@@ -504,7 +504,7 @@ ul  { list-style: none; }
 
 .shop-card-photo {
   width: 100%;
-  height: 240px;
+  height: 280px;
   overflow: hidden;
   line-height: 0;
   position: relative;
@@ -515,7 +515,7 @@ ul  { list-style: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
   display: block;
   transition: transform 0.4s ease;
 }
