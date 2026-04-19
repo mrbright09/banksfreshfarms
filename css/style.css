@@ -448,6 +448,15 @@ ul  { list-style: none; }
   font-family: 'Lato', sans-serif;
 }
 
+.story-quote {
+  color: var(--gold);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 20px 0 4px;
+}
+
 .btn-story {
   display: inline-block;
   margin-top: 24px;
