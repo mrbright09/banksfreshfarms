@@ -75,6 +75,18 @@
   window.addEventListener('scroll', handleScroll, { passive: true });
 
 
+  /* ─── Story Photo Auto-Rotate ──────────────────────────────── */
+  var slides = document.querySelectorAll('.story-slideshow .slide');
+  if (slides.length > 1) {
+    var current = 0;
+    setInterval(function () {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4500);
+  }
+
+
   /* ─── IntersectionObserver — Fade-in ────────────────────────── */
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {

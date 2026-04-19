@@ -401,6 +401,27 @@ ul  { list-style: none; }
 
 .story-photo:hover img { transform: scale(1.03); }
 
+/* Rotating slideshow for story photos */
+.story-slideshow {
+  position: relative;
+  height: 300px;
+}
+
+.story-slideshow img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.story-slideshow img.active { opacity: 1; }
+.story-slideshow:hover img  { transform: none; }
+
 .story-copy { padding-top: 8px; }
 
 .story-line {
