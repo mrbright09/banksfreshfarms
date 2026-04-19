@@ -69,20 +69,38 @@ ul  { list-style: none; }
   flex-shrink: 0;
 }
 
-.nav-logo-badge {
+.nav-logo {
+  width: 52px;
+  height: 52px;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Fallback badge shown when logo.png is missing */
+.nav-logo--fallback {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 2px solid var(--gold);
   background: rgba(200,146,42,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: 'Playfair Display', serif;
   font-size: 13px;
   font-weight: 700;
   color: var(--gold);
-  flex-shrink: 0;
+}
+
+.nav-logo--fallback::after {
+  content: 'BFF';
 }
 
 .nav-brand {
@@ -420,7 +438,6 @@ ul  { list-style: none; }
    ============================================================= */
 .shop-section {
   background: var(--bg-mid);
-  padding: 16px 40px 80px;
 }
 
 .shop-grid {
@@ -429,6 +446,7 @@ ul  { list-style: none; }
   gap: 24px;
   max-width: 1100px;
   margin: 0 auto;
+  padding: 0 40px 80px;
 }
 
 .shop-card {
