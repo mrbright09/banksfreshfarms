@@ -417,9 +417,13 @@ ul  { list-style: none; }
 .story-slideshow {
   position: relative;
   height: 300px;
+  border: 3px solid rgba(200,146,42,0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.story-slideshow img {
+.story-slideshow .slide {
   position: absolute;
   top: 0;
   left: 0;
@@ -427,12 +431,12 @@ ul  { list-style: none; }
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  display: block;
   opacity: 0;
   transition: opacity 1.2s ease;
 }
 
-.story-slideshow img.active { opacity: 1; }
-.story-slideshow:hover img  { transform: none; }
+.story-slideshow .slide.active { opacity: 1; }
 
 .story-copy { padding-top: 8px; }
 
