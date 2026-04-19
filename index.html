@@ -25,8 +25,10 @@
   ============================================================ -->
   <nav class="site-nav" id="nav">
     <div class="nav-left">
-      <!-- PLACEHOLDER: replace nav-logo-badge with <img src="images/logo.png"> when logo is ready -->
-      <div class="nav-logo-badge">BFF</div>
+      <div class="nav-logo">
+        <img src="images/logo.png" alt="Banks Fresh Farms Logo"
+          onerror="this.style.display='none'; this.parentElement.classList.add('nav-logo--fallback');" />
+      </div>
       <div>
         <div class="nav-brand">Banks Fresh Farms</div>
         <div class="nav-sub">A Georgia Grown Heritage</div>
@@ -36,6 +38,7 @@
       <li><a href="#home">Home</a></li>
       <li><a href="#story">Our Story</a></li>
       <li><a href="#shop">Shop</a></li>
+      <li><a href="#merch">Merch</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <!-- SQUARE PAYMENT LINK: Replace href="#shop" with Square payment link for general orders -->
@@ -49,6 +52,7 @@
       <li><a href="#home"    class="mobile-nav-link">Home</a></li>
       <li><a href="#story"   class="mobile-nav-link">Our Story</a></li>
       <li><a href="#shop"    class="mobile-nav-link">Shop</a></li>
+      <li><a href="#merch"   class="mobile-nav-link">Merch</a></li>
       <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
     </ul>
     <a href="#shop" class="nav-cta mobile-nav-cta">Order Now</a>
@@ -111,10 +115,10 @@
 
       <div class="story-copy">
         <p class="story-line">Banks Fresh Farms isn't just land — it's legacy.</p>
-        <p class="story-line">My father wasn't expected to live. My mother brought him back to the land. Real food changed everything.</p>
         <p class="story-line">What started as a commitment to family, faith, and self-sufficiency has grown into a multi-generational operation grounded in purpose.</p>
         <p class="story-line">Every step we take is connected to those who came before us and those we're building for next.</p>
-        <p class="story-line">Today, we carry forward five generations of farming — not just to grow food, but to grow healthier families.</p>
+        <p class="story-line">We don't just grow food — we cultivate responsibility, ownership, and community.</p>
+        <p class="story-line">Today, we carry forward generations of farming — not just to grow food, but to grow healthier families.</p>
         <a href="#contact" class="btn-story">Read Our Full Story</a>
       </div>
 
@@ -125,19 +129,19 @@
   <!-- ============================================================
        SHOP — What We Bring to Your Table
   ============================================================ -->
-  <div class="section-divider-row section-divider-row--mid" id="shop">
-    <div class="divider-line"></div>
-    <div class="divider-label">&#9670; What We Bring to Your Table &#9670;</div>
-    <div class="divider-line"></div>
-  </div>
+  <section class="shop-section" id="shop">
 
-  <section class="shop-section">
+    <div class="section-divider-row section-divider-row--mid">
+      <div class="divider-line"></div>
+      <div class="divider-label">&#9670; What We Bring to Your Table &#9670;</div>
+      <div class="divider-line"></div>
+    </div>
+
     <div class="shop-grid">
 
       <!-- FRESH EGGS -->
       <div class="shop-card fade-in">
         <div class="shop-card-photo">
-          <!-- PRODUCT PHOTO: product-eggs.png — BFF egg carton marketing photo -->
           <img src="images/product-eggs.png" alt="BFF Fresh Eggs — Pre Order Now"
             onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
           <div class="shop-card-badge">Pre Order Now</div>
@@ -145,15 +149,14 @@
         <div class="shop-card-body">
           <h3 class="shop-card-title">Farm Fresh Eggs</h3>
           <p class="shop-card-desc">Nutrient-rich, pasture-raised. Collected daily from naturally foraging hens on Georgia farmland.</p>
-          <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for Fresh Eggs -->
-          <a href="#contact" class="shop-card-btn">Shop Eggs</a>
+          <!-- SQUARE PAYMENT LINK: Replace href="#" with Square payment link for Fresh Eggs -->
+          <a href="#" class="shop-card-btn" target="_blank">Shop Eggs</a>
         </div>
       </div>
 
       <!-- BFF SEASONINGS -->
       <div class="shop-card fade-in">
         <div class="shop-card-photo">
-          <!-- PRODUCT PHOTO: product-seasonings.png — BFF mason jar spice box photo -->
           <img src="images/product-seasonings.png" alt="BFF Seasonings"
             onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
           <div class="shop-card-badge">Order Now</div>
@@ -161,15 +164,14 @@
         <div class="shop-card-body">
           <h3 class="shop-card-title">BFF Seasonings</h3>
           <p class="shop-card-desc">Hand-crafted spice blends made from farm-grown herbs. Four signature blends, Georgia-made.</p>
-          <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for BFF Seasonings -->
-          <a href="#contact" class="shop-card-btn">Order Now</a>
+          <!-- SQUARE PAYMENT LINK: Replace href="#" with Square payment link for BFF Seasonings -->
+          <a href="#" class="shop-card-btn" target="_blank">Order Now</a>
         </div>
       </div>
 
       <!-- BEEF & POULTRY — COMING SOON -->
       <div class="shop-card shop-card--soon fade-in">
         <div class="shop-card-photo">
-          <!-- PRODUCT PHOTO: product-beef.png — BFF steak plate marketing photo -->
           <img src="images/product-beef.png" alt="BFF Beef and Poultry — Coming Soon"
             onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
           <div class="shop-card-badge shop-card-badge--soon">Coming Soon</div>
@@ -177,7 +179,7 @@
         <div class="shop-card-body">
           <h3 class="shop-card-title">Farm Experiences</h3>
           <p class="shop-card-desc">Premium pasture-raised beef and poultry. Humanely raised on BFF land. Coming soon to your table.</p>
-          <a href="#contact" class="shop-card-btn shop-card-btn--soon">Get Notified</a>
+          <a href="#contact" class="shop-card-btn shop-card-btn--soon">Learn More</a>
         </div>
       </div>
 
@@ -303,12 +305,11 @@
         <input type="email" name="Email" placeholder="Email Address" required />
         <select name="Inquiry Type" required>
           <option value="" disabled selected>I'm interested in...</option>
-          <option>Fresh Eggs Order</option>
+          <option>Poultry / Eggs Order</option>
           <option>BFF Seasonings</option>
           <option>Herbal Products</option>
           <option>Merch</option>
           <option>Wholesale / B2B</option>
-          <option>Poultry / Beef — Notify Me</option>
         </select>
         <textarea name="Message" placeholder="Your message..." rows="4"></textarea>
         <button type="submit" class="form-submit">Send Message</button>
