@@ -30,6 +30,17 @@ body {
   overflow-x: hidden;
 }
 
+/* Grain texture overlay — fixed, sits above everything, non-interactive */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 img { display: block; max-width: 100%; }
 a   { text-decoration: none; color: inherit; }
 ul  { list-style: none; }
@@ -224,7 +235,7 @@ ul  { list-style: none; }
    ============================================================= */
 .headline-block {
   background: var(--bg-dark);
-  background-image: radial-gradient(ellipse at center, rgba(61,35,20,0.85) 0%, var(--bg-dark) 70%);
+  background-image: radial-gradient(ellipse at center, #7B4220 0%, #4E2512 45%, var(--bg-dark) 75%);
   text-align: center;
   padding: 68px 40px 80px;
 }
@@ -342,6 +353,7 @@ ul  { list-style: none; }
   gap: 20px;
   padding: 48px 60px 24px;
   background: var(--bg-dark);
+  background-image: radial-gradient(ellipse at center, #5A2E14 0%, var(--bg-dark) 70%);
 }
 
 .section-divider-row--mid  { background: var(--bg-mid); }
@@ -369,7 +381,7 @@ ul  { list-style: none; }
    ============================================================= */
 .story-section {
   background: var(--bg-dark);
-  background-image: radial-gradient(ellipse at 65% 50%, rgba(61,35,20,0.9) 0%, var(--bg-dark) 100%);
+  background-image: radial-gradient(ellipse at 65% 50%, #6B3818 0%, #3D2010 50%, var(--bg-dark) 100%);
   padding: 16px 60px 80px;
 }
 
@@ -705,6 +717,7 @@ ul  { list-style: none; }
    ============================================================= */
 .contact-section {
   background: var(--bg-dark);
+  background-image: radial-gradient(ellipse at center, #5A2E14 0%, #3A1C0C 50%, var(--bg-dark) 80%);
   padding-bottom: 88px;
 }
 
