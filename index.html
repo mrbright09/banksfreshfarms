@@ -3,20 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Banks Fresh Farms — Five generations. One mission. Real food. A Black-owned, multi-generational family farm. Georgia Grown." />
-
-  <!-- Open Graph / Social Preview -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:title"       content="Banks Fresh Farms | Five Generations. One Mission. Real Food." />
-  <meta property="og:description" content="What helped save our family is now feeding yours. Fresh eggs, BFF Seasonings, and premium farm products from Georgia." />
-  <meta property="og:site_name"   content="Banks Fresh Farms" />
-  <meta name="twitter:card"       content="summary_large_image" />
-  <meta name="twitter:title"      content="Banks Fresh Farms | Five Generations. One Mission. Real Food." />
+  <meta name="description" content="Banks Fresh Farms — Five generations. One mission. Real food. Black-owned, multi-generational family farm. Georgia Grown." />
+  <meta property="og:type"         content="website" />
+  <meta property="og:title"        content="Banks Fresh Farms | Five Generations. One Mission. Real Food." />
+  <meta property="og:description"  content="What helped save our family is now feeding yours. Fresh eggs, BFF Seasonings, and premium farm products from Georgia." />
+  <meta property="og:site_name"    content="Banks Fresh Farms" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Banks Fresh Farms | Five Generations. One Mission. Real Food." />
   <meta name="twitter:description" content="What helped save our family is now feeding yours. Georgia Grown." />
-
-  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%232C1810'/><text y='.9em' font-size='72' x='12'>🌿</text></svg>" />
-
   <title>Banks Fresh Farms | Five Generations. One Mission. Real Food.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,117 +21,64 @@
 <body>
 
   <!-- ============================================================
-       NAVIGATION
+       NAV
   ============================================================ -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-inner">
-
-      <!-- Logo + Brand -->
-      <a href="#home" class="nav-brand">
-        <!-- PLACEHOLDER: replace div below with <img src="images/logo.png" alt="Banks Fresh Farms Logo" width="46" height="46" style="border-radius:6px;"> when logo is ready -->
-        <div class="img-placeholder img-logo"><span>Logo</span></div>
-        <div class="nav-brand-text">
-          <span class="nav-brand-name">Banks Fresh Farms</span>
-          <span class="nav-brand-sub">A Georgia Grown Heritage</span>
-        </div>
-      </a>
-
-      <!-- Center Nav Links -->
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home"    class="nav-link">Home</a></li>
-        <li><a href="#story"   class="nav-link">Our Story</a></li>
-        <li><a href="#shop"    class="nav-link">Shop</a></li>
-        <li><a href="#merch"   class="nav-link">Merch</a></li>
-        <li><a href="#contact" class="nav-link">Contact</a></li>
-      </ul>
-
-      <!-- Right CTA -->
-      <div class="nav-right">
-        <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for general orders -->
-        <a href="#contact" class="btn-cta">Order Now</a>
-        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
+  <nav class="site-nav" id="nav">
+    <div class="nav-left">
+      <!-- PLACEHOLDER: replace nav-logo-badge with <img src="images/logo.png"> when logo is ready -->
+      <div class="nav-logo-badge">BFF</div>
+      <div>
+        <div class="nav-brand">Banks Fresh Farms</div>
+        <div class="nav-sub">A Georgia Grown Heritage</div>
       </div>
-
     </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <!-- SQUARE PAYMENT LINK: Replace href="#shop" with Square payment link for general orders -->
+    <a href="#shop" class="nav-cta">Order Now</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
   </nav>
 
-  <!-- Mobile Nav Overlay -->
-  <div class="nav-overlay" id="navOverlay" aria-hidden="true">
-    <button class="nav-overlay-close" id="navClose" aria-label="Close menu">&times;</button>
-    <ul class="nav-overlay-links">
-      <li><a href="#home"    class="nav-overlay-link">Home</a></li>
-      <li><a href="#story"   class="nav-overlay-link">Our Story</a></li>
-      <li><a href="#shop"    class="nav-overlay-link">Shop</a></li>
-      <li><a href="#merch"   class="nav-overlay-link">Merch</a></li>
-      <li><a href="#contact" class="nav-overlay-link">Contact</a></li>
+  <!-- Mobile nav drawer -->
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="#home"    class="mobile-nav-link">Home</a></li>
+      <li><a href="#story"   class="mobile-nav-link">Our Story</a></li>
+      <li><a href="#shop"    class="mobile-nav-link">Shop</a></li>
+      <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
     </ul>
-    <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for general orders -->
-    <a href="#contact" class="btn-cta nav-overlay-cta">Order Now</a>
+    <a href="#shop" class="nav-cta mobile-nav-cta">Order Now</a>
   </div>
 
 
   <!-- ============================================================
-       1. HERO — YouTube Video Background
+       HERO — Full-width family photo, no overlay, no text
   ============================================================ -->
-  <section class="hero" id="home">
+  <div class="hero-photo" id="home">
+    <img src="images/family-photo.jpg" alt="The Banks Family — Banks Fresh Farms Georgia" />
+  </div>
 
-    <!-- YouTube video background -->
-    <div class="hero-video-bg">
-      <iframe
-        src="https://www.youtube.com/embed/GPxPnyqBmkM?autoplay=1&mute=1&loop=1&playlist=GPxPnyqBmkM&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen
-        title="Banks Fresh Farms farm video"
-      ></iframe>
-    </div>
 
-    <!-- Diagonal texture overlay -->
-    <div class="hero-texture"></div>
-
-    <div class="hero-inner">
-
-      <!-- Left Content -->
-      <div class="hero-content">
-        <div class="hero-badge fade-up" style="--delay: 0.1s">
-          <span class="hero-badge-dot"></span>
-          Black-Owned &middot; Family Operated
-        </div>
-        <h1 class="hero-title fade-up" style="--delay: 0.25s">
-          Five Generations.<br>
-          One Mission.<br>
-          <em class="hero-gold">Real Food.</em>
-        </h1>
-        <p class="hero-sub fade-up" style="--delay: 0.4s">
-          What helped save our family is now feeding yours.
-        </p>
-        <div class="hero-actions fade-up" style="--delay: 0.55s">
-          <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for Fresh Eggs -->
-          <a href="#contact" class="btn-gold">Shop Fresh Eggs</a>
-          <a href="#story"   class="btn-outline-cream">Join the Farm Experience</a>
-        </div>
-        <div class="hero-meta fade-up" style="--delay: 0.68s">
-          <span class="hero-meta-item">&#x1F4CD; Serving Metro Atlanta &amp; Southeast Georgia</span>
-          <span class="hero-meta-item">&#x1F33F; Weekly Fresh Drops Available</span>
-        </div>
-      </div>
-
-      <!-- Right Visual -->
-      <div class="hero-visual fade-up" style="--delay: 0.45s">
-        <div class="hero-circle">
-          <img src="images/farm-land.jpg" alt="Banks Fresh Farms raised garden beds" class="hero-farm-img">
-        </div>
-        <div class="hero-circle-label">Georgia Grown &middot; Since Day One</div>
-      </div>
-
+  <!-- ============================================================
+       HEADLINE BLOCK — below the photo
+  ============================================================ -->
+  <section class="headline-block">
+    <h1 class="headline-title">Five Generations. One Mission. <em>Real Food.</em></h1>
+    <p class="headline-sub">What helped save our family is now feeding yours.</p>
+    <div class="headline-btns">
+      <!-- SQUARE PAYMENT LINK: Replace href="#shop" with Square payment link for Fresh Eggs -->
+      <a href="#shop"  class="btn-primary">Shop Fresh Eggs</a>
+      <a href="#story" class="btn-outline">Join the Farm Experience</a>
     </div>
   </section>
 
 
   <!-- ============================================================
-       2. TRUST BAR
+       TRUST BAR
   ============================================================ -->
   <div class="trust-bar">
     <div class="trust-bar-inner">
@@ -152,31 +94,90 @@
 
 
   <!-- ============================================================
-       3. OUR STORY
+       OUR STORY
   ============================================================ -->
-  <section class="story section-pad" id="story">
-    <div class="container story-inner">
+  <div class="section-divider-row" id="story">
+    <div class="divider-line"></div>
+    <div class="divider-label">&#9670; Our Story &#9670;</div>
+    <div class="divider-line"></div>
+  </div>
 
-      <!-- Left Image -->
-      <div class="story-image scroll-fade">
-        <img src="images/family-photo.jpg" alt="The Banks Family" class="story-img">
+  <section class="story-section">
+    <div class="story-inner">
+
+      <div class="story-photo">
+        <img src="images/family-photo.jpg" alt="The Banks Family on the farm" />
       </div>
 
-      <!-- Right Content -->
-      <div class="story-content scroll-fade">
-        <div class="section-tag">Our Story</div>
-        <h2 class="story-title">Rooted in Family.<br>Built for Generations.</h2>
-        <p class="story-body">
-          Banks Fresh Farms isn't just land — it's legacy. What started as a commitment to family, faith, and self-sufficiency has grown into a multi-generational operation grounded in purpose. Every step we take is connected to those who came before us and those we're building for next.
-        </p>
-        <p class="story-body">
-          We don't just grow food — we cultivate responsibility, ownership, and community. From our soil to your table, everything we produce carries the weight of our name and the pride of our family.
-        </p>
-        <blockquote class="story-quote">"This isn't just farming. This is stewardship."</blockquote>
-        <div class="story-tags">
-          <span class="tag">Multi-Generational Legacy</span>
-          <span class="tag">Family Owned &amp; Operated</span>
-          <span class="tag">Georgia Grown. Community Driven</span>
+      <div class="story-copy">
+        <p class="story-line">Banks Fresh Farms isn't just land — it's legacy.</p>
+        <p class="story-line">My father wasn't expected to live. My mother brought him back to the land. Real food changed everything.</p>
+        <p class="story-line">What started as a commitment to family, faith, and self-sufficiency has grown into a multi-generational operation grounded in purpose.</p>
+        <p class="story-line">Every step we take is connected to those who came before us and those we're building for next.</p>
+        <p class="story-line">Today, we carry forward five generations of farming — not just to grow food, but to grow healthier families.</p>
+        <a href="#contact" class="btn-story">Read Our Full Story</a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SHOP — What We Bring to Your Table
+  ============================================================ -->
+  <div class="section-divider-row section-divider-row--mid" id="shop">
+    <div class="divider-line"></div>
+    <div class="divider-label">&#9670; What We Bring to Your Table &#9670;</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <section class="shop-section">
+    <div class="shop-grid">
+
+      <!-- FRESH EGGS -->
+      <div class="shop-card fade-in">
+        <div class="shop-card-photo">
+          <!-- PRODUCT PHOTO: product-eggs.png — BFF egg carton marketing photo -->
+          <img src="images/product-eggs.png" alt="BFF Fresh Eggs — Pre Order Now"
+            onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
+          <div class="shop-card-badge">Pre Order Now</div>
+        </div>
+        <div class="shop-card-body">
+          <h3 class="shop-card-title">Farm Fresh Eggs</h3>
+          <p class="shop-card-desc">Nutrient-rich, pasture-raised. Collected daily from naturally foraging hens on Georgia farmland.</p>
+          <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for Fresh Eggs -->
+          <a href="#contact" class="shop-card-btn">Shop Eggs</a>
+        </div>
+      </div>
+
+      <!-- BFF SEASONINGS -->
+      <div class="shop-card fade-in">
+        <div class="shop-card-photo">
+          <!-- PRODUCT PHOTO: product-seasonings.png — BFF mason jar spice box photo -->
+          <img src="images/product-seasonings.png" alt="BFF Seasonings"
+            onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
+          <div class="shop-card-badge">Order Now</div>
+        </div>
+        <div class="shop-card-body">
+          <h3 class="shop-card-title">BFF Seasonings</h3>
+          <p class="shop-card-desc">Hand-crafted spice blends made from farm-grown herbs. Four signature blends, Georgia-made.</p>
+          <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for BFF Seasonings -->
+          <a href="#contact" class="shop-card-btn">Order Now</a>
+        </div>
+      </div>
+
+      <!-- BEEF & POULTRY — COMING SOON -->
+      <div class="shop-card shop-card--soon fade-in">
+        <div class="shop-card-photo">
+          <!-- PRODUCT PHOTO: product-beef.png — BFF steak plate marketing photo -->
+          <img src="images/product-beef.png" alt="BFF Beef and Poultry — Coming Soon"
+            onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
+          <div class="shop-card-badge shop-card-badge--soon">Coming Soon</div>
+        </div>
+        <div class="shop-card-body">
+          <h3 class="shop-card-title">Farm Experiences</h3>
+          <p class="shop-card-desc">Premium pasture-raised beef and poultry. Humanely raised on BFF land. Coming soon to your table.</p>
+          <a href="#contact" class="shop-card-btn shop-card-btn--soon">Get Notified</a>
         </div>
       </div>
 
@@ -185,298 +186,158 @@
 
 
   <!-- ============================================================
-       4. SHOP
+       GARDEN STRIP — Grown Right Here
   ============================================================ -->
-  <section class="shop section-pad" id="shop">
-    <div class="container">
-      <div class="shop-header">
-        <p class="section-label-light">From the Earth &amp; The Flock</p>
-        <h2 class="shop-title">Farm Direct. No Middlemen. No Compromise.</h2>
-        <div class="divider-gold"></div>
+  <section class="garden-strip">
 
-        <!-- Farm photo strip -->
-        <div class="farm-photo-strip">
-          <img src="images/farm-harvest.jpg"  alt="Fresh cucumber harvest"    class="strip-photo">
-          <img src="images/farm-produce.jpg"  alt="Fresh field peas"          class="strip-photo">
-          <img src="images/farm-plants.jpg"   alt="Green bean plants"         class="strip-photo">
-          <img src="images/farm-shelling2.jpg" alt="Shelling fresh peas"      class="strip-photo">
-        </div>
+    <div class="section-divider-row section-divider-row--dark">
+      <div class="divider-line"></div>
+      <div class="divider-label">&#9670; Grown Right Here &#9670;</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="garden-grid">
+
+      <!-- Row 1: Two large shelling peas photos -->
+      <div class="garden-item garden-item--large">
+        <img src="images/hands-shelling-peas.jpg" alt="Two generations shelling peas — Banks Fresh Farms" />
+        <div class="garden-caption">Generational Knowledge. Real Hands.</div>
       </div>
 
-      <div class="products-grid">
-
-        <!-- Product: Premium Poultry / Beef — COMING SOON -->
-        <div class="product-card scroll-fade">
-          <div class="product-photo">
-            <!-- PHOTO: product-beef.jpg — BFF steak/poultry plate photo -->
-            <img src="images/product-beef.jpg" alt="BFF Premium Beef & Poultry — Coming Soon"
-              onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='flex'">
-            <span class="product-badge product-badge--soon">Coming Soon</span>
-          </div>
-          <!-- Fallback if photo not yet uploaded -->
-          <div class="product-photo-placeholder" style="display:none;">&#x1F413;</div>
-          <div class="product-body">
-            <div class="product-icon">&#x1F413;</div>
-            <h3 class="product-name">Premium Beef &amp; Poultry</h3>
-            <p class="product-desc">Pasture-raised and humanely harvested on Georgia farmland. From our farm to your table — coming soon.</p>
-            <p class="product-price">Notify Me</p>
-            <a href="#contact" class="btn-product btn-product--muted">Get Notified</a>
-          </div>
-        </div>
-
-        <!-- Product: Fresh Eggs — PRE ORDER -->
-        <div class="product-card scroll-fade">
-          <div class="product-photo">
-            <!-- PHOTO: product-eggs.jpg — BFF egg carton photo -->
-            <img src="images/product-eggs.jpg" alt="BFF Fresh Eggs — Pre Order Now"
-              onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='flex'">
-            <span class="product-badge">Pre Order Now</span>
-          </div>
-          <!-- Fallback if photo not yet uploaded -->
-          <div class="product-photo-placeholder" style="display:none;">&#x1F95A;</div>
-          <div class="product-body">
-            <div class="product-icon">&#x1F95A;</div>
-            <h3 class="product-name">Fresh Eggs</h3>
-            <p class="product-desc">Farm-fresh eggs from free-range hens. Rich yolks, clean shells — straight from the coop to your kitchen.</p>
-            <p class="product-price">Starting at $6 / dozen</p>
-            <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for Fresh Eggs -->
-            <a href="#contact" class="btn-product">Pre Order Now</a>
-          </div>
-        </div>
-
-        <!-- Product: Herbal Products -->
-        <div class="product-card scroll-fade">
-          <div class="product-photo">
-            <img src="images/farm-plants.jpg" alt="BFF Herbal Products"
-              onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='flex'">
-            <span class="product-badge">Order Now</span>
-          </div>
-          <div class="product-photo-placeholder" style="display:none;">&#x1F33F;</div>
-          <div class="product-body">
-            <div class="product-icon">&#x1F33F;</div>
-            <h3 class="product-name">Herbal Products</h3>
-            <p class="product-desc">Botanical wellness products grown on-farm. Crafted with traditional knowledge passed through generations.</p>
-            <p class="product-price">Starting at $12</p>
-            <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for Herbal Products -->
-            <a href="#contact" class="btn-product">Order Now</a>
-          </div>
-        </div>
-
-        <!-- Product: BFF Seasonings -->
-        <div class="product-card scroll-fade">
-          <div class="product-photo">
-            <!-- PHOTO: product-seasonings.jpg — BFF seasonings box photo -->
-            <img src="images/product-seasonings.jpg" alt="BFF Seasonings — Order Now"
-              onerror="this.parentElement.style.display='none';this.parentElement.nextElementSibling.style.display='flex'">
-            <span class="product-badge">Order Now</span>
-          </div>
-          <!-- Fallback if photo not yet uploaded -->
-          <div class="product-photo-placeholder" style="display:none;">&#x1F9C2;</div>
-          <div class="product-body">
-            <div class="product-icon">&#x1F9C2;</div>
-            <h3 class="product-name">BFF Seasonings</h3>
-            <p class="product-desc">Four house-blended seasoning mixes crafted from farm-grown herbs. The taste of Georgia in every shake.</p>
-            <p class="product-price">Starting at $10</p>
-            <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for BFF Seasonings -->
-            <a href="#contact" class="btn-product">Order Now</a>
-          </div>
-        </div>
-
+      <div class="garden-item garden-item--large">
+        <img src="images/shelling-peas-solo.jpg" alt="Shelling field peas fresh from the farm" />
+        <div class="garden-caption">Shelled Fresh. Every Time.</div>
       </div>
+
+      <!-- Row 2: Four smaller farm photos -->
+      <div class="garden-item">
+        <img src="images/harvest-bowl.jpg" alt="Fresh field peas and okra — Banks Fresh Farms harvest" />
+        <div class="garden-caption">Field Peas &amp; Okra</div>
+      </div>
+
+      <div class="garden-item">
+        <img src="images/cucumber-bed-wide.jpg" alt="BFF raised cucumber bed" />
+        <div class="garden-caption">Raised Bed Cucumbers</div>
+      </div>
+
+      <div class="garden-item">
+        <img src="images/cucumber-closeup.jpg" alt="Baby cucumber growing on the vine" />
+        <div class="garden-caption">Farm to Table</div>
+      </div>
+
+      <div class="garden-item">
+        <img src="images/shelling-peas-solo-2.jpg" alt="Shelling fresh peas — Banks Fresh Farms" />
+        <div class="garden-caption">Pure. Honest. Fresh.</div>
+      </div>
+
     </div>
   </section>
 
 
   <!-- ============================================================
-       5. MERCH
+       TRUST PILLARS
   ============================================================ -->
-  <section class="merch section-pad" id="merch">
-    <div class="container">
-      <div class="merch-header">
-        <p class="section-label-gold">Rep the Farm</p>
-        <h2 class="merch-title">BFF Merch</h2>
-      </div>
-
-      <div class="merch-grid">
-
-        <!-- Merch: Work Shirt -->
-        <div class="merch-card scroll-fade">
-          <div class="merch-card-inner">
-            <!-- PLACEHOLDER: replace with <img src="images/shirt.jpg"> when photo is ready -->
-            <div class="img-merch"><span>Shirt Photo Coming Soon</span></div>
-            <div class="merch-info">
-              <h3 class="merch-name">BFF Work Shirt</h3>
-              <p class="merch-desc">Tan &amp; Forest Green colorway with "Georgia Grown" embroidery. Built for the farm and the everyday.</p>
-              <p class="merch-price">$45.00</p>
-              <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for BFF Work Shirt -->
-              <a href="#contact" class="btn-green">Add to Cart</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Merch: Trucker Hat -->
-        <div class="merch-card scroll-fade">
-          <div class="merch-card-inner">
-            <!-- PLACEHOLDER: replace with <img src="images/hat.jpg"> when photo is ready -->
-            <div class="img-merch"><span>Hat Photo Coming Soon</span></div>
-            <div class="merch-info">
-              <h3 class="merch-name">BFF Trucker Hat</h3>
-              <p class="merch-desc">Tan &amp; Forest Green with a Banks Fresh Farms embroidered patch. Wear the brand with pride.</p>
-              <p class="merch-price">$32.00</p>
-              <!-- SQUARE PAYMENT LINK: Replace href="#contact" with Square payment link for BFF Trucker Hat -->
-              <a href="#contact" class="btn-green">Add to Cart</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
+  <section class="trust-pillars">
+    <div class="trust-pillar fade-in">
+      <div class="trust-pillar-icon">&#x1F331;</div>
+      <div class="trust-pillar-text">Building Generational Legacy</div>
+    </div>
+    <div class="trust-pillar fade-in">
+      <div class="trust-pillar-icon">&#x1F91D;</div>
+      <div class="trust-pillar-text">Driven to Purposeness</div>
+    </div>
+    <div class="trust-pillar fade-in">
+      <div class="trust-pillar-icon">&#x1F4D6;</div>
+      <div class="trust-pillar-text">Educating Table Farmers</div>
+    </div>
+    <div class="trust-pillar fade-in">
+      <div class="trust-pillar-icon">&#x1F46A;</div>
+      <div class="trust-pillar-text">Grown Owned Community</div>
     </div>
   </section>
 
 
   <!-- ============================================================
-       Farm Photo Banner
+       CLOSING FULL-WIDTH IMAGE
   ============================================================ -->
-  <div class="farm-banner">
-    <img src="images/farm-shelling.jpg" alt="Two generations of the Banks family working together" class="farm-banner-img">
-    <div class="farm-banner-overlay">
-      <p class="farm-banner-text">"From our hands to your table — every harvest is a family effort."</p>
-    </div>
+  <div class="closing-photo">
+    <img src="images/hands-shelling-peas.jpg" alt="Banks family shelling peas — generational farming" />
   </div>
 
 
   <!-- ============================================================
-       6. VALUES
+       CONTACT
   ============================================================ -->
-  <section class="values section-pad" id="values">
-    <div class="container">
-      <div class="values-header">
-        <p class="section-label-gold">The BFF Standard</p>
-        <h2 class="values-title">What We Stand On</h2>
-      </div>
+  <section class="contact-section" id="contact">
 
-      <div class="values-grid">
-
-        <div class="value-card scroll-fade">
-          <span class="value-number">01</span>
-          <h3 class="value-title">The Land</h3>
-          <p class="value-body">Georgia grown. Rooted deeply in local soil. Committed to uplifting the regional agricultural economy and keeping supply chains short and sustainable.</p>
-        </div>
-
-        <div class="value-card scroll-fade">
-          <span class="value-number">02</span>
-          <h3 class="value-title">The Practice</h3>
-          <p class="value-body">Herbal and natural methods. Cultivating the earth using botanical practices that ensure a healthy, chemical-free foundation for all farm activities.</p>
-        </div>
-
-        <div class="value-card scroll-fade">
-          <span class="value-number">03</span>
-          <h3 class="value-title">The People</h3>
-          <p class="value-body">Banks Family tradition. Multi-generational commitment to independent farming with direct accountability and unwavering quality control across every harvest.</p>
-        </div>
-
-      </div>
+    <div class="section-divider-row">
+      <div class="divider-line"></div>
+      <div class="divider-label">&#9670; Get In Touch &#9670;</div>
+      <div class="divider-line"></div>
     </div>
-  </section>
 
+    <div class="contact-inner">
 
-  <!-- ============================================================
-       7. CONTACT
-  ============================================================ -->
-  <section class="contact section-pad" id="contact">
-    <div class="container contact-inner">
-
-      <!-- Left Info -->
-      <div class="contact-info scroll-fade">
-        <p class="section-label-gold">Get In Touch</p>
+      <div class="contact-info">
         <h2 class="contact-title">Order Direct.<br>Talk to the Family.</h2>
-        <p class="contact-desc">We love hearing from our community. Reach out for orders, wholesale inquiries, or just to say hello.</p>
-
-        <ul class="contact-details">
-          <li class="contact-detail">
-            <span class="contact-icon">&#9993;</span>
-            <a href="mailto:banksfreshfarms@gmail.com">banksfreshfarms@gmail.com</a>
-          </li>
-          <li class="contact-detail">
-            <span class="contact-icon">&#x1F69C;</span>
-            <span>Farm Pickup Available</span>
-          </li>
-          <li class="contact-detail">
-            <span class="contact-icon">&#x1F91D;</span>
-            <span>Wholesale &amp; B2B Welcome</span>
-          </li>
-        </ul>
+        <p class="contact-desc">Whether you're placing an order, asking about wholesale, or just want to know what's fresh — we're real people. Reach out directly.</p>
+        <div class="contact-detail">
+          <span>&#9993;</span>
+          <a href="mailto:banksfreshfarms@gmail.com">banksfreshfarms@gmail.com</a>
+        </div>
+        <div class="contact-detail">
+          <span>&#x1F69C;</span>
+          <span>Farm Pickup Available — Georgia</span>
+        </div>
+        <div class="contact-detail">
+          <span>&#x1F91D;</span>
+          <span>Wholesale &amp; B2B Welcome</span>
+        </div>
       </div>
 
-      <!-- Right Form -->
-      <div class="contact-form-wrap scroll-fade">
-        <form class="contact-form" action="mailto:banksfreshfarms@gmail.com" method="POST" enctype="text/plain">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="firstName">First Name</label>
-              <input type="text" id="firstName" name="First Name" placeholder="First" required />
-            </div>
-            <div class="form-group">
-              <label for="lastName">Last Name</label>
-              <input type="text" id="lastName" name="Last Name" placeholder="Last" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="Email" placeholder="your@email.com" required />
-          </div>
-          <div class="form-group">
-            <label for="inquiry">Inquiry Type</label>
-            <select id="inquiry" name="Inquiry Type" required>
-              <option value="" disabled selected>Select an inquiry type</option>
-              <option value="Fresh Eggs Order">Fresh Eggs Order</option>
-              <option value="Poultry/Beef Notify">Poultry / Beef — Notify Me</option>
-              <option value="Herbal Products">Herbal Products</option>
-              <option value="BFF Seasonings">BFF Seasonings</option>
-              <option value="Merch">Merch</option>
-              <option value="Wholesale/B2B">Wholesale / B2B</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="Message" rows="5" placeholder="Tell us what you need..."></textarea>
-          </div>
-          <button type="submit" class="btn-gold btn-full">Send Message</button>
-        </form>
-      </div>
+      <form class="contact-form" action="mailto:banksfreshfarms@gmail.com" method="POST" enctype="text/plain">
+        <div class="form-row">
+          <input type="text"  name="First Name" placeholder="First Name" required />
+          <input type="text"  name="Last Name"  placeholder="Last Name"  required />
+        </div>
+        <input type="email" name="Email" placeholder="Email Address" required />
+        <select name="Inquiry Type" required>
+          <option value="" disabled selected>I'm interested in...</option>
+          <option>Fresh Eggs Order</option>
+          <option>BFF Seasonings</option>
+          <option>Herbal Products</option>
+          <option>Merch</option>
+          <option>Wholesale / B2B</option>
+          <option>Poultry / Beef — Notify Me</option>
+        </select>
+        <textarea name="Message" placeholder="Your message..." rows="4"></textarea>
+        <button type="submit" class="form-submit">Send Message</button>
+      </form>
 
     </div>
   </section>
 
 
   <!-- ============================================================
-       8. FOOTER
+       FOOTER
   ============================================================ -->
-  <footer class="footer">
-    <div class="container footer-inner">
-
+  <footer class="site-footer">
+    <div class="footer-inner">
       <div class="footer-brand">
-        <p class="footer-name">Banks Fresh Farms</p>
-        <p class="footer-sub">A Georgia Grown Heritage</p>
-        <p class="footer-tagline">From Our Land To Your Table</p>
+        <div class="footer-name">Banks Fresh Farms</div>
+        <div class="footer-sub">A Georgia Grown Heritage &middot; Black-Owned Family Farm</div>
+        <div class="footer-tagline">From Our Land To Your Table</div>
       </div>
-
       <nav class="footer-nav" aria-label="Footer navigation">
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#story">Our Story</a></li>
-          <li><a href="#shop">Shop</a></li>
-          <li><a href="#merch">Merch</a></li>
-          <li><a href="#values">Our Values</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+        <a href="#home">Home</a>
+        <a href="#story">Our Story</a>
+        <a href="#shop">Shop</a>
+        <a href="#contact">Contact</a>
       </nav>
-
       <div class="footer-copy">
-        <p>&copy; 2026 Banks Fresh Farms. All rights reserved.</p>
-        <p class="footer-black-owned">Black-Owned &middot; Family Operated &middot; Georgia Grown</p>
+        &copy; 2026 Banks Fresh Farms. All rights reserved.<br>
+        Black-Owned &middot; Family Operated &middot; Georgia Grown
       </div>
-
     </div>
   </footer>
 
