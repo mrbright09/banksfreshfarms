@@ -87,6 +87,10 @@ ul  { list-style: none; }
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--cream);
+  border-radius: 50%;
+  padding: 8px;
+  overflow: hidden;
 }
 
 .nav-logo img {
@@ -949,7 +953,7 @@ ul  { list-style: none; }
     justify-content: center;
   }
 
-  .nav-logo { width: 56px; height: 56px; }
+  .nav-logo { width: 52px; height: 52px; padding: 6px; }
   .nav-brand { font-size: 15px; }
 
   .nav-right { justify-content: flex-end; }
