@@ -58,7 +58,7 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   NAVIGATION — stacked centered logo
+   NAVIGATION — stacked, centered
    ============================================================= */
 .site-nav {
   background: var(--charcoal);
@@ -66,24 +66,102 @@ ul  { list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 40px 20px;
+  padding: 20px 40px 16px;
   position: sticky;
   top: 0;
   z-index: 200;
 }
 
-/* Top row: nav links left, order now right */
-.nav-top-bar {
+/* Hamburger — hidden on desktop, absolute on mobile */
+.nav-hamburger {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 10;
+}
+
+/* Logo + brand name stacked and centered */
+.nav-brand-center {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  gap: 8px;
+}
+
+.nav-logo {
+  width: 100px;
+  height: 100px;
+  background: var(--cream);
+  border-radius: 50%;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo img {
   width: 100%;
-  margin-bottom: 14px;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.nav-logo--fallback {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: rgba(200,146,42,0.1);
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  color: var(--cream);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.nav-sub {
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Nav links + CTA row — below the brand on desktop */
+.nav-bottom-bar {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(200,146,42,0.15);
+  width: 100%;
+  justify-content: center;
 }
 
 .nav-links {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   padding: 0;
 }
 
@@ -98,98 +176,19 @@ ul  { list-style: none; }
 
 .nav-links a:hover { color: var(--gold); }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* Center block: logo stacked above brand name */
-.nav-brand-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-logo {
-  width: 100px;
-  height: 100px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  mix-blend-mode: lighten;
-}
-
-/* Fallback badge if logo missing */
-.nav-logo--fallback {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  background: rgba(200,146,42,0.1);
-  font-family: 'Playfair Display', serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-brand {
-  font-family: 'Playfair Display', serif;
-  color: var(--cream);
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.5px;
-  text-align: center;
-}
-
-.nav-sub {
-  font-size: 10px;
-  color: var(--gold);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-weight: 700;
-  text-align: center;
-}
-
 .nav-cta {
   background: var(--gold);
   color: var(--white);
-  padding: 9px 22px;
+  padding: 8px 20px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  white-space: nowrap;
-  flex-shrink: 0;
   transition: background 0.2s;
 }
 
 .nav-cta:hover { background: var(--gold-light); }
-
-.nav-hamburger {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--cream);
-  font-size: 22px;
-  cursor: pointer;
-  padding: 4px;
-  flex-shrink: 0;
-}
 
 /* Mobile Nav Drawer */
 .mobile-nav {
@@ -956,15 +955,12 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
-  .site-nav { padding: 12px 20px 16px; }
+  .site-nav { padding: 16px 20px 14px; position: relative; }
 
-  .nav-links { display: none; }
-  .nav-cta   { display: none; }
   .nav-hamburger { display: block; }
+  .nav-bottom-bar { display: none; }
 
-  .nav-top-bar { margin-bottom: 10px; }
-
-  .nav-logo  { width: 70px; height: 70px; }
+  .nav-logo  { width: 72px; height: 72px; padding: 8px; }
   .nav-brand { font-size: 20px; }
   .nav-sub   { font-size: 9px; letter-spacing: 2px; }
 

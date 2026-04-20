@@ -24,18 +24,10 @@
        NAV — stacked centered logo layout
   ============================================================ -->
   <nav class="site-nav" id="nav">
-    <div class="nav-top-bar">
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#story">Our Story</a></li>
-        <li><a href="#shop">Shop</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <div class="nav-right">
-        <a href="#shop" class="nav-cta">Order Now</a>
-        <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
-      </div>
-    </div>
+    <!-- Hamburger — absolute top-right on mobile, hidden on desktop -->
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+
+    <!-- Always-centered brand block -->
     <div class="nav-brand-center">
       <div class="nav-logo">
         <img src="images/logo.png" alt="Banks Fresh Farms Logo"
@@ -43,6 +35,17 @@
       </div>
       <div class="nav-brand">Banks Fresh Farms</div>
       <div class="nav-sub">A Georgia Grown Heritage</div>
+    </div>
+
+    <!-- Nav links + CTA — desktop only -->
+    <div class="nav-bottom-bar">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#shop" class="nav-cta">Order Now</a>
     </div>
   </nav>
 
