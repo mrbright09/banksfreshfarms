@@ -63,9 +63,20 @@
   var nav       = document.getElementById('nav');
   var navSpacer = document.getElementById('navSpacer');
 
-  // Capture the full-size nav height once so the spacer never changes
-  var fullNavH = nav ? nav.offsetHeight : 0;
-  if (navSpacer) navSpacer.style.height = fullNavH + 'px';
+  function setSpacerToFullNav() {
+    if (!nav || !navSpacer) return;
+    // Temporarily strip compact so we measure the true full-size nav
+    var wasCompact = nav.classList.contains('nav--compact');
+    if (wasCompact) nav.classList.remove('nav--compact');
+    navSpacer.style.height = nav.offsetHeight + 'px';
+    if (wasCompact) nav.classList.add('nav--compact');
+  }
+
+  // Measure on load, then again after fonts resolve (Playfair changes nav height)
+  setSpacerToFullNav();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setSpacerToFullNav);
+  }
 
   function syncMobileNavTop() {
     if (mobileNav && nav) mobileNav.style.top = nav.offsetHeight + 'px';
@@ -86,11 +97,7 @@
 
   window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('resize', function () {
-    // Re-measure full nav height on resize (orientation change etc.)
-    if (!nav.classList.contains('nav--compact')) {
-      fullNavH = nav.offsetHeight;
-      if (navSpacer) navSpacer.style.height = fullNavH + 'px';
-    }
+    setSpacerToFullNav();
     handleScroll();
   }, { passive: true });
 
