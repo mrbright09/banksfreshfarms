@@ -96,11 +96,11 @@ ul  { list-style: none; }
 }
 
 .nav-logo {
-  width: 110px;
-  height: 110px;
+  width: 130px;
+  height: 130px;
   background: var(--cream);
   border-radius: 50%;
-  padding: 6px;
+  padding: 0;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -108,8 +108,8 @@ ul  { list-style: none; }
 }
 
 .nav-logo img {
-  width: 100%;
-  height: 100%;
+  width: 115%;
+  height: 115%;
   object-fit: contain;
   display: block;
 }
@@ -231,7 +231,7 @@ ul  { list-style: none; }
    ============================================================= */
 .hero-photo {
   width: 100%;
-  max-height: 560px;
+  aspect-ratio: 16 / 7;
   overflow: hidden;
   display: block;
   line-height: 0;
@@ -239,7 +239,7 @@ ul  { list-style: none; }
 
 .hero-photo img {
   width: 100%;
-  height: 560px;
+  height: 100%;
   object-fit: cover;
   object-position: center 20%;
   display: block;
@@ -436,7 +436,7 @@ ul  { list-style: none; }
 /* Rotating slideshow for story photos */
 .story-slideshow {
   position: relative;
-  height: 300px;
+  aspect-ratio: 3 / 4;
   border: 3px solid rgba(200,146,42,0.3);
   border-radius: 4px;
   overflow: hidden;
@@ -533,7 +533,7 @@ ul  { list-style: none; }
 
 .shop-card-photo {
   width: 100%;
-  height: 280px;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   line-height: 0;
   position: relative;
@@ -731,7 +731,7 @@ ul  { list-style: none; }
    ============================================================= */
 .closing-photo {
   width: 100%;
-  height: 440px;
+  aspect-ratio: 21 / 9;
   overflow: hidden;
   line-height: 0;
 }
@@ -964,11 +964,12 @@ ul  { list-style: none; }
   .nav-hamburger { display: block; }
   .nav-bottom-bar { display: none; }
 
-  .nav-logo  { width: 88px; height: 88px; padding: 6px; }
+  .nav-logo  { width: 96px; height: 96px; padding: 0; }
   .nav-brand { font-size: 20px; }
   .nav-sub   { font-size: 9px; letter-spacing: 2px; }
 
-  .hero-photo img { height: 320px; object-position: center top; }
+  .hero-photo { aspect-ratio: 4 / 3; }
+  .hero-photo img { object-position: center top; }
 
   .headline-block  { padding: 40px 24px 16px; }
   .headline-btns   { flex-direction: column; align-items: center; }
@@ -977,7 +978,7 @@ ul  { list-style: none; }
 
   .story-section { padding: 12px 24px 56px; }
   .story-inner   { grid-template-columns: 1fr; gap: 28px; }
-  .story-photo img { height: 240px; }
+  .story-slideshow { aspect-ratio: 4 / 3; }
 
   .shop-section { padding: 12px 20px 56px; }
   .shop-grid    { grid-template-columns: 1fr; gap: 20px; }
@@ -989,8 +990,8 @@ ul  { list-style: none; }
 
   .trust-pillars { gap: 24px 36px; padding: 36px 20px; }
 
-  .closing-photo       { height: 260px; }
-  .closing-photo img   { object-position: center 20%; }
+  .closing-photo     { aspect-ratio: 16 / 9; }
+  .closing-photo img { object-position: center 20%; }
 
   .contact-section     { padding-bottom: 56px; }
   .contact-inner       { grid-template-columns: 1fr; gap: 36px; padding: 12px 20px 0; }
