@@ -59,24 +59,40 @@
   });
 
 
-  /* ─── Nav scroll shrink ─────────────────────────────────────── */
-  var nav = document.getElementById('nav');
+  /* ─── Nav (fixed) + spacer setup ───────────────────────────── */
+  var nav       = document.getElementById('nav');
+  var navSpacer = document.getElementById('navSpacer');
+
+  // Capture the full-size nav height once so the spacer never changes
+  var fullNavH = nav ? nav.offsetHeight : 0;
+  if (navSpacer) navSpacer.style.height = fullNavH + 'px';
+
+  function syncMobileNavTop() {
+    if (mobileNav && nav) mobileNav.style.top = nav.offsetHeight + 'px';
+  }
 
   function handleScroll() {
     if (!nav) return;
     var scrolled = window.scrollY > 60;
     nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
-    // Collapse to logo-only on mobile / landscape short viewports
     var smallScreen = window.innerWidth <= 768 || window.innerHeight <= 500;
     if (scrolled && smallScreen) {
       nav.classList.add('nav--compact');
     } else {
       nav.classList.remove('nav--compact');
     }
+    syncMobileNavTop();
   }
 
   window.addEventListener('scroll', handleScroll, { passive: true });
-  window.addEventListener('resize', handleScroll, { passive: true });
+  window.addEventListener('resize', function () {
+    // Re-measure full nav height on resize (orientation change etc.)
+    if (!nav.classList.contains('nav--compact')) {
+      fullNavH = nav.offsetHeight;
+      if (navSpacer) navSpacer.style.height = fullNavH + 'px';
+    }
+    handleScroll();
+  }, { passive: true });
 
 
   /* ─── Story Photo Auto-Rotate ──────────────────────────────── */

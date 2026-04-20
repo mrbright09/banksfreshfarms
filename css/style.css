@@ -67,8 +67,10 @@ ul  { list-style: none; }
   flex-direction: column;
   align-items: center;
   padding: 20px 40px 16px;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 200;
   transition: padding 0.3s ease;
 }
@@ -233,9 +235,13 @@ ul  { list-style: none; }
   background: var(--charcoal);
   padding: 32px 24px;
   border-bottom: 1px solid rgba(200,146,42,0.2);
-  position: sticky;
-  top: 68px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  /* top is set dynamically by JS to match nav height */
   z-index: 199;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
 }
 
 .mobile-nav.open { display: flex; }
