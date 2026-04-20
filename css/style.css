@@ -253,7 +253,7 @@ ul  { list-style: none; }
   background: var(--bg-dark);
   background-image: radial-gradient(ellipse at center, #7B4220 0%, #4E2512 45%, var(--bg-dark) 75%);
   text-align: center;
-  padding: 68px 40px 80px;
+  padding: 60px 40px 50px;
 }
 
 .headline-title {
@@ -367,7 +367,7 @@ ul  { list-style: none; }
   align-items: center;
   justify-content: center;
   gap: 20px;
-  padding: 48px 60px 24px;
+  padding: 28px 60px 20px;
   background: var(--bg-dark);
   background-image: radial-gradient(ellipse at center, #5A2E14 0%, var(--bg-dark) 70%);
 }
