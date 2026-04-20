@@ -999,14 +999,15 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
-  .site-nav { padding: 16px 20px 14px; position: relative; }
+  .site-nav { padding: 10px 20px 10px; position: relative; }
 
   .nav-hamburger { display: block; }
   .nav-bottom-bar { display: none; }
 
-  .nav-logo  { width: 120px; }
-  .nav-brand { font-size: 20px; }
-  .nav-sub   { font-size: 9px; letter-spacing: 2px; }
+  .nav-brand-center { gap: 4px; }
+  .nav-logo  { width: 100px; }
+  .nav-brand { font-size: 18px; }
+  .nav-sub   { font-size: 8px; letter-spacing: 2px; }
 
   .hero-photo { aspect-ratio: 4 / 3; }
   .hero-photo img { object-position: center top; }

@@ -65,17 +65,28 @@
 
   function setSpacerToFullNav() {
     if (!nav || !navSpacer) return;
-    // Temporarily strip compact so we measure the true full-size nav
     var wasCompact = nav.classList.contains('nav--compact');
     if (wasCompact) nav.classList.remove('nav--compact');
     navSpacer.style.height = nav.offsetHeight + 'px';
     if (wasCompact) nav.classList.add('nav--compact');
   }
 
-  // Measure on load, then again after fonts resolve (Playfair changes nav height)
+  // Initial measure, re-measure after fonts load, and after ALL resources
+  // (including logo img) are loaded — the logo height affects nav height
   setSpacerToFullNav();
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(setSpacerToFullNav);
+  }
+  window.addEventListener('load', setSpacerToFullNav);
+
+  // Also re-measure the moment the logo image finishes loading
+  var logoImg = nav && nav.querySelector('.nav-logo img');
+  if (logoImg) {
+    if (logoImg.complete) {
+      setSpacerToFullNav();
+    } else {
+      logoImg.addEventListener('load', setSpacerToFullNav);
+    }
   }
 
   function syncMobileNavTop() {
