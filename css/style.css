@@ -58,94 +58,37 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   NAVIGATION — centered logo layout
+   NAVIGATION — stacked centered logo
    ============================================================= */
 .site-nav {
   background: var(--charcoal);
   border-bottom: 1px solid rgba(200,146,42,0.25);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 14px 40px;
+  padding: 16px 40px 20px;
   position: sticky;
   top: 0;
   z-index: 200;
 }
 
-/* Center column: logo + brand stacked */
-.nav-center {
+/* Top row: nav links left, order now right */
+.nav-top-bar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 14px;
-  justify-content: center;
-}
-
-.nav-logo {
-  width: 80px;
-  height: 80px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--cream);
-  border-radius: 50%;
-  padding: 8px;
-  overflow: hidden;
-}
-
-.nav-logo img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
+  margin-bottom: 14px;
 }
 
-/* Fallback badge shown when logo.png is missing */
-.nav-logo--fallback {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  background: rgba(200,146,42,0.1);
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-brand-block { text-align: left; }
-
-.nav-brand {
-  font-family: 'Playfair Display', serif;
-  color: var(--cream);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.nav-sub {
-  font-size: 9px;
-  color: var(--gold);
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-top: 2px;
-}
-
-/* Left column: nav links */
 .nav-links {
   display: flex;
   gap: 28px;
   padding: 0;
-  justify-content: flex-start;
 }
 
 .nav-links a {
-  color: rgba(245,236,215,0.75);
+  color: rgba(245,236,215,0.7);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -155,12 +98,70 @@ ul  { list-style: none; }
 
 .nav-links a:hover { color: var(--gold); }
 
-/* Right column: CTA + hamburger */
 .nav-right {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 16px;
+}
+
+/* Center block: logo stacked above brand name */
+.nav-brand-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-logo {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  mix-blend-mode: lighten;
+}
+
+/* Fallback badge if logo missing */
+.nav-logo--fallback {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: rgba(200,146,42,0.1);
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  color: var(--cream);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.nav-sub {
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
 }
 
 .nav-cta {
@@ -955,25 +956,17 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
-  .site-nav {
-    grid-template-columns: auto 1fr auto;
-    padding: 10px 16px;
-    gap: 0;
-  }
+  .site-nav { padding: 12px 20px 16px; }
 
-  .nav-links  { display: none; }
-  .nav-cta    { display: none; }
+  .nav-links { display: none; }
+  .nav-cta   { display: none; }
   .nav-hamburger { display: block; }
 
-  .nav-center {
-    gap: 10px;
-    justify-content: center;
-  }
+  .nav-top-bar { margin-bottom: 10px; }
 
-  .nav-logo { width: 52px; height: 52px; padding: 6px; }
-  .nav-brand { font-size: 15px; }
-
-  .nav-right { justify-content: flex-end; }
+  .nav-logo  { width: 70px; height: 70px; }
+  .nav-brand { font-size: 20px; }
+  .nav-sub   { font-size: 9px; letter-spacing: 2px; }
 
   .hero-photo img { height: 320px; object-position: center top; }
 
