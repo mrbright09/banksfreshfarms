@@ -999,7 +999,7 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
-  .site-nav { padding: 10px 20px 10px; position: relative; }
+  .site-nav { padding: 10px 20px; }
 
   .nav-hamburger { display: block; }
   .nav-bottom-bar { display: none; }
