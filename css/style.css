@@ -5,15 +5,15 @@
 
 /* ─── Variables ──────────────────────────────────────────────── */
 :root {
-  --bg-dark:       #2C1810;
-  --bg-mid:        #3D2314;
+  --bg-dark:       #1A0D08;
+  --bg-mid:        #261208;
   --bg-card:       #8B5E3C;
   --bg-card-light: #C4956A;
   --gold:          #C8922A;
   --gold-light:    #E8B86D;
   --cream:         #F5ECD7;
   --cream-muted:   #C9B99A;
-  --charcoal:      #1A0F0A;
+  --charcoal:      #100705;
   --white:         #FFFFFF;
 }
 
