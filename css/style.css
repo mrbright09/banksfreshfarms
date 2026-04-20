@@ -253,7 +253,11 @@ ul  { list-style: none; }
   background: var(--bg-dark);
   background-image: radial-gradient(ellipse at center, #7B4220 0%, #4E2512 45%, var(--bg-dark) 75%);
   text-align: center;
-  padding: 56px 40px 28px;
+  padding: 56px 40px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .headline-title {
@@ -960,13 +964,13 @@ ul  { list-style: none; }
   .nav-hamburger { display: block; }
   .nav-bottom-bar { display: none; }
 
-  .nav-logo  { width: 72px; height: 72px; padding: 8px; }
+  .nav-logo  { width: 88px; height: 88px; padding: 6px; }
   .nav-brand { font-size: 20px; }
   .nav-sub   { font-size: 9px; letter-spacing: 2px; }
 
   .hero-photo img { height: 320px; object-position: center top; }
 
-  .headline-block  { padding: 48px 24px 56px; }
+  .headline-block  { padding: 48px 24px 28px; }
   .headline-btns   { flex-direction: column; align-items: center; }
   .btn-primary,
   .btn-outline     { width: 100%; max-width: 280px; text-align: center; }
