@@ -20,7 +20,12 @@
 /* ─── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  overflow-x: hidden; /* prevent horizontal scroll at root level */
+  max-width: 100%;
+}
 
 body {
   font-family: 'Lato', Arial, sans-serif;
@@ -28,6 +33,7 @@ body {
   color: var(--cream);
   line-height: 1.65;
   overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Grain texture overlay — fixed, sits above everything, non-interactive */
@@ -71,6 +77,8 @@ ul  { list-style: none; }
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  box-sizing: border-box;
   z-index: 200;
   transition: padding 0.3s ease;
 }
@@ -99,7 +107,7 @@ ul  { list-style: none; }
 }
 
 .nav-logo {
-  width: 160px;
+  width: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,6 +118,8 @@ ul  { list-style: none; }
   width: 100%;
   height: auto;
   display: block;
+  /* boost faint white pixels so BFF mark reads clearly on dark background */
+  filter: brightness(1.6) contrast(1.4);
 }
 
 .nav-logo--fallback {
@@ -154,7 +164,7 @@ ul  { list-style: none; }
     gap: 0;
   }
   .site-nav.nav--compact .nav-logo {
-    width: 56px;
+    width: 90px;
   }
   .site-nav.nav--compact .nav-brand,
   .site-nav.nav--compact .nav-sub {
@@ -416,10 +426,13 @@ ul  { list-style: none; }
 .divider-label {
   color: var(--gold);
   font-family: 'Playfair Display', serif;
-  font-size: clamp(16px, 3vw, 22px);
+  font-size: clamp(14px, 3vw, 22px);
   font-style: italic;
   letter-spacing: 1px;
   white-space: nowrap;
+  max-width: calc(100vw - 120px); /* never wider than viewport minus padding */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
@@ -991,7 +1004,7 @@ ul  { list-style: none; }
   .nav-hamburger { display: block; }
   .nav-bottom-bar { display: none; }
 
-  .nav-logo  { width: 110px; }
+  .nav-logo  { width: 150px; }
   .nav-brand { font-size: 20px; }
   .nav-sub   { font-size: 9px; letter-spacing: 2px; }
 
@@ -1048,7 +1061,7 @@ ul  { list-style: none; }
    ============================================================= */
 @media (max-height: 500px) and (orientation: landscape) {
   .site-nav       { padding: 8px 20px; }
-  .nav-logo       { width: 70px; }
+  .nav-logo       { width: 90px; }
   .nav-brand      { font-size: 16px; }
   .nav-sub        { display: none; }
   .nav-bottom-bar { margin-top: 6px; padding-top: 6px; }
