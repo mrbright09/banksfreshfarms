@@ -21,29 +21,28 @@
 <body>
 
   <!-- ============================================================
-       NAV — centered logo layout
+       NAV — stacked centered logo layout
   ============================================================ -->
   <nav class="site-nav" id="nav">
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#story">Our Story</a></li>
-      <li><a href="#shop">Shop</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <div class="nav-center">
+    <div class="nav-top-bar">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <a href="#shop" class="nav-cta">Order Now</a>
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+      </div>
+    </div>
+    <div class="nav-brand-center">
       <div class="nav-logo">
         <img src="images/logo.png" alt="Banks Fresh Farms Logo"
           onerror="this.style.display='none'; this.parentElement.classList.add('nav-logo--fallback');" />
       </div>
-      <div class="nav-brand-block">
-        <div class="nav-brand">Banks Fresh Farms</div>
-        <div class="nav-sub">A Georgia Grown Heritage</div>
-      </div>
-    </div>
-    <div class="nav-right">
-      <!-- SQUARE PAYMENT LINK: Replace href="#shop" with Square payment link -->
-      <a href="#shop" class="nav-cta">Order Now</a>
-      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+      <div class="nav-brand">Banks Fresh Farms</div>
+      <div class="nav-sub">A Georgia Grown Heritage</div>
     </div>
   </nav>
 
