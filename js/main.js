@@ -63,16 +63,20 @@
   var nav = document.getElementById('nav');
 
   function handleScroll() {
-    if (nav) {
-      if (window.scrollY > 60) {
-        nav.style.boxShadow = '0 2px 24px rgba(0,0,0,0.5)';
-      } else {
-        nav.style.boxShadow = 'none';
-      }
+    if (!nav) return;
+    var scrolled = window.scrollY > 60;
+    nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
+    // Collapse to logo-only on mobile / landscape short viewports
+    var smallScreen = window.innerWidth <= 768 || window.innerHeight <= 500;
+    if (scrolled && smallScreen) {
+      nav.classList.add('nav--compact');
+    } else {
+      nav.classList.remove('nav--compact');
     }
   }
 
   window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('resize', handleScroll, { passive: true });
 
 
   /* ─── Story Photo Auto-Rotate ──────────────────────────────── */

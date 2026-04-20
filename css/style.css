@@ -70,6 +70,7 @@ ul  { list-style: none; }
   position: sticky;
   top: 0;
   z-index: 200;
+  transition: padding 0.3s ease;
 }
 
 /* Hamburger — hidden on desktop, absolute on mobile */
@@ -105,6 +106,7 @@ ul  { list-style: none; }
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 .nav-logo img {
@@ -136,6 +138,9 @@ ul  { list-style: none; }
   font-weight: 700;
   line-height: 1;
   text-align: center;
+  max-height: 60px;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
 }
 
 .nav-sub {
@@ -145,6 +150,35 @@ ul  { list-style: none; }
   text-transform: uppercase;
   font-weight: 700;
   text-align: center;
+  max-height: 30px;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
+}
+
+/* ── Compact nav (triggered on scroll, mobile/landscape only) ── */
+@media (max-width: 768px), (max-height: 500px) {
+  .site-nav.nav--compact {
+    padding: 6px 20px;
+  }
+  .site-nav.nav--compact .nav-brand-center {
+    gap: 0;
+  }
+  .site-nav.nav--compact .nav-logo {
+    width: 46px;
+    height: 46px;
+  }
+  .site-nav.nav--compact .nav-brand,
+  .site-nav.nav--compact .nav-sub {
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+  .site-nav.nav--compact .nav-bottom-bar {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
 }
 
 /* Nav links + CTA row — below the brand on desktop */
@@ -1013,4 +1047,17 @@ ul  { list-style: none; }
   .headline-title { font-size: 24px; }
   .nav-brand      { font-size: 13px; }
   .divider-label  { font-size: 14px; }
+}
+
+
+/* =============================================================
+   LANDSCAPE — short viewport (phones in landscape)
+   ============================================================= */
+@media (max-height: 500px) and (orientation: landscape) {
+  .site-nav       { padding: 8px 20px; }
+  .nav-logo       { width: 52px; height: 52px; }
+  .nav-brand      { font-size: 16px; }
+  .nav-sub        { display: none; }
+  .nav-bottom-bar { margin-top: 6px; padding-top: 6px; }
+  .nav-hamburger  { top: 10px; }
 }
