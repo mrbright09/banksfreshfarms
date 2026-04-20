@@ -1009,8 +1009,8 @@ ul  { list-style: none; }
   .nav-brand { font-size: 18px; }
   .nav-sub   { font-size: 8px; letter-spacing: 2px; }
 
-  .hero-photo { aspect-ratio: 4 / 3; }
-  .hero-photo img { object-position: center top; }
+  .hero-photo { aspect-ratio: 3 / 2; }
+  .hero-photo img { object-position: center center; }
 
   .headline-block  { padding: 40px 24px 16px; }
   .headline-btns   { flex-direction: column; align-items: center; }
