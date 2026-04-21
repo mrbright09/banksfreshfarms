@@ -107,7 +107,7 @@ ul  { list-style: none; }
 }
 
 .nav-logo {
-  width: 400px;
+  width: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,7 +164,7 @@ ul  { list-style: none; }
     gap: 0;
   }
   .site-nav.nav--compact .nav-logo { /* compact scroll state */
-    width: 180px;
+    width: 300px;
   }
   .site-nav.nav--compact .nav-brand,
   .site-nav.nav--compact .nav-sub {
@@ -1005,7 +1005,7 @@ ul  { list-style: none; }
   .nav-bottom-bar { display: none; }
 
   .nav-brand-center { gap: 4px; }
-  .nav-logo  { width: 200px; }
+  .nav-logo  { width: 400px; }
   .nav-brand { font-size: 18px; }
   .nav-sub   { font-size: 8px; letter-spacing: 2px; }
 
