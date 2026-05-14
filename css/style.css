@@ -79,7 +79,11 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  transition: padding 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.3s ease;
+}
+
+.site-nav.nav--hidden {
+  transform: translateY(-100%);
 }
 
 /* Hamburger — hidden on desktop, absolute on mobile */
