@@ -23,6 +23,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
   max-width: 100%;
 }
 
@@ -79,14 +80,15 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  transition: transform 0.35s ease, box-shadow 0.3s ease;
+  transition: padding 0.3s ease;
+  /* force GPU layer so iOS Safari doesn't bleed content through on scroll */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-.site-nav.nav--hidden {
-  transform: translateY(-100%);
-}
-
-/* Hamburger — hidden on desktop, absolute on mobile */
+/* Hamburger — hidden on desktop until scroll, always shown on mobile */
 .nav-hamburger {
   display: none;
   position: absolute;
@@ -110,7 +112,7 @@ ul  { list-style: none; }
 }
 
 .nav-logo {
-  width: 700px;
+  width: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,7 +123,6 @@ ul  { list-style: none; }
   width: 100%;
   height: auto;
   display: block;
-  /* boost faint white pixels so BFF mark reads clearly on dark background */
   filter: brightness(1.6) contrast(1.4);
 }
 
@@ -141,6 +142,9 @@ ul  { list-style: none; }
   font-weight: 700;
   line-height: 1;
   text-align: center;
+  max-height: 40px;
+  overflow: hidden;
+  transition: opacity 0.25s ease, max-height 0.25s ease, margin 0.25s ease;
 }
 
 .nav-sub {
@@ -150,6 +154,39 @@ ul  { list-style: none; }
   text-transform: uppercase;
   font-weight: 700;
   text-align: center;
+  max-height: 30px;
+  overflow: hidden;
+  transition: opacity 0.25s ease, max-height 0.25s ease, margin 0.25s ease;
+}
+
+/* ── Scrolled / minimized state — all screen sizes ── */
+.site-nav.nav--scrolled {
+  padding: 6px 20px;
+}
+.site-nav.nav--scrolled .nav-logo {
+  width: 150px;
+}
+.site-nav.nav--scrolled .nav-brand-center {
+  gap: 0;
+}
+.site-nav.nav--scrolled .nav-brand,
+.site-nav.nav--scrolled .nav-sub {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Desktop: keep nav links visible on scroll — only mobile collapses to hamburger */
+@media (max-width: 768px) {
+  .site-nav.nav--scrolled .nav-bottom-bar {
+    display: none;
+  }
+  .site-nav.nav--scrolled .nav-hamburger {
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 /* Nav links + CTA row — below the brand on desktop */
@@ -250,7 +287,7 @@ ul  { list-style: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 55%;
   display: block;
 }
 
@@ -402,7 +439,7 @@ ul  { list-style: none; }
   font-style: italic;
   letter-spacing: 1px;
   white-space: nowrap;
-  max-width: calc(100vw - 120px); /* never wider than viewport minus padding */
+  max-width: calc(100vw - 120px);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -977,7 +1014,7 @@ ul  { list-style: none; }
   .nav-bottom-bar { display: none; }
 
   .nav-brand-center { gap: 4px; }
-  .nav-logo  { width: 400px; }
+  .nav-logo  { width: 180px; }
   .nav-brand { font-size: 16px; }
   .nav-sub   { font-size: 11px; letter-spacing: 1.5px; }
 
@@ -1034,7 +1071,7 @@ ul  { list-style: none; }
    ============================================================= */
 @media (max-height: 500px) and (orientation: landscape) {
   .site-nav       { padding: 8px 20px; }
-  .nav-logo       { width: 90px; }
+  .nav-logo       { width: 120px; }
   .nav-brand      { font-size: 16px; }
   .nav-sub        { display: none; }
   .nav-bottom-bar { margin-top: 6px; padding-top: 6px; }
