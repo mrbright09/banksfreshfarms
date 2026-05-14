@@ -23,7 +23,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden; /* prevent horizontal scroll at root level */
+  overflow-x: hidden;
   max-width: 100%;
 }
 
@@ -36,7 +36,6 @@ body {
   max-width: 100%;
 }
 
-/* Grain texture overlay — fixed, sits above everything, non-interactive */
 body::after {
   content: '';
   position: fixed;
@@ -51,7 +50,6 @@ img { display: block; max-width: 100%; }
 a   { text-decoration: none; color: inherit; }
 ul  { list-style: none; }
 
-/* ─── Fade-in animation ──────────────────────────────────────── */
 .fade-in {
   opacity: 0;
   transform: translateY(24px);
@@ -64,7 +62,7 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   NAVIGATION — stacked, centered
+   NAVIGATION
    ============================================================= */
 .site-nav {
   background: var(--charcoal);
@@ -83,7 +81,6 @@ ul  { list-style: none; }
   transition: padding 0.3s ease;
 }
 
-/* Hamburger — hidden on desktop, absolute on mobile */
 .nav-hamburger {
   display: none;
   position: absolute;
@@ -98,7 +95,6 @@ ul  { list-style: none; }
   z-index: 10;
 }
 
-/* Logo + brand name stacked and centered */
 .nav-brand-center {
   display: flex;
   flex-direction: column;
@@ -118,7 +114,6 @@ ul  { list-style: none; }
   width: 100%;
   height: auto;
   display: block;
-  /* boost faint white pixels so BFF mark reads clearly on dark background */
   filter: brightness(1.6) contrast(1.4);
 }
 
@@ -149,7 +144,6 @@ ul  { list-style: none; }
   text-align: center;
 }
 
-/* Nav links + CTA row — below the brand on desktop */
 .nav-bottom-bar {
   display: flex;
   align-items: center;
@@ -192,7 +186,6 @@ ul  { list-style: none; }
 
 .nav-cta:hover { background: var(--gold-light); }
 
-/* Mobile Nav Drawer */
 .mobile-nav {
   display: none;
   flex-direction: column;
@@ -204,7 +197,6 @@ ul  { list-style: none; }
   position: fixed;
   left: 0;
   right: 0;
-  /* top is set dynamically by JS to match nav height */
   z-index: 199;
   overflow-y: auto;
   max-height: calc(100vh - 60px);
@@ -233,7 +225,7 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   HERO — Full-width family photo
+   HERO
    ============================================================= */
 .hero-photo {
   width: 100%;
@@ -370,7 +362,7 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   GOLD DIVIDER — reusable between sections
+   GOLD DIVIDER
    ============================================================= */
 .section-divider-row {
   display: flex;
@@ -399,7 +391,7 @@ ul  { list-style: none; }
   font-style: italic;
   letter-spacing: 1px;
   white-space: nowrap;
-  max-width: calc(100vw - 120px); /* never wider than viewport minus padding */
+  max-width: calc(100vw - 120px);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -442,7 +434,6 @@ ul  { list-style: none; }
 
 .story-photo:hover img { transform: scale(1.03); }
 
-/* Rotating slideshow for story photos */
 .story-slideshow {
   position: relative;
   aspect-ratio: 3 / 4;
@@ -509,7 +500,7 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   SHOP — Product Cards
+   SHOP
    ============================================================= */
 .shop-section {
   background: var(--bg-mid);
@@ -560,7 +551,6 @@ ul  { list-style: none; }
 
 .shop-card:hover .shop-card-photo img { transform: scale(1.05); }
 
-/* Fallback when no photo */
 .shop-card-photo.no-photo {
   display: flex;
   align-items: center;
@@ -949,16 +939,9 @@ ul  { list-style: none; }
    ============================================================= */
 @media (max-width: 1024px) {
   .site-nav { padding: 14px 28px; }
-
   .story-inner { grid-template-columns: 260px 1fr; gap: 36px; }
-
   .shop-grid { grid-template-columns: 1fr 1fr; }
-
-  .garden-grid {
-    grid-template-columns: 1fr 1fr;
-    padding: 0 28px;
-  }
-
+  .garden-grid { grid-template-columns: 1fr 1fr; padding: 0 28px; }
   .garden-item--large { grid-column: span 2; height: 300px; }
   .garden-item        { height: 220px; }
 }
