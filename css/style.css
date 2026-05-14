@@ -88,7 +88,7 @@ ul  { list-style: none; }
   backface-visibility: hidden;
 }
 
-/* Hamburger — hidden on desktop until scroll, always shown on mobile */
+/* Hamburger — hidden on desktop, always shown on mobile */
 .nav-hamburger {
   display: none;
   position: absolute;
@@ -159,7 +159,7 @@ ul  { list-style: none; }
   transition: opacity 0.25s ease, max-height 0.25s ease, margin 0.25s ease;
 }
 
-/* ── Scrolled / minimized state — all screen sizes ── */
+/* ── Scrolled / minimized state — desktop: shrink logo + hide brand text ── */
 .site-nav.nav--scrolled {
   padding: 6px 20px;
 }
@@ -175,25 +175,6 @@ ul  { list-style: none; }
   max-height: 0;
   margin: 0;
   pointer-events: none;
-}
-
-/* Desktop: keep nav links visible on scroll — mobile collapses to hamburger-only */
-@media (max-width: 768px) {
-  .site-nav.nav--scrolled {
-    padding: 0;
-    min-height: 48px;
-  }
-  .site-nav.nav--scrolled .nav-brand-center {
-    display: none;
-  }
-  .site-nav.nav--scrolled .nav-bottom-bar {
-    display: none;
-  }
-  .site-nav.nav--scrolled .nav-hamburger {
-    display: block;
-    top: 50%;
-    transform: translateY(-50%);
-  }
 }
 
 /* Nav links + CTA row — below the brand on desktop */
@@ -251,7 +232,6 @@ ul  { list-style: none; }
   position: fixed;
   left: 0;
   right: 0;
-  /* top is set dynamically by JS to match nav height */
   z-index: 199;
   overflow-y: auto;
   max-height: calc(100vh - 60px);
@@ -1024,6 +1004,16 @@ ul  { list-style: none; }
   .nav-logo  { width: 180px; }
   .nav-brand { font-size: 16px; }
   .nav-sub   { font-size: 11px; letter-spacing: 1.5px; }
+
+  /* Scrolled: collapse to hamburger-only on mobile */
+  .site-nav.nav--scrolled { padding: 0; min-height: 48px; }
+  .site-nav.nav--scrolled .nav-brand-center { display: none; }
+  .site-nav.nav--scrolled .nav-bottom-bar { display: none; }
+  .site-nav.nav--scrolled .nav-hamburger {
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }
