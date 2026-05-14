@@ -177,8 +177,15 @@ ul  { list-style: none; }
   pointer-events: none;
 }
 
-/* Desktop: keep nav links visible on scroll — only mobile collapses to hamburger */
+/* Desktop: keep nav links visible on scroll — mobile collapses to hamburger-only */
 @media (max-width: 768px) {
+  .site-nav.nav--scrolled {
+    padding: 0;
+    min-height: 48px;
+  }
+  .site-nav.nav--scrolled .nav-brand-center {
+    display: none;
+  }
   .site-nav.nav--scrolled .nav-bottom-bar {
     display: none;
   }
