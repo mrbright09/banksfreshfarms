@@ -33,6 +33,7 @@ body {
   line-height: 1.65;
   overflow-x: hidden;
   max-width: 100%;
+  -webkit-overflow-scrolling: auto;
 }
 
 /* Grain texture overlay — fixed, sits above everything, non-interactive */
@@ -79,7 +80,8 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  transition: padding 0.4s ease-in-out;
+  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
+  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
   /* force GPU compositing layer — prevents iOS Safari bleed-through */
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);

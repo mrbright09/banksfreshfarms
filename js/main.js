@@ -89,9 +89,18 @@
     if (mobileNav && nav) mobileNav.style.top = nav.offsetHeight + 'px';
   }
 
+  function getScrollY() {
+    return Math.max(0,
+      window.pageYOffset !== undefined ? window.pageYOffset :
+      (document.documentElement.scrollTop || document.body.scrollTop || 0)
+    );
+  }
+
+  var scrollTicking = false;
+
   function handleScroll() {
     if (!nav) return;
-    var scrolled = window.scrollY > 60;
+    var scrolled = getScrollY() > 60;
     nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
     if (scrolled) {
       nav.classList.add('nav--scrolled');
@@ -100,9 +109,18 @@
       closeMobileNav();
     }
     syncMobileNavTop();
+    scrollTicking = false;
   }
 
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  function onScroll() {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      (window.requestAnimationFrame || function (fn) { setTimeout(fn, 16); })(handleScroll);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
     setSpacerToFullNav();
     handleScroll();
