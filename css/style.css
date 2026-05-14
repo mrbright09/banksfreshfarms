@@ -134,25 +134,19 @@ ul  { list-style: none; }
 .nav-brand {
   font-family: 'Playfair Display', serif;
   color: var(--cream);
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   line-height: 1;
   text-align: center;
-  max-height: 60px;
-  overflow: hidden;
-  transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
 }
 
 .nav-sub {
-  font-size: 10px;
+  font-size: 13px;
   color: var(--gold);
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   font-weight: 700;
   text-align: center;
-  max-height: 30px;
-  overflow: hidden;
-  transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
 }
 
 /* ── Compact nav (triggered on scroll, mobile/landscape only) ── */
@@ -1006,8 +1000,8 @@ ul  { list-style: none; }
 
   .nav-brand-center { gap: 4px; }
   .nav-logo  { width: 400px; }
-  .nav-brand { font-size: 18px; }
-  .nav-sub   { font-size: 8px; letter-spacing: 2px; }
+  .nav-brand { font-size: 16px; }
+  .nav-sub   { font-size: 11px; letter-spacing: 1.5px; }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }

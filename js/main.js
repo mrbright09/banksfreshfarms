@@ -97,12 +97,6 @@
     if (!nav) return;
     var scrolled = window.scrollY > 60;
     nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
-    var smallScreen = window.innerWidth <= 768 || window.innerHeight <= 500;
-    if (scrolled && smallScreen) {
-      nav.classList.add('nav--compact');
-    } else {
-      nav.classList.remove('nav--compact');
-    }
     syncMobileNavTop();
   }
 
