@@ -80,12 +80,25 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  transition: padding 0.3s ease;
-  /* force GPU layer so iOS Safari doesn't bleed content through on scroll */
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
+  transition: padding 0.4s ease-in-out;
+  /* force GPU compositing layer — prevents iOS Safari bleed-through */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+/* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
+.site-nav::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--charcoal);
+  pointer-events: none;
 }
 
 /* Hamburger — hidden on desktop, always shown on mobile */
@@ -109,6 +122,9 @@ ul  { list-style: none; }
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  overflow: hidden;
+  max-height: 300px;
+  transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out;
 }
 
 .nav-logo {
@@ -144,7 +160,7 @@ ul  { list-style: none; }
   text-align: center;
   max-height: 40px;
   overflow: hidden;
-  transition: opacity 0.25s ease, max-height 0.25s ease, margin 0.25s ease;
+  transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out, margin 0.35s ease-in-out;
 }
 
 .nav-sub {
@@ -156,7 +172,7 @@ ul  { list-style: none; }
   text-align: center;
   max-height: 30px;
   overflow: hidden;
-  transition: opacity 0.25s ease, max-height 0.25s ease, margin 0.25s ease;
+  transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out, margin 0.35s ease-in-out;
 }
 
 /* ── Scrolled / minimized state — desktop: shrink logo + hide brand text ── */
@@ -997,7 +1013,7 @@ ul  { list-style: none; }
 @media (max-width: 768px) {
   .site-nav { padding: 10px 20px; }
 
-  .nav-hamburger { display: block; }
+  .nav-hamburger { display: block; transition: top 0.35s ease-in-out; }
   .nav-bottom-bar { display: none; }
 
   .nav-brand-center { gap: 4px; }
@@ -1007,7 +1023,11 @@ ul  { list-style: none; }
 
   /* Scrolled: collapse to hamburger-only on mobile */
   .site-nav.nav--scrolled { padding: 0; min-height: 48px; }
-  .site-nav.nav--scrolled .nav-brand-center { display: none; }
+  .site-nav.nav--scrolled .nav-brand-center {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+  }
   .site-nav.nav--scrolled .nav-bottom-bar { display: none; }
   .site-nav.nav--scrolled .nav-hamburger {
     display: block;
