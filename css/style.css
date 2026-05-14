@@ -81,6 +81,11 @@ ul  { list-style: none; }
   box-sizing: border-box;
   z-index: 200;
   transition: padding 0.3s ease;
+  /* force GPU layer so iOS Safari doesn't bleed content through on scroll */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Hamburger — hidden on desktop until scroll, always shown on mobile */
