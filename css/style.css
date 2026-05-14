@@ -23,7 +23,6 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden; /* prevent horizontal scroll at root level */
   max-width: 100%;
 }
 
@@ -80,7 +79,11 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  transition: padding 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.3s ease;
+}
+
+.site-nav.nav--hidden {
+  transform: translateY(-100%);
 }
 
 /* Hamburger — hidden on desktop, absolute on mobile */
@@ -147,31 +150,6 @@ ul  { list-style: none; }
   text-transform: uppercase;
   font-weight: 700;
   text-align: center;
-}
-
-/* ── Compact nav (triggered on scroll, mobile/landscape only) ── */
-@media (max-width: 768px), (max-height: 500px) {
-  .site-nav.nav--compact {
-    padding: 6px 20px;
-  }
-  .site-nav.nav--compact .nav-brand-center {
-    gap: 0;
-  }
-  .site-nav.nav--compact .nav-logo { /* compact scroll state */
-    width: 300px;
-  }
-  .site-nav.nav--compact .nav-brand,
-  .site-nav.nav--compact .nav-sub {
-    opacity: 0;
-    max-height: 0;
-    margin: 0;
-    pointer-events: none;
-  }
-  .site-nav.nav--compact .nav-bottom-bar {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: none;
-  }
 }
 
 /* Nav links + CTA row — below the brand on desktop */
