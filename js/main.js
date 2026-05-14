@@ -65,7 +65,10 @@
 
   function setSpacerToFullNav() {
     if (!nav || !navSpacer) return;
+    var wasScrolled = nav.classList.contains('nav--scrolled');
+    if (wasScrolled) nav.classList.remove('nav--scrolled');
     navSpacer.style.height = nav.offsetHeight + 'px';
+    if (wasScrolled) nav.classList.add('nav--scrolled');
   }
 
   // Initial measure, re-measure after fonts load, and after ALL resources
@@ -94,6 +97,12 @@
     if (!nav) return;
     var scrolled = window.scrollY > 60;
     nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
+    if (scrolled) {
+      nav.classList.add('nav--scrolled');
+    } else {
+      nav.classList.remove('nav--scrolled');
+      closeMobileNav();
+    }
     syncMobileNavTop();
   }
 
