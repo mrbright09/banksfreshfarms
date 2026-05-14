@@ -33,6 +33,7 @@ body {
   line-height: 1.65;
   overflow-x: hidden;
   max-width: 100%;
+  -webkit-overflow-scrolling: auto;
 }
 
 /* Grain texture overlay — fixed, sits above everything, non-interactive */
@@ -79,10 +80,12 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
+  -webkit-transition: -webkit-transform 0.35s ease, box-shadow 0.3s ease;
   transition: transform 0.35s ease, box-shadow 0.3s ease;
 }
 
 .site-nav.nav--hidden {
+  -webkit-transform: translateY(-100%);
   transform: translateY(-100%);
 }
 

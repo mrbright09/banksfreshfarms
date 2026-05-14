@@ -67,10 +67,16 @@
   }
 
   var lastScrollY = 0;
+  var scrollTicking = false;
+
+  function getScrollY() {
+    return Math.max(0, window.pageYOffset !== undefined ? window.pageYOffset :
+      (document.documentElement.scrollTop || document.body.scrollTop || 0));
+  }
 
   function handleScroll() {
     if (!nav) return;
-    var scrollY = window.scrollY;
+    var scrollY = getScrollY();
     nav.style.boxShadow = scrollY > 60 ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
     if (scrollY > lastScrollY && scrollY > 80) {
       nav.classList.add('nav--hidden');
@@ -80,9 +86,18 @@
     }
     lastScrollY = scrollY;
     syncMobileNavTop();
+    scrollTicking = false;
   }
 
-  window.addEventListener('scroll', handleScroll, { passive: true });
+  function onScrollEvent() {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      (window.requestAnimationFrame || function (fn) { setTimeout(fn, 16); })(handleScroll);
+    }
+  }
+
+  window.addEventListener('scroll', onScrollEvent, { passive: true });
+  document.addEventListener('scroll', onScrollEvent, { passive: true });
   window.addEventListener('resize', function () { setSpacerToFullNav(); handleScroll(); }, { passive: true });
 
   var slides = document.querySelectorAll('.story-slideshow .slide');
