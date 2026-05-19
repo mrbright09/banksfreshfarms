@@ -872,6 +872,48 @@ ul  { list-style: none; }
   font-weight: 700;
 }
 
+/* Price block */
+.pack-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-top: 1px solid rgba(200,146,42,0.15);
+  border-bottom: 1px solid rgba(200,146,42,0.15);
+  padding: 14px 0;
+}
+
+.pack-price-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+}
+
+.pack-price-per {
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--cream-muted);
+}
+
+.pack-price-label {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Button group */
+.pack-card-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
 .pack-card-btn {
   display: block;
   text-align: center;
@@ -886,7 +928,6 @@ ul  { list-style: none; }
   border: 1px solid rgba(200,146,42,0.3);
   transition: background 0.2s, color 0.2s;
   cursor: pointer;
-  margin-top: auto;
 }
 .pack-card-btn:hover {
   background: rgba(200,146,42,0.15);
@@ -911,6 +952,27 @@ ul  { list-style: none; }
 .pack-card-btn--reserve:hover {
   color: var(--gold);
   border-color: var(--gold);
+}
+
+/* Secondary one-time button */
+.pack-card-btn--alt {
+  background: transparent;
+  color: var(--cream-muted);
+  border-color: rgba(255,255,255,0.12);
+  font-size: 10px;
+  padding: 10px 16px;
+}
+.pack-card-btn--alt:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--cream);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.pack-card-btn--alt-muted {
+  opacity: 0.55;
+}
+.pack-card-btn--alt-muted:hover {
+  opacity: 0.8;
 }
 
 /* Modal responsive */
