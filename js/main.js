@@ -240,10 +240,44 @@
   var packModalClose = document.getElementById('packModalClose');
   var shopEggsBtn    = document.getElementById('shopEggsBtn');
 
+  /* ─── Dozen stepper ──────────────────────────────────────── */
+  var eggsQty       = 1;
+  var EGG_PRICE     = 5;
+  var eggsQtyEl     = document.getElementById('eggsQty');
+  var eggsTotalEl   = document.getElementById('eggsStepperTotal');
+  var eggsOrderBtn  = document.getElementById('eggsOrderBtn');
+  var eggsQtyMinus  = document.getElementById('eggsQtyMinus');
+  var eggsQtyPlus   = document.getElementById('eggsQtyPlus');
+
+  function updateEggsStepper() {
+    var total = eggsQty * EGG_PRICE;
+    if (eggsQtyEl)    eggsQtyEl.textContent   = eggsQty;
+    if (eggsTotalEl)  eggsTotalEl.textContent  = '$' + total + ' total';
+    if (eggsOrderBtn) {
+      eggsOrderBtn.textContent = 'Order Now — $' + total;
+      eggsOrderBtn.setAttribute('data-order',
+        eggsQty + ' dozen pasture-raised eggs · $' + total + ' one-time');
+    }
+  }
+
+  if (eggsQtyMinus) {
+    eggsQtyMinus.addEventListener('click', function () {
+      if (eggsQty > 1) { eggsQty--; updateEggsStepper(); }
+    });
+  }
+  if (eggsQtyPlus) {
+    eggsQtyPlus.addEventListener('click', function () {
+      eggsQty++;
+      updateEggsStepper();
+    });
+  }
+
   function openPackModal() {
     if (!packModal) return;
     packModal.classList.add('open');
     document.body.style.overflow = 'hidden';
+    eggsQty = 1;
+    updateEggsStepper();
     initCalendar();
     if (window.BFF) window.BFF.loadCapacity();
   }

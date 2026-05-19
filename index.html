@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=17" />
+  <link rel="stylesheet" href="css/style.css?v=18" />
 </head>
 <body>
 
@@ -359,8 +359,17 @@
           <p class="pack-card-desc">Fresh eggs, no strings. Pick your Saturday, show up, take home a dozen straight from the farm.</p>
           <div class="pack-card-price">
             <span class="pack-price-amount">$5</span>
-            <span class="pack-price-label">one-time · 12 eggs</span>
+            <span class="pack-price-label">per dozen · 12 eggs</span>
           </div>
+          <div class="dozen-stepper">
+            <button type="button" class="stepper-btn" id="eggsQtyMinus" aria-label="Fewer dozens">&#8722;</button>
+            <span class="stepper-val">
+              <span class="stepper-qty" id="eggsQty">1</span>
+              <span class="stepper-unit">dozen</span>
+            </span>
+            <button type="button" class="stepper-btn" id="eggsQtyPlus" aria-label="More dozens">+</button>
+          </div>
+          <p class="stepper-total" id="eggsStepperTotal">$5 total</p>
           <div class="pickup-cal">
             <div class="pickup-cal-hdr">
               <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
@@ -374,9 +383,9 @@
             <div class="cal-label" id="calLabel">Select a Saturday for pickup</div>
           </div>
           <div class="pack-card-btns">
-            <button type="button" class="pack-card-btn"
+            <button type="button" class="pack-card-btn" id="eggsOrderBtn"
                data-plan="single-dozen"
-               data-order="Single Dozen — 12 pasture-raised eggs · $5 one-time"
+               data-order="1 dozen pasture-raised eggs · $5 one-time"
                data-requires-date="true">Order Now — $5</button>
           </div>
         </div>
