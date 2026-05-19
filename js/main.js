@@ -668,7 +668,7 @@
     if (!videoModal) return;
     videoModal.classList.add('open');
     document.body.style.overflow = 'hidden';
-    if (beefVideo) beefVideo.play();
+    if (beefVideo) { var p = beefVideo.play(); if (p && p.catch) p.catch(function(){}); }
   }
 
   function closeVideoModal() {

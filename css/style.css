@@ -703,6 +703,11 @@ ul  { list-style: none; }
   letter-spacing: 1.5px;
   text-transform: uppercase;
   transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .shop-card-btn:hover { background: var(--charcoal); }
