@@ -297,16 +297,10 @@ ul  { list-style: none; }
   top: 0;
   left: 0;
   right: 0;
-  height: 180px;
-  /* solid charcoal for the nav zone, then fades out */
-  background: linear-gradient(
-    to bottom,
-    var(--charcoal)  0%,
-    var(--charcoal) 52%,
-    transparent     100%
-  );
+  height: 160px;
+  background: linear-gradient(to bottom, var(--charcoal) 0%, transparent 100%);
   pointer-events: none;
-  z-index: 199;
+  z-index: 1; /* behind content, behind nav */
 }
 
 .bottom-edge-fade {
@@ -315,22 +309,24 @@ ul  { list-style: none; }
   bottom: 0;
   left: 0;
   right: 0;
-  height: 130px;
-  /* solid charcoal for the bottom-nav zone, then fades up */
-  background: linear-gradient(
-    to top,
-    var(--charcoal)  0%,
-    var(--charcoal) 48%,
-    transparent     100%
-  );
+  height: 120px;
+  background: linear-gradient(to top, var(--charcoal) 0%, transparent 100%);
   pointer-events: none;
-  z-index: 299;
+  z-index: 1; /* behind content, behind bottom nav */
 }
 
 @media (max-width: 768px) {
   .bottom-edge-fade { display: block; }
 }
 
+
+/* All page sections float above the z-index:1 edge fades */
+.hero-photo, .headline-block, .section-divider-row,
+.story-section, .shop-section, .garden-strip,
+.trust-pillars, .closing-section, .contact-section, footer {
+  position: relative;
+  z-index: 2;
+}
 
 /* =============================================================
    HERO — Full-width family photo
