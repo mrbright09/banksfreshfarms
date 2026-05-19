@@ -117,6 +117,11 @@
           var top  = contact.getBoundingClientRect().top + window.pageYOffset - navH - 16;
           window.scrollTo({ top: top, behavior: 'smooth' });
         }
+
+        var message2 = document.getElementById('contactMessage');
+        if (message2) {
+          setTimeout(function () { message2.focus(); }, 400);
+        }
       });
     });
   }
