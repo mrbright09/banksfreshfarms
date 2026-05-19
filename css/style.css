@@ -286,49 +286,6 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   SCROLL-ARTIFACT EDGE FADES
-   Fixed overlays that hide the content bleed Safari shows during
-   momentum scroll at the top and bottom of the viewport.
-   z-index sits below nav (200) / bottom-nav (300) so those bars
-   remain fully interactive.
-   ============================================================= */
-.top-edge-fade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 220px;
-  background: linear-gradient(to bottom, var(--charcoal) 0%, var(--charcoal) 78%, transparent 100%);
-  pointer-events: none;
-  z-index: 1; /* behind content, behind nav */
-}
-
-.bottom-edge-fade {
-  display: none; /* mobile only */
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 180px;
-  background: linear-gradient(to top, var(--charcoal) 0%, var(--charcoal) 78%, transparent 100%);
-  pointer-events: none;
-  z-index: 1; /* behind content, behind bottom nav */
-}
-
-@media (max-width: 768px) {
-  .bottom-edge-fade { display: block; }
-}
-
-
-/* All page sections float above the z-index:1 edge fades */
-.hero-photo, .headline-block, .section-divider-row,
-.story-section, .shop-section, .garden-strip,
-.trust-pillars, .closing-section, .contact-section, footer {
-  position: relative;
-  z-index: 2;
-}
-
-/* =============================================================
    HERO — Full-width family photo
    ============================================================= */
 .hero-photo {
@@ -1817,7 +1774,7 @@ ul  { list-style: none; }
   background: var(--charcoal);
   border-top: 1px solid rgba(200,146,42,0.22);
   z-index: 300;
-  padding-bottom: 8px;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
 }
 
 .mbn-item {
