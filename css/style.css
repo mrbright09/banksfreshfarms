@@ -286,6 +286,53 @@ ul  { list-style: none; }
 
 
 /* =============================================================
+   SCROLL-ARTIFACT EDGE FADES
+   Fixed overlays that hide the content bleed Safari shows during
+   momentum scroll at the top and bottom of the viewport.
+   z-index sits below nav (200) / bottom-nav (300) so those bars
+   remain fully interactive.
+   ============================================================= */
+.top-edge-fade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  /* solid charcoal for the nav zone, then fades out */
+  background: linear-gradient(
+    to bottom,
+    var(--charcoal)  0%,
+    var(--charcoal) 52%,
+    transparent     100%
+  );
+  pointer-events: none;
+  z-index: 199;
+}
+
+.bottom-edge-fade {
+  display: none; /* mobile only */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  /* solid charcoal for the bottom-nav zone, then fades up */
+  background: linear-gradient(
+    to top,
+    var(--charcoal)  0%,
+    var(--charcoal) 48%,
+    transparent     100%
+  );
+  pointer-events: none;
+  z-index: 299;
+}
+
+@media (max-width: 768px) {
+  .bottom-edge-fade { display: block; }
+}
+
+
+/* =============================================================
    HERO — Full-width family photo
    ============================================================= */
 .hero-photo {
