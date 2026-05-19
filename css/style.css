@@ -64,17 +64,15 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   NAVIGATION — horizontal single row (ABBC-style)
-   Logo left · hamburger/links right · fixed height 64px
+   NAVIGATION — stacked, centered
    ============================================================= */
 .site-nav {
   background: var(--charcoal);
+  border-bottom: 1px solid rgba(200,146,42,0.25);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  height: 64px;
+  padding: 20px 40px 16px;
   position: fixed;
   top: 0;
   left: 0;
@@ -82,10 +80,11 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  transition: box-shadow 0.3s ease;
+  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
+  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
 }
 
-/* Sub-pixel seal for iOS Safari gap */
+/* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
 .site-nav::after {
   content: '';
   position: absolute;
@@ -97,67 +96,128 @@ ul  { list-style: none; }
   pointer-events: none;
 }
 
-/* ── Left block: logo image + BFF / subtitle ─────────────────── */
-.nav-left {
+/* Compact "BFF" brand — shown centered in mobile scrolled state only */
+.nav-scrolled-brand {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 4px;
+  pointer-events: none;
+}
+
+/* Hamburger — hidden on desktop, always shown on mobile */
+.nav-hamburger {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 10;
+}
+
+/* Logo + brand name stacked and centered */
+.nav-brand-center {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  overflow: hidden;
+  max-height: 300px;
+  transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out;
 }
 
 .nav-logo {
-  height: 40px;
-  width: auto;
+  width: 280px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease;
 }
 
 .nav-logo img {
-  height: 40px;
-  width: auto;
+  width: 100%;
+  height: auto;
   display: block;
   filter: brightness(1.6) contrast(1.4);
 }
 
 .nav-logo--fallback {
+  width: 100px;
   font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--gold);
-}
-
-.nav-brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  text-align: center;
 }
 
 .nav-brand {
   font-family: 'Playfair Display', serif;
-  font-size: 20px;
+  color: var(--cream);
+  font-size: 22px;
   font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 3px;
   line-height: 1;
+  text-align: center;
+  max-height: 40px;
+  overflow: hidden;
+  transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out, margin 0.35s ease-in-out;
 }
 
 .nav-sub {
-  font-size: 9px;
-  letter-spacing: 1.5px;
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(245,236,215,0.45);
-  line-height: 1;
+  font-weight: 700;
+  text-align: center;
+  max-height: 30px;
+  overflow: hidden;
+  transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out, margin 0.35s ease-in-out;
 }
 
-/* ── Right block: links (desktop) + hamburger (mobile) ──────── */
-.nav-right {
+/* ── Scrolled / minimized state — desktop: shrink logo + hide brand text ── */
+.site-nav.nav--scrolled {
+  padding: 6px 20px;
+}
+.site-nav.nav--scrolled .nav-logo {
+  width: 150px;
+}
+.site-nav.nav--scrolled .nav-brand-center {
+  gap: 0;
+}
+.site-nav.nav--scrolled .nav-brand,
+.site-nav.nav--scrolled .nav-sub {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+/* Nav links + CTA row — below the brand on desktop */
+.nav-bottom-bar {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(200,146,42,0.15);
+  width: 100%;
+  justify-content: center;
 }
 
 .nav-links {
-  display: none; /* mobile: hidden — shown on desktop */
-  gap: 28px;
+  display: flex;
+  gap: 32px;
   padding: 0;
 }
 
@@ -173,7 +233,6 @@ ul  { list-style: none; }
 .nav-links a:hover { color: var(--gold); }
 
 .nav-cta {
-  display: none; /* mobile: hidden — shown on desktop */
   background: var(--gold);
   color: var(--white);
   padding: 8px 20px;
@@ -186,47 +245,6 @@ ul  { list-style: none; }
 }
 
 .nav-cta:hover { background: var(--gold-light); }
-
-/* Hamburger */
-.nav-hamburger {
-  display: block;
-  background: none;
-  border: none;
-  color: var(--cream);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 4px 0;
-  line-height: 1;
-}
-
-/* Scrolled — just add shadow, no size change */
-.site-nav.nav--scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.5); }
-
-/* ── Edge fade gradients ──────────────────────────────────────── */
-/* Blends nav into page content at the top */
-.nav-edge-fade {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: linear-gradient(to bottom, var(--charcoal) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 190;
-}
-
-/* Blends page content into bottom nav (mobile only) */
-.bottom-edge-fade {
-  display: none;
-  position: fixed;
-  bottom: 64px;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: linear-gradient(to top, var(--charcoal) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 290;
-}
 
 /* Mobile Nav Drawer */
 .mobile-nav {
@@ -1635,20 +1653,11 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   RESPONSIVE — DESKTOP (≥ 769px) — show nav links, hide hamburger
-   ============================================================= */
-@media (min-width: 769px) {
-  .nav-hamburger { display: none; }
-  .nav-links     { display: flex; }
-  .nav-cta       { display: block; }
-  .nav-edge-fade { display: none; } /* desktop has no bottom nav so no fade needed */
-}
-
-
-/* =============================================================
    RESPONSIVE — TABLET (≤ 1024px)
    ============================================================= */
 @media (max-width: 1024px) {
+  .site-nav { padding: 14px 28px; }
+
   .story-inner { grid-template-columns: 260px 1fr; gap: 36px; }
 
   .shop-grid { grid-template-columns: 1fr 1fr; }
@@ -1667,7 +1676,30 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
-  .bottom-edge-fade { display: block; }
+  .site-nav { padding: 10px 20px; }
+
+  .nav-hamburger { display: block; transition: top 0.35s ease-in-out; }
+  .nav-bottom-bar { display: none; }
+
+  .nav-brand-center { gap: 4px; }
+  .nav-logo  { width: 180px; }
+  .nav-brand { font-size: 16px; }
+  .nav-sub   { font-size: 11px; letter-spacing: 1.5px; }
+
+  /* Scrolled: collapse to hamburger-only on mobile */
+  .site-nav.nav--scrolled { padding: 0; min-height: 48px; }
+  .site-nav.nav--scrolled .nav-brand-center {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+  }
+  .site-nav.nav--scrolled .nav-bottom-bar { display: none; }
+  .site-nav.nav--scrolled .nav-hamburger {
+    display: block;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .site-nav.nav--scrolled .nav-scrolled-brand { display: block; }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }
@@ -1721,11 +1753,12 @@ ul  { list-style: none; }
    LANDSCAPE — short viewport (phones in landscape)
    ============================================================= */
 @media (max-height: 500px) and (orientation: landscape) {
-  .site-nav  { height: 52px; }
-  .nav-logo  { height: 32px; }
-  .nav-logo img { height: 32px; }
-  .nav-sub   { display: none; }
-  .nav-edge-fade { top: 52px; }
+  .site-nav       { padding: 8px 20px; }
+  .nav-logo       { width: 120px; }
+  .nav-brand      { font-size: 16px; }
+  .nav-sub        { display: none; }
+  .nav-bottom-bar { margin-top: 6px; padding-top: 6px; }
+  .nav-hamburger  { top: 10px; }
 }
 
 
