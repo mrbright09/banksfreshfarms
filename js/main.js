@@ -342,6 +342,13 @@
     var tog       = document.getElementById('pickupToggle');
     if (pickupSec) pickupSec.classList.remove('pickup-section--open');
     if (tog)       tog.classList.remove('pickup-toggle--open');
+    if (tog && pickupSec) {
+      tog.onclick = function (e) {
+        e.stopPropagation();
+        var isOpen = pickupSec.classList.toggle('pickup-section--open');
+        tog.classList.toggle('pickup-toggle--open', isOpen);
+      };
+    }
     initCalendar();
     if (window.BFF) window.BFF.loadCapacity();
   }
@@ -365,15 +372,7 @@
 
   if (packModal) {
     packModal.addEventListener('click', function (e) {
-      if (e.target === packModal) { closePackModal(); return; }
-      var toggleBtn = e.target.closest('.pickup-toggle');
-      if (toggleBtn) {
-        var pickupSec = document.getElementById('pickupSection');
-        if (pickupSec) {
-          var isOpen = pickupSec.classList.toggle('pickup-section--open');
-          toggleBtn.classList.toggle('pickup-toggle--open', isOpen);
-        }
-      }
+      if (e.target === packModal) closePackModal();
     });
 
     packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
