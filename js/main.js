@@ -373,4 +373,37 @@
     });
   }
 
+  /* ─── Mobile Bottom Nav — active section highlight ───────── */
+  var mbnItems = document.querySelectorAll('.mbn-item');
+
+  function setMbnActive(sectionId) {
+    mbnItems.forEach(function (item) {
+      item.classList.toggle('mbn-active', item.getAttribute('data-section') === sectionId);
+    });
+  }
+
+  if (mbnItems.length && 'IntersectionObserver' in window) {
+    var sectionIds = ['home', 'story', 'shop', 'contact'];
+    var sectionVisible = {};
+
+    var mbnObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        sectionVisible[entry.target.id] = entry.isIntersecting;
+      });
+      for (var i = sectionIds.length - 1; i >= 0; i--) {
+        if (sectionVisible[sectionIds[i]]) {
+          setMbnActive(sectionIds[i]);
+          break;
+        }
+      }
+    }, { threshold: 0.25 });
+
+    sectionIds.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) mbnObserver.observe(el);
+    });
+  }
+
+  setMbnActive('home');
+
 })();
