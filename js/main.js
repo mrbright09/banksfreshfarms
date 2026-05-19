@@ -338,6 +338,12 @@
   window.addEventListener('resize', function () {
     setSpacerToFullNav();
     handleScroll();
+    if (window.innerWidth > 768) {
+      var shopSection = document.querySelector('.shop-section--carousel');
+      if (shopSection) shopSection.classList.remove('shop-section--carousel');
+      var dotsWrap = document.querySelector('.shop-carousel-dots');
+      if (dotsWrap) dotsWrap.remove();
+    }
   }, { passive: true });
 
 
@@ -405,5 +411,74 @@
   }
 
   setMbnActive('home');
+
+
+  /* ─── Shop Card Carousel (mobile) ──────────────────────────── */
+  function initShopCarousel() {
+    if (window.innerWidth > 768) return;
+    var shopSection = document.querySelector('.shop-section');
+    var shopGrid    = shopSection && shopSection.querySelector('.shop-grid');
+    if (!shopGrid) return;
+    if (shopSection.classList.contains('shop-section--carousel')) return;
+
+    var cards = Array.prototype.slice.call(shopGrid.querySelectorAll('.shop-card'));
+    if (cards.length < 2) return;
+
+    shopSection.classList.add('shop-section--carousel');
+    cards.forEach(function (c) { c.classList.add('visible'); });
+
+    var idx = 0;
+    var autoTimer;
+
+    var dotsWrap = document.createElement('div');
+    dotsWrap.className = 'shop-carousel-dots';
+    var dots = cards.map(function (_, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'shop-carousel-dot';
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dotsWrap.appendChild(dot);
+      return dot;
+    });
+    shopGrid.insertAdjacentElement('afterend', dotsWrap);
+
+    function goTo(n) {
+      idx = ((n % cards.length) + cards.length) % cards.length;
+      var cardW = cards[0] ? cards[0].offsetWidth : 0;
+      shopGrid.style.transform = 'translateX(' + (-idx * (cardW + 16)) + 'px)';
+      dots.forEach(function (d, i) {
+        d.classList.toggle('shop-carousel-dot--active', i === idx);
+      });
+    }
+
+    function startAuto() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(function () { goTo(idx + 1); }, 3500);
+    }
+
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () { goTo(i); startAuto(); });
+    });
+
+    var touchStartX = 0;
+    shopGrid.addEventListener('touchstart', function (e) {
+      touchStartX = e.touches[0].clientX;
+      clearInterval(autoTimer);
+    }, { passive: true });
+    shopGrid.addEventListener('touchend', function (e) {
+      var dx = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) goTo(idx + (dx > 0 ? 1 : -1));
+      startAuto();
+    }, { passive: true });
+
+    goTo(0);
+    startAuto();
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('load', initShopCarousel);
+  } else {
+    initShopCarousel();
+  }
 
 })();
