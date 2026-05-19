@@ -283,36 +283,13 @@
       </div>
       <div class="pack-grid">
 
-        <!-- SOLO PACK -->
-        <div class="pack-card">
-          <div class="pack-card-badge">Available Now</div>
-          <div class="pack-card-icon">🥚</div>
-          <h3 class="pack-card-title">Solo Pack</h3>
-          <div class="pack-card-sub">The Fresh 6</div>
-          <p class="pack-card-desc">Low commitment, no waste. Perfect for one or two people who want real eggs without a full dozen going stale.</p>
-          <div class="pack-card-price">
-            <span class="pack-price-amount">$3</span>
-            <span class="pack-price-label">one-time · 6 eggs</span>
-          </div>
-          <ul class="pack-card-features">
-            <li>6 pasture-raised eggs</li>
-            <li>One-time order</li>
-            <li>Farm pickup — Georgia</li>
-            <li>No subscription required</li>
-          </ul>
-          <div class="pack-card-btns">
-            <button type="button" class="pack-card-btn"
-               data-order="Solo Pack — 6 pasture-raised eggs · $3 one-time">Order Now — $3</button>
-          </div>
-        </div>
-
-        <!-- WEEKLY DOZEN — RECOMMENDED -->
+        <!-- WEEKLY SUBSCRIPTION -->
         <div class="pack-card pack-card--featured">
           <div class="pack-card-badge pack-card-badge--featured">Best Value</div>
           <div class="pack-card-icon">🥚🥚</div>
           <h3 class="pack-card-title">Weekly Dozen</h3>
           <div class="pack-card-sub">Family Subscription</div>
-          <p class="pack-card-desc">Lock in your weekly supply. Always fresh, always farm direct. No store runs, no guessing — 5 dozen delivered to you every month.</p>
+          <p class="pack-card-desc">Lock in your weekly supply. Always fresh, always farm direct — 5 dozen delivered to you every month, no store runs required.</p>
           <div class="pack-card-price">
             <span class="pack-price-amount">$8<span class="pack-price-per">/wk</span></span>
             <span class="pack-price-label">5 dozen per month · cancel anytime</span>
@@ -326,8 +303,59 @@
           <div class="pack-card-btns">
             <button type="button" class="pack-card-btn pack-card-btn--featured"
                data-order="Weekly Dozen Subscription — 5 dozen/month · $8/week (cancel anytime)">Order Now — $8/wk</button>
-            <button type="button" class="pack-card-btn pack-card-btn--alt"
-               data-order="Dozen — 12 pasture-raised eggs · $6 one-time">Order Now — $6</button>
+          </div>
+        </div>
+
+        <!-- ONE-TIME DOZEN + PICKUP CALENDAR -->
+        <div class="pack-card">
+          <div class="pack-card-badge">One-Time</div>
+          <div class="pack-card-icon">🥚</div>
+          <h3 class="pack-card-title">Single Dozen</h3>
+          <div class="pack-card-sub">One-Time Purchase</div>
+          <p class="pack-card-desc">Fresh eggs, no strings. Pick your Saturday, show up, take home a dozen straight from the farm.</p>
+          <div class="pack-card-price">
+            <span class="pack-price-amount">$6</span>
+            <span class="pack-price-label">one-time · 12 eggs</span>
+          </div>
+          <div class="pickup-cal">
+            <div class="pickup-cal-hdr">
+              <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
+              <span class="cal-title" id="calTitle"></span>
+              <button type="button" class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
+            </div>
+            <div class="cal-weekdays">
+              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span class="cal-sat-hdr">Sa</span>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-label" id="calLabel">Select a Saturday for pickup</div>
+          </div>
+          <div class="pack-card-btns">
+            <button type="button" class="pack-card-btn"
+               data-order="Single Dozen — 12 pasture-raised eggs · $6 one-time"
+               data-requires-date="true">Order Now — $6</button>
+          </div>
+        </div>
+
+        <!-- SOLO PACK — COMING SOON -->
+        <div class="pack-card pack-card--reserve">
+          <div class="pack-card-badge pack-card-badge--reserve">Coming Soon</div>
+          <div class="pack-card-icon">🥚</div>
+          <h3 class="pack-card-title">Solo Pack</h3>
+          <div class="pack-card-sub">The Fresh 6</div>
+          <p class="pack-card-desc">Not available just yet. Six pasture-raised eggs — perfect for one or two people. Be the first to know when it drops.</p>
+          <div class="pack-card-price">
+            <span class="pack-price-amount">$3</span>
+            <span class="pack-price-label">coming soon · 6 eggs</span>
+          </div>
+          <ul class="pack-card-features">
+            <li>6 pasture-raised eggs</li>
+            <li>Perfect for 1–2 people</li>
+            <li>No waste, no commitment</li>
+            <li>Georgia farmland fresh</li>
+          </ul>
+          <div class="pack-card-btns">
+            <button type="button" class="pack-card-btn pack-card-btn--reserve"
+               data-order="Solo Pack interest — please notify me when the Solo Pack (6 eggs · $3) becomes available">Notify Me When Available</button>
           </div>
         </div>
 

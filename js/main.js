@@ -62,9 +62,13 @@
   var contactForm    = document.querySelector('.contact-form');
   var toastTimer;
 
-  function showToast() {
+  function showToast(msg) {
     if (!formToast) return;
     clearTimeout(toastTimer);
+    if (msg) {
+      var msgEl = formToast.querySelector('.form-toast-msg');
+      if (msgEl) msgEl.textContent = msg;
+    }
     formToast.classList.add('show');
     toastTimer = setTimeout(hideToast, 4000);
   }
@@ -86,8 +90,100 @@
       });
       if (!allFilled) {
         e.preventDefault();
-        showToast();
+        showToast('Almost there! We just need all your info so the Banks family can get back to you.');
       }
+    });
+  }
+
+  /* ─── Pickup Calendar ─────────────────────────────────────── */
+  var MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+  var calViewYear, calViewMonth, selectedPickupDate = null;
+
+  function renderCalendar() {
+    var calTitle = document.getElementById('calTitle');
+    var calGrid  = document.getElementById('calGrid');
+    var calPrev  = document.getElementById('calPrev');
+    var calNext  = document.getElementById('calNext');
+    if (!calTitle || !calGrid) return;
+
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    calTitle.textContent = MONTHS[calViewMonth] + ' ' + calViewYear;
+    if (calPrev) calPrev.disabled = (calViewYear === today.getFullYear() && calViewMonth === today.getMonth());
+
+    var firstDay    = new Date(calViewYear, calViewMonth, 1).getDay();
+    var daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+    calGrid.innerHTML = '';
+
+    for (var e = 0; e < firstDay; e++) {
+      var blank = document.createElement('div');
+      blank.className = 'cal-day';
+      calGrid.appendChild(blank);
+    }
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var date   = new Date(calViewYear, calViewMonth, d);
+      var isSat  = date.getDay() === 6;
+      var isPast = date < today;
+      var isSel  = selectedPickupDate && date.toDateString() === selectedPickupDate.toDateString();
+
+      var cell = document.createElement('button');
+      cell.type = 'button';
+      cell.textContent = d;
+      cell.disabled = !isSat || isPast;
+      cell.className = 'cal-day' +
+        (isSat && !isPast ? ' cal-day--sat' : '') +
+        (isSel            ? ' cal-day--sel'  : '');
+
+      if (isSat && !isPast) {
+        (function (captured) {
+          cell.addEventListener('click', function () {
+            selectedPickupDate = captured;
+            renderCalendar();
+            updateCalLabel();
+          });
+        })(new Date(calViewYear, calViewMonth, d));
+      }
+      calGrid.appendChild(cell);
+    }
+  }
+
+  function updateCalLabel() {
+    var calLabel = document.getElementById('calLabel');
+    if (!calLabel) return;
+    if (selectedPickupDate) {
+      calLabel.textContent = '✓ Pickup: ' + MONTHS[selectedPickupDate.getMonth()] +
+        ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
+      calLabel.classList.add('cal-label--set');
+    } else {
+      calLabel.textContent = 'Select a Saturday for pickup';
+      calLabel.classList.remove('cal-label--set');
+    }
+  }
+
+  function initCalendar() {
+    var now = new Date();
+    calViewYear  = now.getFullYear();
+    calViewMonth = now.getMonth();
+    selectedPickupDate = null;
+    renderCalendar();
+    updateCalLabel();
+  }
+
+  var calPrevBtn = document.getElementById('calPrev');
+  var calNextBtn = document.getElementById('calNext');
+  if (calPrevBtn) {
+    calPrevBtn.addEventListener('click', function () {
+      calViewMonth--;
+      if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+      renderCalendar();
+    });
+  }
+  if (calNextBtn) {
+    calNextBtn.addEventListener('click', function () {
+      calViewMonth++;
+      if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+      renderCalendar();
     });
   }
 
@@ -100,6 +196,7 @@
     if (!packModal) return;
     packModal.classList.add('open');
     document.body.style.overflow = 'hidden';
+    initCalendar();
   }
 
   function closePackModal() {
@@ -126,11 +223,24 @@
 
     packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var order = btn.getAttribute('data-order');
+        var order        = btn.getAttribute('data-order');
+        var requiresDate = btn.getAttribute('data-requires-date') === 'true';
+
+        if (requiresDate && !selectedPickupDate) {
+          showToast('Please select a Saturday for pickup before placing your order.');
+          return;
+        }
+
+        var fullOrder = order || '';
+        if (requiresDate && selectedPickupDate) {
+          fullOrder += ' · Pickup: Saturday ' + MONTHS[selectedPickupDate.getMonth()] +
+            ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
+        }
+
         closePackModal();
 
         setTimeout(function () {
-          if (order) {
+          if (fullOrder) {
             var inquiry = document.getElementById('contactInquiry');
             var message = document.getElementById('contactMessage');
             if (inquiry) {
@@ -142,7 +252,7 @@
               }
             }
             if (message) {
-              message.value = "I'd like to order: " + order;
+              message.value = "I'd like to order: " + fullOrder;
             }
           }
 
