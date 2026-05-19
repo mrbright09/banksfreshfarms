@@ -24,7 +24,6 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 
@@ -34,6 +33,7 @@ body {
   color: var(--cream);
   line-height: 1.65;
   max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Grain texture overlay — fixed, sits above everything, non-interactive */
