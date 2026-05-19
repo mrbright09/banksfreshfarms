@@ -1116,6 +1116,7 @@ ul  { list-style: none; }
   justify-content: center;
   transition: background 0.15s;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   padding: 0;
 }
 .stepper-btn:active { background: rgba(200,146,42,0.28); }
@@ -1367,7 +1368,7 @@ ul  { list-style: none; }
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
-  .pack-card--reserve { order: 3; grid-column: 1 / -1; max-width: 320px; margin: 0 auto; }
+  .pack-card--reserve { grid-column: 1 / -1; max-width: 320px; margin: 0 auto; }
 }
 
 @media (max-width: 600px) {
@@ -1380,7 +1381,6 @@ ul  { list-style: none; }
     gap: 16px;
   }
   .pack-card--reserve { max-width: 100%; }
-  .pack-card--featured { order: -1; }
 }
 
 /* =============================================================
