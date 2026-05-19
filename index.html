@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=20" />
+  <link rel="stylesheet" href="css/style.css?v=21" />
 </head>
 <body>
 
@@ -339,23 +339,53 @@
             <button type="button" class="stepper-btn" id="eggsQtyPlus" aria-label="More dozens">+</button>
           </div>
           <p class="stepper-total" id="eggsStepperTotal">$5 total</p>
-          <div class="pickup-cal">
-            <div class="pickup-cal-hdr">
-              <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
-              <span class="cal-title" id="calTitle"></span>
-              <button type="button" class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
+          <button type="button" class="pickup-toggle" id="pickupToggle">
+            Schedule Your Pickup <span class="pickup-toggle-chevron">&#9660;</span>
+          </button>
+          <div class="pickup-section" id="pickupSection">
+            <div class="pickup-radios">
+              <label class="pickup-radio">
+                <input type="radio" name="pickupType" value="farm" />
+                <span class="pickup-radio-ui"></span>
+                <span class="pickup-radio-text">
+                  <span class="pickup-radio-name">Farm Pickup</span>
+                  <span class="pickup-radio-detail">Saturdays &middot; Georgia Farm</span>
+                </span>
+              </label>
+              <label class="pickup-radio">
+                <input type="radio" name="pickupType" value="church" />
+                <span class="pickup-radio-ui"></span>
+                <span class="pickup-radio-text">
+                  <span class="pickup-radio-name">Church Drop-off</span>
+                  <span class="pickup-radio-detail">Sundays &middot; Savannah, GA</span>
+                </span>
+              </label>
+              <label class="pickup-radio">
+                <input type="radio" name="pickupType" value="atlanta" />
+                <span class="pickup-radio-ui"></span>
+                <span class="pickup-radio-text">
+                  <span class="pickup-radio-name">City Pickup</span>
+                  <span class="pickup-radio-detail">Saturdays &middot; Atlanta, GA</span>
+                </span>
+              </label>
             </div>
-            <div class="cal-weekdays">
-              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span class="cal-sat-hdr">Sa</span>
+            <div class="pickup-cal" id="pickupCal">
+              <div class="pickup-cal-hdr">
+                <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
+                <span class="cal-title" id="calTitle"></span>
+                <button type="button" class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
+              </div>
+              <div class="cal-weekdays">
+                <span id="calSunHdr">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span id="calSatHdr" class="cal-sat-hdr">Sa</span>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+              <div class="cal-label" id="calLabel"></div>
             </div>
-            <div class="cal-grid" id="calGrid"></div>
-            <div class="cal-label" id="calLabel">Select a Saturday for pickup</div>
           </div>
           <div class="pack-card-btns">
             <button type="button" class="pack-card-btn" id="eggsOrderBtn"
                data-plan="single-dozen"
-               data-order="1 dozen pasture-raised eggs · $5 one-time"
-               data-requires-date="true">Order Now — $5</button>
+               data-order="1 dozen pasture-raised eggs · $5 one-time">Order Now — $5</button>
           </div>
         </div>
 

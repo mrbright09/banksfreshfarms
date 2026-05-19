@@ -1258,13 +1258,127 @@ ul  { list-style: none; }
 }
 
 /* ── Pickup Calendar ───────────────────────────────────────── */
+/* ─── Schedule pickup toggle ───────────────────────────────────── */
+.pickup-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 16px;
+  background: rgba(200,146,42,0.08);
+  border: 1px solid rgba(200,146,42,0.35);
+  border-radius: 6px;
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  margin-bottom: 0;
+}
+.pickup-toggle:hover { background: rgba(200,146,42,0.14); }
+
+.pickup-toggle-chevron {
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.25s;
+}
+.pickup-toggle--open .pickup-toggle-chevron { transform: rotate(180deg); }
+
+/* ─── Pickup section (radios + calendar) ──────────────────────── */
+.pickup-section {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.pickup-section--open { max-height: 700px; }
+
+/* ─── Pickup type radios ──────────────────────────────────────── */
+.pickup-radios {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+
+.pickup-radio {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(200,146,42,0.2);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pickup-radio:hover { background: rgba(200,146,42,0.06); }
+.pickup-radio:has(input:checked) {
+  background: rgba(200,146,42,0.12);
+  border-color: var(--gold);
+}
+
+.pickup-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pickup-radio-ui {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(200,146,42,0.45);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s;
+}
+.pickup-radio-ui::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.pickup-radio:has(input:checked) .pickup-radio-ui { border-color: var(--gold); }
+.pickup-radio:has(input:checked) .pickup-radio-ui::after { opacity: 1; }
+
+.pickup-radio-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pickup-radio-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+}
+.pickup-radio-detail {
+  font-size: 10px;
+  color: var(--cream-muted);
+  letter-spacing: 0.4px;
+}
+
+/* ─── Pickup calendar ─────────────────────────────────────────── */
 .pickup-cal {
+  display: none;
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(200,146,42,0.18);
   border-radius: 8px;
   padding: 12px 10px 10px;
-  margin: 16px 0 20px;
+  margin: 12px 0 4px;
 }
+.pickup-cal--visible { display: block; }
 
 .pickup-cal-hdr {
   display: flex;

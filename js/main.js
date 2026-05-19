@@ -146,7 +146,7 @@
   /* ─── Pickup Calendar ─────────────────────────────────────── */
   var MONTHS = ['January','February','March','April','May','June',
                 'July','August','September','October','November','December'];
-  var calViewYear, calViewMonth, selectedPickupDate = null;
+  var calViewYear, calViewMonth, selectedPickupDate = null, pickupType = null;
 
   function renderCalendar() {
     var calTitle = document.getElementById('calTitle');
@@ -170,20 +170,21 @@
     }
 
     for (var d = 1; d <= daysInMonth; d++) {
-      var date   = new Date(calViewYear, calViewMonth, d);
-      var isSat  = date.getDay() === 6;
-      var isPast = date < today;
-      var isSel  = selectedPickupDate && date.toDateString() === selectedPickupDate.toDateString();
+      var date       = new Date(calViewYear, calViewMonth, d);
+      var dow        = date.getDay();
+      var isPickupDay = pickupType === 'church' ? dow === 0 : dow === 6;
+      var isPast     = date < today;
+      var isSel      = selectedPickupDate && date.toDateString() === selectedPickupDate.toDateString();
 
       var cell = document.createElement('button');
       cell.type = 'button';
       cell.textContent = d;
-      cell.disabled = !isSat || isPast;
+      cell.disabled = !isPickupDay || isPast;
       cell.className = 'cal-day' +
-        (isSat && !isPast ? ' cal-day--sat' : '') +
-        (isSel            ? ' cal-day--sel'  : '');
+        (isPickupDay && !isPast ? ' cal-day--sat' : '') +
+        (isSel                  ? ' cal-day--sel'  : '');
 
-      if (isSat && !isPast) {
+      if (isPickupDay && !isPast) {
         (function (captured) {
           cell.addEventListener('click', function () {
             selectedPickupDate = captured;
@@ -200,11 +201,14 @@
     var calLabel = document.getElementById('calLabel');
     if (!calLabel) return;
     if (selectedPickupDate) {
-      calLabel.textContent = '✓ Pickup: ' + MONTHS[selectedPickupDate.getMonth()] +
+      var dayName = pickupType === 'church' ? 'Sunday' : 'Saturday';
+      calLabel.textContent = '✓ ' + dayName + ' ' + MONTHS[selectedPickupDate.getMonth()] +
         ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
       calLabel.classList.add('cal-label--set');
     } else {
-      calLabel.textContent = 'Select a Saturday for pickup';
+      calLabel.textContent = pickupType === 'church' ? 'Select a Sunday for drop-off' :
+                             pickupType === 'atlanta' ? 'Select a Saturday — Atlanta' :
+                             'Select a Saturday — Farm Pickup';
       calLabel.classList.remove('cal-label--set');
     }
   }
@@ -214,9 +218,48 @@
     calViewYear  = now.getFullYear();
     calViewMonth = now.getMonth();
     selectedPickupDate = null;
+    pickupType = null;
+    document.querySelectorAll('input[name="pickupType"]').forEach(function (r) { r.checked = false; });
+    var pickupCal = document.getElementById('pickupCal');
+    if (pickupCal) pickupCal.classList.remove('pickup-cal--visible');
+    var calSatHdr = document.getElementById('calSatHdr');
+    var calSunHdr = document.getElementById('calSunHdr');
+    if (calSatHdr) calSatHdr.className = 'cal-sat-hdr';
+    if (calSunHdr) calSunHdr.className = '';
     renderCalendar();
     updateCalLabel();
   }
+
+  /* ─── Schedule toggle ────────────────────────────────────────── */
+  var pickupToggle  = document.getElementById('pickupToggle');
+  var pickupSection = document.getElementById('pickupSection');
+  if (pickupToggle && pickupSection) {
+    pickupToggle.addEventListener('click', function () {
+      var isOpen = pickupSection.classList.toggle('pickup-section--open');
+      pickupToggle.classList.toggle('pickup-toggle--open', isOpen);
+    });
+  }
+
+  /* ─── Pickup type radios ─────────────────────────────────────── */
+  document.querySelectorAll('input[name="pickupType"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      pickupType = radio.value;
+      selectedPickupDate = null;
+      var calSatHdr = document.getElementById('calSatHdr');
+      var calSunHdr = document.getElementById('calSunHdr');
+      if (pickupType === 'church') {
+        if (calSatHdr) calSatHdr.className = '';
+        if (calSunHdr) calSunHdr.className = 'cal-sat-hdr';
+      } else {
+        if (calSatHdr) calSatHdr.className = 'cal-sat-hdr';
+        if (calSunHdr) calSunHdr.className = '';
+      }
+      renderCalendar();
+      updateCalLabel();
+      var pickupCal = document.getElementById('pickupCal');
+      if (pickupCal) pickupCal.classList.add('pickup-cal--visible');
+    });
+  });
 
   var calPrevBtn = document.getElementById('calPrev');
   var calNextBtn = document.getElementById('calNext');
@@ -272,12 +315,42 @@
     });
   }
 
+  /* Pre-handler: validate pickup type + date, build order string before generic handler reads it */
+  if (eggsOrderBtn) {
+    eggsOrderBtn.addEventListener('click', function (e) {
+      if (!pickupType) {
+        showToast('Please choose a pickup option first.');
+        e.stopImmediatePropagation();
+        return;
+      }
+      if (!selectedPickupDate) {
+        showToast('Please select a date for your pickup.');
+        e.stopImmediatePropagation();
+        return;
+      }
+      var total     = eggsQty * EGG_PRICE;
+      var dayName   = pickupType === 'church' ? 'Sunday' : 'Saturday';
+      var typeLabel = pickupType === 'farm'    ? 'Farm Pickup · Georgia' :
+                      pickupType === 'church'  ? 'Church Drop-off · Savannah GA' :
+                                                 'City Pickup · Atlanta GA';
+      var dateStr   = MONTHS[selectedPickupDate.getMonth()] + ' ' +
+                      selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
+      eggsOrderBtn.setAttribute('data-order',
+        eggsQty + ' dozen pasture-raised eggs · $' + total + ' · ' +
+        typeLabel + ' · ' + dayName + ' ' + dateStr);
+    });
+  }
+
   function openPackModal() {
     if (!packModal) return;
     packModal.classList.add('open');
     document.body.style.overflow = 'hidden';
     eggsQty = 1;
     updateEggsStepper();
+    var pickupSec = document.getElementById('pickupSection');
+    var tog       = document.getElementById('pickupToggle');
+    if (pickupSec) pickupSec.classList.remove('pickup-section--open');
+    if (tog)       tog.classList.remove('pickup-toggle--open');
     initCalendar();
     if (window.BFF) window.BFF.loadCapacity();
   }
