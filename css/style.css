@@ -1536,6 +1536,7 @@ ul  { list-style: none; }
 .contact-detail {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 14px;
   color: var(--cream);
