@@ -218,7 +218,7 @@
         </div>
         <div class="form-row">
           <input type="email" name="Email" placeholder="Email Address" required />
-          <input type="tel" name="Phone" placeholder="Phone Number" />
+          <input type="tel" name="Phone" placeholder="Phone Number" required />
         </div>
         <select name="Inquiry Type" id="contactInquiry" required>
           <option value="" disabled selected>I'm interested in...</option>
@@ -264,6 +264,13 @@
       </div>
     </div>
   </footer>
+
+  <!-- FORM VALIDATION TOAST -->
+  <div class="form-toast" id="formToast" role="alert" aria-live="assertive">
+    <span class="form-toast-icon">✦</span>
+    <span class="form-toast-msg">Almost there! We just need all your info so the Banks family can get back to you.</span>
+    <button class="form-toast-close" id="formToastClose" aria-label="Dismiss">&times;</button>
+  </div>
 
   <!-- EGGS PACK MODAL -->
   <div class="pack-modal-backdrop" id="packModal" role="dialog" aria-modal="true" aria-labelledby="packModalTitle">

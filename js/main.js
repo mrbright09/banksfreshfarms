@@ -56,6 +56,41 @@
     if (e.key === 'Escape') { closeMobileNav(); closePackModal(); }
   });
 
+  /* ─── Form Validation Toast ──────────────────────────────── */
+  var formToast      = document.getElementById('formToast');
+  var formToastClose = document.getElementById('formToastClose');
+  var contactForm    = document.querySelector('.contact-form');
+  var toastTimer;
+
+  function showToast() {
+    if (!formToast) return;
+    clearTimeout(toastTimer);
+    formToast.classList.add('show');
+    toastTimer = setTimeout(hideToast, 4000);
+  }
+
+  function hideToast() {
+    if (formToast) formToast.classList.remove('show');
+  }
+
+  if (formToastClose) {
+    formToastClose.addEventListener('click', hideToast);
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
+      var fields = contactForm.querySelectorAll('input[required], select[required], textarea[required]');
+      var allFilled = true;
+      fields.forEach(function (field) {
+        if (!field.value.trim()) allFilled = false;
+      });
+      if (!allFilled) {
+        e.preventDefault();
+        showToast();
+      }
+    });
+  }
+
   /* ─── Eggs Pack Modal ─────────────────────────────────────── */
   var packModal      = document.getElementById('packModal');
   var packModalClose = document.getElementById('packModalClose');
