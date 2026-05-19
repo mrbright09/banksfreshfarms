@@ -90,38 +90,37 @@
     });
 
     packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
+      btn.addEventListener('click', function () {
         var order = btn.getAttribute('data-order');
         closePackModal();
 
-        if (order) {
-          var inquiry  = document.getElementById('contactInquiry');
-          var message  = document.getElementById('contactMessage');
-          if (inquiry) {
-            for (var i = 0; i < inquiry.options.length; i++) {
-              if (inquiry.options[i].text === 'Poultry / Eggs Order') {
-                inquiry.selectedIndex = i;
-                break;
+        setTimeout(function () {
+          if (order) {
+            var inquiry = document.getElementById('contactInquiry');
+            var message = document.getElementById('contactMessage');
+            if (inquiry) {
+              for (var i = 0; i < inquiry.options.length; i++) {
+                if (inquiry.options[i].text === 'Poultry / Eggs Order') {
+                  inquiry.selectedIndex = i;
+                  break;
+                }
               }
             }
+            if (message) {
+              message.value = "I'd like to order: " + order;
+            }
           }
-          if (message) {
-            message.value = "I'd like to order: " + order;
+
+          var contact = document.getElementById('contact');
+          if (contact) {
+            var navH = nav ? nav.offsetHeight : 0;
+            var top  = contact.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+            window.scrollTo({ top: top, behavior: 'smooth' });
           }
-        }
 
-        var contact = document.getElementById('contact');
-        if (contact) {
-          var navH = nav ? nav.offsetHeight : 0;
-          var top  = contact.getBoundingClientRect().top + window.pageYOffset - navH - 16;
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        }
-
-        var message2 = document.getElementById('contactMessage');
-        if (message2) {
-          setTimeout(function () { message2.focus(); }, 400);
-        }
+          var msg = document.getElementById('contactMessage');
+          if (msg) { setTimeout(function () { msg.focus(); }, 400); }
+        }, 50);
       });
     });
   }
