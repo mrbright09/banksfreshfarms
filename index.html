@@ -16,31 +16,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
 </head>
 <body>
 
   <!-- ============================================================
-       NAV — stacked centered logo layout
+       NAV — horizontal row, logo left / hamburger right
   ============================================================ -->
   <nav class="site-nav" id="nav">
-    <!-- Hamburger — absolute top-right on mobile, hidden on desktop -->
-    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
-    <!-- Compact brand shown only in mobile scrolled state -->
-    <span class="nav-scrolled-brand" aria-hidden="true">BFF</span>
-
-    <!-- Always-centered brand block -->
-    <div class="nav-brand-center">
+    <!-- Left: logo + brand -->
+    <div class="nav-left">
       <div class="nav-logo">
         <img src="images/logo.png" alt="Banks Fresh Farms Logo"
           onerror="this.style.display='none'; this.parentElement.classList.add('nav-logo--fallback');" />
       </div>
-      <div class="nav-brand">Banks Fresh Farms</div>
-      <div class="nav-sub">A Georgia Grown Heritage</div>
+      <div class="nav-brand-text">
+        <div class="nav-brand">BFF</div>
+        <div class="nav-sub">Banks Fresh Farms</div>
+      </div>
     </div>
 
-    <!-- Nav links + CTA — desktop only -->
-    <div class="nav-bottom-bar">
+    <!-- Right: desktop links + CTA + hamburger -->
+    <div class="nav-right">
       <ul class="nav-links" id="navLinks">
         <li><a href="#home">Home</a></li>
         <li><a href="#story">Our Story</a></li>
@@ -48,8 +45,12 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
       <a href="#shop" class="nav-cta">Order Now</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
     </div>
   </nav>
+
+  <!-- Top gradient fade — blends nav into page content -->
+  <div class="nav-edge-fade" aria-hidden="true"></div>
 
   <!-- Mobile nav drawer -->
   <div class="mobile-nav" id="mobileNav">
@@ -272,6 +273,9 @@
       </div>
     </div>
   </footer>
+
+  <!-- Bottom gradient fade — blends page content into bottom nav -->
+  <div class="bottom-edge-fade" aria-hidden="true"></div>
 
   <!-- MOBILE BOTTOM NAV -->
   <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile navigation">
