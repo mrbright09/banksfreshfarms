@@ -664,18 +664,44 @@
   var beefVideo       = document.getElementById('beefVideo');
   var beefBtn         = document.getElementById('beefLearnMoreBtn');
 
+  function requestFullscreen(el) {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen();
+  }
+
+  function exitFullscreen() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+
   function openVideoModal() {
     if (!videoModal) return;
     videoModal.classList.add('open');
     document.body.style.overflow = 'hidden';
-    if (beefVideo) { var p = beefVideo.play(); if (p && p.catch) p.catch(function(){}); }
+    if (beefVideo) {
+      var p = beefVideo.play();
+      var doFs = function () { requestFullscreen(beefVideo); };
+      if (p && p.then) { p.then(doFs).catch(function(){}); }
+      else { doFs(); }
+    }
   }
 
   function closeVideoModal() {
     if (!videoModal) return;
+    exitFullscreen();
     videoModal.classList.remove('open');
     document.body.style.overflow = '';
     if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
+  }
+
+  if (beefVideo) {
+    beefVideo.addEventListener('fullscreenchange', function () {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
+    });
+    beefVideo.addEventListener('webkitfullscreenchange', function () {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
+    });
   }
 
   if (beefBtn) beefBtn.addEventListener('click', openVideoModal);
