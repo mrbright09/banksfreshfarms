@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BFF Admin — Pickup Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- ── Login ─────────────────────────────────────────── -->
+  <div id="loginScreen">
+    <div class="login-wrap">
+      <div class="login-logo">BFF</div>
+      <h1 class="login-title">Admin Login</h1>
+      <p class="login-sub">Banks Fresh Farms · Pickup Tracker</p>
+      <form id="loginForm" novalidate>
+        <input id="adminEmail"    type="email"    placeholder="Email address" autocomplete="username"     required />
+        <input id="adminPassword" type="password" placeholder="Password"      autocomplete="current-password" required />
+        <p class="login-error" id="loginError"></p>
+        <button type="submit" id="loginBtn">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ── Dashboard ─────────────────────────────────────── -->
+  <div id="dashboard" style="display:none">
+
+    <header class="adm-header">
+      <div class="adm-header-left">
+        <span class="adm-logo">BFF</span>
+        <span class="adm-title">Pickup Tracker</span>
+      </div>
+      <div class="adm-header-right">
+        <button class="adm-refresh" id="refreshBtn" title="Refresh">↻</button>
+        <button class="adm-signout" id="logoutBtn">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="adm-summary" id="admSummary"></div>
+
+    <main class="adm-list" id="admList">
+      <div class="adm-loading">Loading subscribers…</div>
+    </main>
+
+  </div>
+
+
+  <!-- ── Toast ─────────────────────────────────────────── -->
+  <div class="adm-toast" id="admToast"></div>
+
+
+  <script src="js/bff-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
