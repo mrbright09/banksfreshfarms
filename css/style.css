@@ -524,8 +524,11 @@ ul  { list-style: none; }
 }
 
 .btn-story {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   margin-top: 24px;
+  margin-left: auto;
+  margin-right: auto;
   border: 1px solid rgba(200,146,42,0.5);
   color: var(--cream-muted);
   background: transparent;
@@ -1416,6 +1419,7 @@ ul  { list-style: none; }
   margin-bottom: 16px;
   line-height: 1.22;
   font-weight: 700;
+  text-align: center;
 }
 
 .contact-desc {
@@ -1423,6 +1427,7 @@ ul  { list-style: none; }
   font-size: 15px;
   margin-bottom: 28px;
   line-height: 1.7;
+  text-align: center;
 }
 
 .contact-detail {
