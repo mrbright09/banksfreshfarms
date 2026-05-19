@@ -27,13 +27,6 @@ html {
   overflow-x: hidden;
 }
 
-/* Clips horizontal overflow without trapping position:fixed elements
-   (unlike overflow-x:hidden on body, which breaks fixed nav on iOS Safari) */
-#page-wrap {
-  overflow-x: hidden;
-  width: 100%;
-  position: relative;
-}
 
 body {
   font-family: 'Lato', Arial, sans-serif;
@@ -704,10 +697,9 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   SHOP CAROUSEL (mobile only)
+   SHOP CAROUSEL (mobile only) — native scroll + scroll-snap
+   Keeps all overflow inside .shop-grid; nothing leaks to the page.
    ============================================================= */
-.shop-section--carousel { overflow: hidden; }
-
 .shop-section--carousel .shop-grid {
   display: flex;
   flex-wrap: nowrap;
@@ -715,13 +707,19 @@ ul  { list-style: none; }
   padding: 0 20px 20px;
   margin: 0;
   max-width: none;
-  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.shop-section--carousel .shop-grid::-webkit-scrollbar { display: none; }
 
 .shop-section--carousel .shop-card {
   flex: 0 0 82vw;
   max-width: 82vw;
+  scroll-snap-align: start;
 }
 
 .shop-carousel-dots {

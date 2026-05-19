@@ -498,13 +498,21 @@
     });
     shopGrid.insertAdjacentElement('afterend', dotsWrap);
 
-    function goTo(n) {
+    function updateDots(n) {
       idx = ((n % cards.length) + cards.length) % cards.length;
-      var cardW = cards[0] ? cards[0].offsetWidth : 0;
-      shopGrid.style.transform = 'translateX(' + (-idx * (cardW + 16)) + 'px)';
       dots.forEach(function (d, i) {
         d.classList.toggle('shop-carousel-dot--active', i === idx);
       });
+    }
+
+    function cardStride() {
+      return cards[0] ? cards[0].offsetWidth + 16 : 0;
+    }
+
+    function goTo(n) {
+      n = ((n % cards.length) + cards.length) % cards.length;
+      shopGrid.scrollTo({ left: n * cardStride(), behavior: 'smooth' });
+      updateDots(n);
     }
 
     function startAuto() {
@@ -512,22 +520,30 @@
       autoTimer = setInterval(function () { goTo(idx + 1); }, 3500);
     }
 
+    /* Sync dots when user swipes natively */
+    var scrollDebounce;
+    shopGrid.addEventListener('scroll', function () {
+      clearTimeout(scrollDebounce);
+      scrollDebounce = setTimeout(function () {
+        var stride = cardStride();
+        if (!stride) return;
+        var newIdx = Math.round(shopGrid.scrollLeft / stride);
+        if (newIdx !== idx) updateDots(newIdx);
+      }, 80);
+    }, { passive: true });
+
+    shopGrid.addEventListener('touchstart', function () {
+      clearInterval(autoTimer);
+    }, { passive: true });
+    shopGrid.addEventListener('touchend', function () {
+      startAuto();
+    }, { passive: true });
+
     dots.forEach(function (dot, i) {
       dot.addEventListener('click', function () { goTo(i); startAuto(); });
     });
 
-    var touchStartX = 0;
-    shopGrid.addEventListener('touchstart', function (e) {
-      touchStartX = e.touches[0].clientX;
-      clearInterval(autoTimer);
-    }, { passive: true });
-    shopGrid.addEventListener('touchend', function (e) {
-      var dx = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(dx) > 40) goTo(idx + (dx > 0 ? 1 : -1));
-      startAuto();
-    }, { passive: true });
-
-    goTo(0);
+    updateDots(0);
     startAuto();
   }
 
