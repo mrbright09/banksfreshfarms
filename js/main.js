@@ -658,4 +658,32 @@
     initShopCarousel();
   }
 
+  /* ─── Beef video modal ───────────────────────────────────────── */
+  var videoModal      = document.getElementById('videoModal');
+  var videoModalClose = document.getElementById('videoModalClose');
+  var beefVideo       = document.getElementById('beefVideo');
+  var beefBtn         = document.getElementById('beefLearnMoreBtn');
+
+  function openVideoModal() {
+    if (!videoModal) return;
+    videoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (beefVideo) beefVideo.play();
+  }
+
+  function closeVideoModal() {
+    if (!videoModal) return;
+    videoModal.classList.remove('open');
+    document.body.style.overflow = '';
+    if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
+  }
+
+  if (beefBtn) beefBtn.addEventListener('click', openVideoModal);
+  if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
+  if (videoModal) {
+    videoModal.addEventListener('click', function (e) {
+      if (e.target === videoModal) closeVideoModal();
+    });
+  }
+
 })();

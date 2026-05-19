@@ -825,6 +825,51 @@ ul  { list-style: none; }
 /* =============================================================
    EGGS PACK MODAL
    ============================================================= */
+/* =============================================================
+   VIDEO MODAL
+   ============================================================= */
+.video-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.94);
+  z-index: 550;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.video-modal-backdrop.open {
+  display: flex;
+}
+.video-modal {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+}
+.video-modal video {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  background: #000;
+  max-height: 80vh;
+}
+.video-modal-close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.video-modal-close:hover { color: var(--gold); }
+
 .pack-modal-backdrop {
   display: none;
   position: fixed;
