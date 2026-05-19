@@ -229,8 +229,16 @@
           <option>Wholesale / B2B</option>
         </select>
         <textarea name="Message" id="contactMessage" placeholder="Your message..." rows="4"></textarea>
-        <button type="submit" class="form-submit">Send Message</button>
+        <input type="hidden" id="contactPlan" name="Plan" />
+        <button type="submit" class="form-submit" id="formSubmitBtn">Send Message</button>
       </form>
+
+      <div class="form-success" id="formSuccess" style="display:none">
+        <div class="form-success-icon">✦</div>
+        <h3 class="form-success-title">Message received!</h3>
+        <p class="form-success-body">The Banks family will be in touch within 24 hours. We appreciate your support.</p>
+        <a href="#shop" class="form-success-link">Back to Shop</a>
+      </div>
 
     </div>
   </section>
@@ -300,6 +308,12 @@
         <div class="pack-modal-eyebrow">Farm Fresh Eggs</div>
         <h2 class="pack-modal-title" id="packModalTitle">Choose Your Pack</h2>
         <p class="pack-modal-sub">Pasture-raised, Georgia grown. Pick what fits your table.</p>
+        <div class="pack-capacity" id="packCapacity" style="display:none">
+          <div class="pack-capacity-track">
+            <div class="pack-capacity-fill" id="packCapacityFill"></div>
+          </div>
+          <p class="pack-capacity-text" id="packCapacityText"></p>
+        </div>
       </div>
       <div class="pack-grid">
 
@@ -322,10 +336,13 @@
           <div class="pack-sub-tiers">
             <div class="pack-tier-label">Choose your plan:</div>
             <button type="button" class="pack-card-btn pack-card-btn--tier"
+               data-plan="monthly"
                data-order="Weekly Dozen — Monthly Subscription · $20/month · 5 dozen/month (cancel anytime)">Monthly — $20/mo</button>
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
+               data-plan="6-month"
                data-order="Weekly Dozen — 6-Month Subscription · $20/month × 6 = $120 · 5 dozen/month">6 Months — $120 <span class="pack-tier-save">Save 5%</span></button>
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
+               data-plan="12-month"
                data-order="Weekly Dozen — 12-Month Subscription · $20/month × 12 = $240 · 5 dozen/month">12 Months — $240 <span class="pack-tier-save">Save 10%</span></button>
           </div>
         </div>
@@ -355,6 +372,7 @@
           </div>
           <div class="pack-card-btns">
             <button type="button" class="pack-card-btn"
+               data-plan="single-dozen"
                data-order="Single Dozen — 12 pasture-raised eggs · $5 one-time"
                data-requires-date="true">Order Now — $5</button>
           </div>
@@ -379,6 +397,7 @@
           </ul>
           <div class="pack-card-btns">
             <button type="button" class="pack-card-btn pack-card-btn--reserve"
+               data-plan="solo-notify"
                data-order="Solo Pack interest — please notify me when the Solo Pack (6 eggs · $3) becomes available">Notify Me When Available</button>
           </div>
         </div>
@@ -387,6 +406,8 @@
     </div>
   </div>
 
+  <script src="js/bff-config.js"></script>
+  <script src="js/bff-supabase.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

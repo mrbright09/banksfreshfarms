@@ -81,17 +81,65 @@
     formToastClose.addEventListener('click', hideToast);
   }
 
+  function showFormSuccess() {
+    var successEl = document.getElementById('formSuccess');
+    if (contactForm)  contactForm.style.display  = 'none';
+    if (successEl)    successEl.style.display     = 'block';
+    var contactSec = document.getElementById('contact');
+    if (contactSec) {
+      var navH = document.getElementById('nav');
+      var offset = navH ? navH.offsetHeight : 0;
+      var top = contactSec.getBoundingClientRect().top + window.pageYOffset - offset - 16;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  }
+
   if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
       var fields = contactForm.querySelectorAll('input[required], select[required], textarea[required]');
       var allFilled = true;
       fields.forEach(function (field) {
         if (!field.value.trim()) allFilled = false;
       });
       if (!allFilled) {
-        e.preventDefault();
         showToast('Almost there! We just need all your info so the Banks family can get back to you.');
+        return;
       }
+
+      var planInput = document.getElementById('contactPlan');
+      var submitBtn = document.getElementById('formSubmitBtn');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+      var data = {
+        firstName:   contactForm.querySelector('[name="First Name"]').value.trim(),
+        lastName:    contactForm.querySelector('[name="Last Name"]').value.trim(),
+        email:       contactForm.querySelector('[name="Email"]').value.trim(),
+        phone:       contactForm.querySelector('[name="Phone"]').value.trim(),
+        plan:        planInput ? (planInput.value || 'inquiry') : 'inquiry',
+        pickupDate:  planInput ? (planInput.dataset.pickupDate || null) : null,
+        inquiryType: document.getElementById('contactInquiry').value,
+        message:     document.getElementById('contactMessage').value.trim()
+      };
+
+      var submit = window.BFF
+        ? window.BFF.submitForm(data)
+        : Promise.resolve({ ok: true, fallback: true });
+
+      submit
+        .then(function (res) {
+          if (res && res.ok) {
+            showFormSuccess();
+          } else {
+            showToast('Something went wrong. Email us at banksfreshfarms@gmail.com');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Message'; }
+          }
+        })
+        .catch(function () {
+          showToast('Something went wrong. Email us at banksfreshfarms@gmail.com');
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Message'; }
+        });
     });
   }
 
@@ -197,6 +245,7 @@
     packModal.classList.add('open');
     document.body.style.overflow = 'hidden';
     initCalendar();
+    if (window.BFF) window.BFF.loadCapacity();
   }
 
   function closePackModal() {
@@ -235,6 +284,13 @@
         if (requiresDate && selectedPickupDate) {
           fullOrder += ' · Pickup: Saturday ' + MONTHS[selectedPickupDate.getMonth()] +
             ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
+        }
+
+        var planInput = document.getElementById('contactPlan');
+        if (planInput) {
+          planInput.value = btn.getAttribute('data-plan') || '';
+          planInput.dataset.pickupDate = (requiresDate && selectedPickupDate)
+            ? selectedPickupDate.toISOString().split('T')[0] : '';
         }
 
         closePackModal();

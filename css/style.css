@@ -852,6 +852,46 @@ ul  { list-style: none; }
   font-family: 'Lato', sans-serif;
 }
 
+/* Capacity availability bar */
+.pack-capacity {
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,146,42,0.18);
+  border-radius: 8px;
+}
+
+.pack-capacity-track {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.pack-capacity-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 3px;
+  transition: width 0.6s ease;
+  width: 0%;
+}
+
+.pack-capacity--low  .pack-capacity-fill { background: #e07b2a; }
+.pack-capacity--full .pack-capacity-fill { background: #c0392b; }
+
+.pack-capacity-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--cream-muted);
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+}
+
+.pack-capacity--low  .pack-capacity-text { color: #e07b2a; }
+.pack-capacity--full .pack-capacity-text { color: #c0392b; }
+
 .pack-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1455,6 +1495,51 @@ ul  { list-style: none; }
 }
 
 .form-submit:hover { background: var(--gold-light); }
+.form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Form success state */
+.form-success {
+  text-align: center;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-success-icon {
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.form-success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: var(--cream);
+  font-weight: 700;
+}
+
+.form-success-body {
+  color: var(--cream-muted);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+.form-success-link {
+  margin-top: 8px;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(200,146,42,0.4);
+  padding-bottom: 2px;
+  transition: color 0.2s;
+}
+
+.form-success-link:hover { color: var(--gold-light); }
 
 
 /* =============================================================
