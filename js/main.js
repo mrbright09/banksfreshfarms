@@ -53,8 +53,45 @@
   }
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeMobileNav();
+    if (e.key === 'Escape') { closeMobileNav(); closePackModal(); }
   });
+
+  /* ─── Eggs Pack Modal ─────────────────────────────────────── */
+  var packModal      = document.getElementById('packModal');
+  var packModalClose = document.getElementById('packModalClose');
+  var shopEggsBtn    = document.getElementById('shopEggsBtn');
+
+  function openPackModal() {
+    if (!packModal) return;
+    packModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePackModal() {
+    if (!packModal) return;
+    packModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (shopEggsBtn) {
+    shopEggsBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      openPackModal();
+    });
+  }
+
+  if (packModalClose) {
+    packModalClose.addEventListener('click', closePackModal);
+  }
+
+  if (packModal) {
+    packModal.addEventListener('click', function (e) {
+      if (e.target === packModal) closePackModal();
+    });
+    packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
+      btn.addEventListener('click', closePackModal);
+    });
+  }
 
 
   /* ─── Nav (fixed) + spacer setup ─────────────────────────────────── */

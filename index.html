@@ -131,8 +131,7 @@
         <div class="shop-card-body">
           <h3 class="shop-card-title">Farm Fresh Eggs</h3>
           <p class="shop-card-desc">Nutrient-rich, pasture-raised. Collected daily from naturally foraging hens on Georgia farmland.</p>
-          <!-- SQUARE PAYMENT LINK: Replace href="#" with Square payment link for Fresh Eggs -->
-          <a href="#" class="shop-card-btn" target="_blank">Shop Eggs</a>
+          <button class="shop-card-btn" id="shopEggsBtn">Shop Eggs</button>
         </div>
       </div>
 
@@ -262,6 +261,69 @@
       </div>
     </div>
   </footer>
+
+  <!-- EGGS PACK MODAL -->
+  <div class="pack-modal-backdrop" id="packModal" role="dialog" aria-modal="true" aria-labelledby="packModalTitle">
+    <div class="pack-modal">
+      <button class="pack-modal-close" id="packModalClose" aria-label="Close">&times;</button>
+      <div class="pack-modal-header">
+        <div class="pack-modal-eyebrow">Farm Fresh Eggs</div>
+        <h2 class="pack-modal-title" id="packModalTitle">Choose Your Pack</h2>
+        <p class="pack-modal-sub">Pasture-raised, Georgia grown. Pick what fits your table.</p>
+      </div>
+      <div class="pack-grid">
+
+        <!-- SOLO PACK -->
+        <div class="pack-card">
+          <div class="pack-card-badge">Pre-Order</div>
+          <div class="pack-card-icon">🥚</div>
+          <h3 class="pack-card-title">Solo Pack</h3>
+          <div class="pack-card-sub">The Fresh 6</div>
+          <p class="pack-card-desc">Low commitment, no waste. Perfect for one or two people who want real eggs without a full dozen going stale.</p>
+          <ul class="pack-card-features">
+            <li>6 pasture-raised eggs</li>
+            <li>One-time order</li>
+            <li>Farm pickup — Georgia</li>
+            <li>No subscription required</li>
+          </ul>
+          <a href="#contact" class="pack-card-btn" id="packSoloBtn">Pre-Order Now</a>
+        </div>
+
+        <!-- WEEKLY DOZEN — RECOMMENDED -->
+        <div class="pack-card pack-card--featured">
+          <div class="pack-card-badge pack-card-badge--featured">Best Value</div>
+          <div class="pack-card-icon">🥚🥚</div>
+          <h3 class="pack-card-title">Weekly Dozen</h3>
+          <div class="pack-card-sub">Family Subscription</div>
+          <p class="pack-card-desc">Lock in your weekly supply. Always fresh, always farm direct. No store runs, no guessing — just eggs on your schedule.</p>
+          <ul class="pack-card-features">
+            <li>12 pasture-raised eggs</li>
+            <li>Weekly recurring delivery</li>
+            <li>No store runs</li>
+            <li>Always farm direct</li>
+          </ul>
+          <a href="#contact" class="pack-card-btn pack-card-btn--featured" id="packFamilyBtn">Subscribe Now</a>
+        </div>
+
+        <!-- BFF RESERVE -->
+        <div class="pack-card pack-card--reserve">
+          <div class="pack-card-badge pack-card-badge--reserve">Coming Soon</div>
+          <div class="pack-card-icon">👑</div>
+          <h3 class="pack-card-title">BFF Reserve</h3>
+          <div class="pack-card-sub">The Premium Tier</div>
+          <p class="pack-card-desc">Not all eggs are created equal. Priority access to premium batches, members-only pricing, and exclusive farm drops.</p>
+          <ul class="pack-card-features">
+            <li>Limited memberships</li>
+            <li>Priority access &amp; premium batches</li>
+            <li>Youth STEM farm support</li>
+            <li>Exclusive early drops</li>
+          </ul>
+          <a href="#contact" class="pack-card-btn pack-card-btn--reserve" id="packReserveBtn">Join the Waitlist</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
