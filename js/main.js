@@ -230,15 +230,6 @@
     updateCalLabel();
   }
 
-  /* ─── Schedule toggle ────────────────────────────────────────── */
-  var pickupToggle  = document.getElementById('pickupToggle');
-  var pickupSection = document.getElementById('pickupSection');
-  if (pickupToggle && pickupSection) {
-    pickupToggle.addEventListener('click', function () {
-      var isOpen = pickupSection.classList.toggle('pickup-section--open');
-      pickupToggle.classList.toggle('pickup-toggle--open', isOpen);
-    });
-  }
 
   /* ─── Pickup type radios ─────────────────────────────────────── */
   document.querySelectorAll('input[name="pickupType"]').forEach(function (radio) {
@@ -374,7 +365,15 @@
 
   if (packModal) {
     packModal.addEventListener('click', function (e) {
-      if (e.target === packModal) closePackModal();
+      if (e.target === packModal) { closePackModal(); return; }
+      var toggleBtn = e.target.closest('.pickup-toggle');
+      if (toggleBtn) {
+        var pickupSec = document.getElementById('pickupSection');
+        if (pickupSec) {
+          var isOpen = pickupSec.classList.toggle('pickup-section--open');
+          toggleBtn.classList.toggle('pickup-toggle--open', isOpen);
+        }
+      }
     });
 
     packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
