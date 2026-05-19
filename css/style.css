@@ -542,9 +542,9 @@ ul  { list-style: none; }
 
 .story-line {
   color: var(--cream-muted);
-  font-size: 15px;
-  line-height: 1.9;
-  margin-bottom: 12px;
+  font-size: 17px;
+  line-height: 1.85;
+  margin-bottom: 16px;
   font-family: 'Lato', sans-serif;
 }
 
