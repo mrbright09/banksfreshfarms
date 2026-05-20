@@ -66,9 +66,20 @@ ul  { list-style: none; }
 /* =============================================================
    NAVIGATION — stacked, centered
    ============================================================= */
+/* Always-black top curtain — prevents content showing above nav during slide */
+#nav-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: #000;
+  z-index: 199;
+  pointer-events: none;
+}
+
 .site-nav {
   background: #000;
-  box-shadow: 0 -1500px 0 1500px #000;
   border-bottom: 1px solid rgba(200,146,42,0.25);
   display: flex;
   flex-direction: column;
