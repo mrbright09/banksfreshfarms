@@ -12,15 +12,48 @@
       if (!targetId || targetId === '#') return;
       var target = document.querySelector(targetId);
       if (!target) return;
+
       e.preventDefault();
-      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
+
+      var nav = document.getElementById('nav');
+      var navH = nav ? nav.offsetHeight : 0;
+      var top = target.getBoundingClientRect().top + window.scrollY - navH;
+
+      window.scrollTo({ top: top, behavior: 'smooth' });
+
+      closeMobileNav();
     });
   });
 
-  function closeMobileNav() {}
+
+  /* ─── Mobile Nav Toggle ──────────────────────────────────────────── */
+  var hamburger  = document.getElementById('hamburger');
+  var mobileNav  = document.getElementById('mobileNav');
+
+  function openMobileNav() {
+    mobileNav.classList.add('open');
+    hamburger.innerHTML = '&times;';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileNav() {
+    mobileNav.classList.remove('open');
+    hamburger.innerHTML = '&#9776;';
+    document.body.style.overflow = '';
+  }
+
+  if (hamburger && mobileNav) {
+    hamburger.addEventListener('click', function () {
+      if (mobileNav.classList.contains('open')) {
+        closeMobileNav();
+      } else {
+        openMobileNav();
+      }
+    });
+  }
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closePackModal(); }
+    if (e.key === 'Escape') { closeMobileNav(); closePackModal(); }
   });
 
   /* ─── Form Validation Toast ──────────────────────────────── */
@@ -54,7 +87,9 @@
     if (successEl)    successEl.style.display     = 'block';
     var contactSec = document.getElementById('contact');
     if (contactSec) {
-      var top = contactSec.getBoundingClientRect().top + window.pageYOffset - 16;
+      var navEl = document.getElementById('nav');
+      var offset = navEl ? navEl.offsetHeight : 0;
+      var top = contactSec.getBoundingClientRect().top + window.pageYOffset - offset - 16;
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
   }
@@ -384,7 +419,9 @@
 
           var contact = document.getElementById('contact');
           if (contact) {
-            var top  = contact.getBoundingClientRect().top + window.pageYOffset - 16;
+            var navEl2 = document.getElementById('nav');
+            var navOffset = navEl2 ? navEl2.offsetHeight : 0;
+            var top  = contact.getBoundingClientRect().top + window.pageYOffset - navOffset - 16;
             window.scrollTo({ top: top, behavior: 'smooth' });
           }
 
@@ -396,7 +433,69 @@
   }
 
 
+  /* ─── Nav (fixed) + spacer setup ─────────────────────────────────── */
+  var nav       = document.getElementById('nav');
+  var navSpacer = document.getElementById('navSpacer');
+
+  function setSpacerToFullNav() {
+    if (!nav || !navSpacer) return;
+    var wasScrolled = nav.classList.contains('nav--scrolled');
+    if (wasScrolled) nav.classList.remove('nav--scrolled');
+    navSpacer.style.height = nav.offsetHeight + 'px';
+    if (wasScrolled) nav.classList.add('nav--scrolled');
+  }
+
+  setSpacerToFullNav();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setSpacerToFullNav);
+  }
+  window.addEventListener('load', setSpacerToFullNav);
+
+  var logoImg = nav && nav.querySelector('.nav-logo img');
+  if (logoImg) {
+    if (logoImg.complete) { setSpacerToFullNav(); }
+    else { logoImg.addEventListener('load', setSpacerToFullNav); }
+  }
+
+  function syncMobileNavTop() {
+    if (mobileNav && nav) mobileNav.style.top = nav.offsetHeight + 'px';
+  }
+
+  function getScrollY() {
+    return Math.max(0,
+      window.pageYOffset !== undefined ? window.pageYOffset :
+      (document.documentElement.scrollTop || document.body.scrollTop || 0)
+    );
+  }
+
+  var scrollTicking = false;
+
+  function handleScroll() {
+    if (!nav) return;
+    var scrolled = getScrollY() > 60;
+    nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
+    if (scrolled) {
+      nav.classList.add('nav--scrolled');
+    } else {
+      nav.classList.remove('nav--scrolled');
+      closeMobileNav();
+    }
+    syncMobileNavTop();
+    scrollTicking = false;
+  }
+
+  function onScroll() {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      (window.requestAnimationFrame || function (fn) { setTimeout(fn, 16); })(handleScroll);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
+    setSpacerToFullNav();
+    handleScroll();
     if (window.innerWidth > 768) {
       var shopSection = document.querySelector('.shop-section--carousel');
       if (shopSection) shopSection.classList.remove('shop-section--carousel');
@@ -437,40 +536,6 @@
       el.classList.add('visible');
     });
   }
-
-  /* ─── Mobile Bottom Nav — active section highlight ───────── */
-  var mbnItems = document.querySelectorAll('.mbn-item');
-
-  function setMbnActive(sectionId) {
-    mbnItems.forEach(function (item) {
-      item.classList.toggle('mbn-active', item.getAttribute('data-section') === sectionId);
-    });
-  }
-
-  if (mbnItems.length && 'IntersectionObserver' in window) {
-    var sectionIds = ['home', 'story', 'shop', 'contact'];
-    var sectionVisible = {};
-
-    var mbnObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        sectionVisible[entry.target.id] = entry.isIntersecting;
-      });
-      for (var i = sectionIds.length - 1; i >= 0; i--) {
-        if (sectionVisible[sectionIds[i]]) {
-          setMbnActive(sectionIds[i]);
-          break;
-        }
-      }
-    }, { threshold: 0.25 });
-
-    sectionIds.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) mbnObserver.observe(el);
-    });
-  }
-
-  setMbnActive('home');
-
 
   /* ─── Shop Card Carousel (mobile) ──────────────────────────── */
   function initShopCarousel() {

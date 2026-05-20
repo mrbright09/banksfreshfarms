@@ -16,13 +16,55 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=33" />
+  <link rel="stylesheet" href="css/style.css?v=34" />
 </head>
 <body>
 
   <!-- ============================================================
        NAV — stacked centered logo layout
   ============================================================ -->
+  <nav class="site-nav" id="nav">
+    <!-- Hamburger — absolute top-right on mobile, hidden on desktop -->
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+    <!-- Compact brand shown only in mobile scrolled state -->
+    <span class="nav-scrolled-brand" aria-hidden="true">
+      <span class="nav-scrolled-name">Banks Fresh Farms</span>
+      <span class="nav-scrolled-sub">A Georgia Grown Heritage</span>
+    </span>
+
+    <!-- Always-centered brand block -->
+    <div class="nav-brand-center">
+      <div class="nav-logo">
+        <img src="images/logo.png" alt="Banks Fresh Farms Logo"
+          onerror="this.style.display='none'; this.parentElement.classList.add('nav-logo--fallback');" />
+      </div>
+      <div class="nav-brand">Banks Fresh Farms</div>
+      <div class="nav-sub">A Georgia Grown Heritage</div>
+    </div>
+
+    <!-- Nav links + CTA — desktop only -->
+    <div class="nav-bottom-bar">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#shop" class="nav-cta">Order Now</a>
+    </div>
+  </nav>
+
+  <!-- Mobile nav drawer -->
+  <div class="mobile-nav" id="mobileNav">
+    <ul>
+      <li><a href="#home"    class="mobile-nav-link">Home</a></li>
+      <li><a href="#story"   class="mobile-nav-link">Our Story</a></li>
+      <li><a href="#shop"    class="mobile-nav-link">Shop</a></li>
+      <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    </ul>
+    <a href="#shop" class="nav-cta mobile-nav-cta">Order Now</a>
+  </div>
+  <div id="navSpacer"></div>
 
 
   <!-- ============================================================
@@ -234,24 +276,6 @@
   </footer>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile navigation">
-    <a href="#home"    class="mbn-item" data-section="home">
-      <span class="mbn-icon">🏡</span>
-      <span class="mbn-label">Home</span>
-    </a>
-    <a href="#shop"    class="mbn-item" data-section="shop">
-      <span class="mbn-icon">🥚</span>
-      <span class="mbn-label">Shop</span>
-    </a>
-    <a href="#story"   class="mbn-item" data-section="story">
-      <span class="mbn-icon">🌾</span>
-      <span class="mbn-label">Story</span>
-    </a>
-    <a href="#contact" class="mbn-item" data-section="contact">
-      <span class="mbn-icon">✉️</span>
-      <span class="mbn-label">Order</span>
-    </a>
-  </nav>
 
   <!-- FORM VALIDATION TOAST -->
   <div class="form-toast" id="formToast" role="alert" aria-live="assertive">
