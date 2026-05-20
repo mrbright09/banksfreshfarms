@@ -472,10 +472,14 @@
   }
 
   var scrollTicking = false;
+  var lastScrollY = 0;
+
+  function isMobile() { return window.innerWidth <= 768; }
 
   function handleScroll() {
     if (!nav) return;
-    var scrolled = getScrollY() > 60;
+    var y = getScrollY();
+    var scrolled = y > 60;
     nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
     if (scrolled) {
       nav.classList.add('nav--scrolled');
@@ -483,6 +487,18 @@
       nav.classList.remove('nav--scrolled');
       closeMobileNav();
     }
+
+    if (isMobile()) {
+      if (y > lastScrollY && y > 80) {
+        nav.classList.add('nav--hidden');
+      } else {
+        nav.classList.remove('nav--hidden');
+      }
+    } else {
+      nav.classList.remove('nav--hidden');
+    }
+
+    lastScrollY = y;
     syncMobileNavTop();
     scrollTicking = false;
   }

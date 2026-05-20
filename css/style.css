@@ -80,8 +80,8 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
-  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
+  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
+  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 /* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
@@ -1948,6 +1948,9 @@ ul  { list-style: none; }
     transform: translateY(-50%);
   }
   .site-nav.nav--scrolled .nav-scrolled-brand { display: flex; }
+
+  /* Hide nav when scrolling down on mobile */
+  .site-nav.nav--hidden { transform: translateY(-110%); }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }
