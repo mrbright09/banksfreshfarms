@@ -80,30 +80,18 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
-  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-/* Extend background above nav so no content shows during slide-in animation */
-.site-nav::before {
-  content: '';
-  position: absolute;
-  top: -500px;
-  left: 0;
-  right: 0;
-  height: 500px;
-  background: #000;
-  pointer-events: none;
+  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, opacity 0.25s ease;
+  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, opacity 0.25s ease;
 }
 
 /* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
 .site-nav::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -2px;
   left: 0;
   right: 0;
-  height: 5px;
+  height: 3px;
   background: #000;
   pointer-events: none;
 }
@@ -1962,7 +1950,7 @@ ul  { list-style: none; }
   .site-nav.nav--scrolled .nav-scrolled-brand { display: flex; }
 
   /* Hide nav when scrolling down on mobile */
-  .site-nav.nav--hidden { transform: translateY(-110%); }
+  .site-nav.nav--hidden { opacity: 0; pointer-events: none; }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }
