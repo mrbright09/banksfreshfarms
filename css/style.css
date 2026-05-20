@@ -84,14 +84,26 @@ ul  { list-style: none; }
   transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+/* Extend background above nav so no content shows during slide-in animation */
+.site-nav::before {
+  content: '';
+  position: absolute;
+  top: -500px;
+  left: 0;
+  right: 0;
+  height: 500px;
+  background: #000;
+  pointer-events: none;
+}
+
 /* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
 .site-nav::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -4px;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 5px;
   background: #000;
   pointer-events: none;
 }
