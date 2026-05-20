@@ -480,7 +480,9 @@
     if (!nav) return;
     var y = getScrollY();
     var scrolled = y > 60;
-    nav.style.boxShadow = scrolled ? '0 2px 24px rgba(0,0,0,0.5)' : 'none';
+    nav.style.boxShadow = scrolled
+      ? '0 -1500px 0 1500px #000, 0 2px 24px rgba(0,0,0,0.5)'
+      : '0 -1500px 0 1500px #000';
     if (scrolled) {
       nav.classList.add('nav--scrolled');
     } else {

@@ -68,6 +68,7 @@ ul  { list-style: none; }
    ============================================================= */
 .site-nav {
   background: #000;
+  box-shadow: 0 -1500px 0 1500px #000;
   border-bottom: 1px solid rgba(200,146,42,0.25);
   display: flex;
   flex-direction: column;
@@ -80,8 +81,8 @@ ul  { list-style: none; }
   width: 100%;
   box-sizing: border-box;
   z-index: 200;
-  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, opacity 0.25s ease;
-  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, opacity 0.25s ease;
+  -webkit-transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
+  transition: padding 0.4s ease-in-out, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 /* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
@@ -1950,7 +1951,7 @@ ul  { list-style: none; }
   .site-nav.nav--scrolled .nav-scrolled-brand { display: flex; }
 
   /* Hide nav when scrolling down on mobile */
-  .site-nav.nav--hidden { opacity: 0; pointer-events: none; }
+  .site-nav.nav--hidden { transform: translateY(-110%); }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }
