@@ -621,33 +621,53 @@
     initShopCarousel();
   }
 
-  /* ─── Beef video modal ───────────────────────────────────────── */
+  /* ─── Beef cuts modal ────────────────────────────────────────── */
+  var beefModal      = document.getElementById('beefModal');
+  var beefModalClose = document.getElementById('beefModalClose');
+  var beefModalOrderBtn = document.getElementById('beefModalOrderBtn');
+  var beefBtn        = document.getElementById('beefLearnMoreBtn');
+
+  function openBeefModal() {
+    if (!beefModal) return;
+    beefModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeBeefModal() {
+    if (!beefModal) return;
+    beefModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (beefBtn) beefBtn.addEventListener('click', openBeefModal);
+  if (beefModalClose) beefModalClose.addEventListener('click', closeBeefModal);
+  if (beefModal) {
+    beefModal.addEventListener('click', function (e) {
+      if (e.target === beefModal) closeBeefModal();
+    });
+  }
+  if (beefModalOrderBtn) {
+    beefModalOrderBtn.addEventListener('click', function () {
+      closeBeefModal();
+      var contact = document.getElementById('contact');
+      if (contact) {
+        setTimeout(function () {
+          var navEl = document.getElementById('nav');
+          var offset = navEl ? navEl.offsetHeight : 0;
+          window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - offset - 16, behavior: 'smooth' });
+        }, 50);
+      }
+    });
+  }
+
+  /* ─── Beef farm video (video modal kept for future use) ────── */
   var videoModal      = document.getElementById('videoModal');
   var videoModalClose = document.getElementById('videoModalClose');
   var beefVideo       = document.getElementById('beefVideo');
-  var beefBtn         = document.getElementById('beefLearnMoreBtn');
-
-  function requestFullscreen(el) {
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen();
-  }
 
   function exitFullscreen() {
     if (document.exitFullscreen) document.exitFullscreen();
     else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-  }
-
-  function openVideoModal() {
-    if (!videoModal) return;
-    videoModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    if (beefVideo) {
-      var p = beefVideo.play();
-      var doFs = function () { requestFullscreen(beefVideo); };
-      if (p && p.then) { p.then(doFs).catch(function(){}); }
-      else { doFs(); }
-    }
   }
 
   function closeVideoModal() {
@@ -658,16 +678,6 @@
     if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
   }
 
-  if (beefVideo) {
-    beefVideo.addEventListener('fullscreenchange', function () {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
-    });
-    beefVideo.addEventListener('webkitfullscreenchange', function () {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
-    });
-  }
-
-  if (beefBtn) beefBtn.addEventListener('click', openVideoModal);
   if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
   if (videoModal) {
     videoModal.addEventListener('click', function (e) {

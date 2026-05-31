@@ -862,6 +862,133 @@ ul  { list-style: none; }
 }
 .video-modal-close:hover { color: var(--gold); }
 
+/* =============================================================
+   BEEF CUTS MODAL
+   ============================================================= */
+.beef-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(16,7,5,0.92);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+.beef-modal-backdrop.open { display: flex; }
+
+.beef-modal {
+  background: var(--bg-card-light);
+  border-radius: 12px;
+  padding: 36px 32px 32px;
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  border: 1px solid rgba(200,146,42,0.2);
+}
+
+.beef-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--cream-muted);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.beef-modal-close:hover { color: var(--gold); }
+
+.beef-modal-header { text-align: center; margin-bottom: 28px; }
+
+.beef-modal-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.beef-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--cream);
+  margin: 0 0 6px;
+}
+
+.beef-modal-sub {
+  font-size: 13px;
+  color: var(--cream-muted);
+  letter-spacing: 0.5px;
+}
+
+.beef-cuts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.beef-cut-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 16px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,146,42,0.1);
+  transition: background 0.15s;
+}
+.beef-cut-item:hover { background: rgba(200,146,42,0.08); }
+
+.beef-cut-item--featured {
+  border-color: rgba(200,146,42,0.3);
+  background: rgba(200,146,42,0.06);
+}
+
+.beef-cut-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--cream);
+  font-weight: 600;
+}
+
+.beef-cut-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.beef-cut-unit {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--cream-muted);
+}
+
+.beef-modal-order-btn {
+  display: block;
+  text-align: center;
+  background: var(--gold);
+  color: var(--white);
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: background 0.2s;
+  touch-action: manipulation;
+}
+.beef-modal-order-btn:hover { background: var(--gold-light); }
+
 .pack-modal-backdrop {
   display: none;
   position: fixed;
