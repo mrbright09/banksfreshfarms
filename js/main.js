@@ -621,11 +621,14 @@
     initShopCarousel();
   }
 
-  /* ─── Beef cuts modal ────────────────────────────────────────── */
-  var beefModal      = document.getElementById('beefModal');
-  var beefModalClose = document.getElementById('beefModalClose');
+  /* ─── Beef video → cuts modal flow ──────────────────────────── */
+  var beefModal         = document.getElementById('beefModal');
+  var beefModalClose    = document.getElementById('beefModalClose');
   var beefModalOrderBtn = document.getElementById('beefModalOrderBtn');
-  var beefBtn        = document.getElementById('beefLearnMoreBtn');
+  var beefBtn           = document.getElementById('beefLearnMoreBtn');
+  var videoModal        = document.getElementById('videoModal');
+  var videoModalClose   = document.getElementById('videoModalClose');
+  var beefVideo         = document.getElementById('beefVideo');
 
   function openBeefModal() {
     if (!beefModal) return;
@@ -639,7 +642,48 @@
     document.body.style.overflow = '';
   }
 
-  if (beefBtn) beefBtn.addEventListener('click', openBeefModal);
+  function exitFullscreen() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+
+  function closeVideoModal() {
+    if (!videoModal) return;
+    exitFullscreen();
+    videoModal.classList.remove('open');
+    if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
+    openBeefModal();
+  }
+
+  function requestFullscreen(el) {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen();
+  }
+
+  function openVideoModal() {
+    if (!videoModal) return;
+    videoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (beefVideo) {
+      var p = beefVideo.play();
+      var doFs = function () { requestFullscreen(beefVideo); };
+      if (p && p.then) { p.then(doFs).catch(function () {}); }
+      else { doFs(); }
+    }
+  }
+
+  if (beefBtn) beefBtn.addEventListener('click', openVideoModal);
+
+  if (beefVideo) {
+    beefVideo.addEventListener('fullscreenchange', function () {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
+    });
+    beefVideo.addEventListener('webkitfullscreenchange', function () {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
+    });
+  }
+
   if (beefModalClose) beefModalClose.addEventListener('click', closeBeefModal);
   if (beefModal) {
     beefModal.addEventListener('click', function (e) {
@@ -658,24 +702,6 @@
         }, 50);
       }
     });
-  }
-
-  /* ─── Beef farm video (video modal kept for future use) ────── */
-  var videoModal      = document.getElementById('videoModal');
-  var videoModalClose = document.getElementById('videoModalClose');
-  var beefVideo       = document.getElementById('beefVideo');
-
-  function exitFullscreen() {
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-  }
-
-  function closeVideoModal() {
-    if (!videoModal) return;
-    exitFullscreen();
-    videoModal.classList.remove('open');
-    document.body.style.overflow = '';
-    if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
   }
 
   if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
