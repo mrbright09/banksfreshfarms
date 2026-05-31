@@ -122,7 +122,7 @@ The beef stepper code was written after DEF-001 was logged but the fix pattern (
 ---
 
 ### Fix Applied
-Switched stepper button wiring from `addEventListener` to `onclick` property assignment, matching the proven-working eggs modal pattern. Also changed `.beef-cut-item` CSS from `display: flex; justify-content: space-between` to `display: grid; grid-template-columns: 1fr auto auto` so name, stepper, and price are consistently aligned.
+Switched stepper button wiring from `addEventListener` to `onclick` property assignment, matching the proven-working eggs modal pattern. Also changed `.beef-cut-item` CSS from `display: flex; justify-content: space-between` to `display: grid; grid-template-columns: 1fr auto auto` as an initial alignment attempt (see DEF-005 for the full alignment fix that followed).
 
 ```js
 // BEFORE — broken ✗
@@ -210,6 +210,81 @@ Development habit defaulted to `main`. The session instructions specified the fe
 
 ### Prevention
 Always `git checkout <feature-branch>` before making edits when a session specifies a target branch. Do not make changes on `main` and stash-transfer to a diverged feature branch.
+
+---
+
+## DEF-005 · Beef Cut Row Alignment — Stepper Position Shifts by Cut Name Length
+
+**Status:** Fixed  
+**Severity:** Medium — visual inconsistency degrades UX; confirmed in iOS screenshot  
+**Reported:** Session — user screenshot showed stepper (−/0/+) column shifting left/right between rows
+
+---
+
+### Description
+The − / 0 / + stepper control and price column do not align vertically across beef cut rows. Rows with shorter names (Ribeye, T-Bone) have their stepper positioned noticeably further left than rows with longer names (Ground Beef, Chuck Roast), creating a jagged, uneven layout.
+
+### Steps to Reproduce
+1. Open beef cuts modal on any device
+2. Observe the 6 cut rows
+3. **Expected:** Stepper column and price column are vertically aligned across all 6 rows
+4. **Actual:** Stepper jumps left for shorter names; price column floats at different horizontal positions per row
+
+### Environment
+- All browsers / devices
+- Element: `.beef-cut-item` list items inside `.beef-cuts-list`
+- Screenshot confirmed on iOS Safari
+
+---
+
+### Root Cause Analysis — 5 Whys
+
+**Why 1: Why does the stepper position shift between rows?**  
+The horizontal position of the stepper depends on how much space the cut name consumes, causing the stepper to start at different x-positions per row.
+
+**Why 2: Why does the name width affect the stepper position?**  
+The original layout used `display: flex; justify-content: space-between` with three items (name, stepper, price). `space-between` distributes the leftover row width equally as gaps between items. A shorter name (e.g. "Ribeye") leaves more leftover space, creating a larger gap before the stepper. A longer name (e.g. "Ground Beef") leaves less space, pushing the stepper closer to the name.
+
+**Why 3: Why didn't the `1fr auto auto` grid fix (DEF-003) fully resolve it?**  
+`grid-template-columns: 1fr auto auto` with `auto` tracks intrinsic content width per column. In theory, CSS Grid shares column widths across all rows of the same grid container, so `auto` should produce consistent widths. However, `auto` sizing is still subject to content-driven variability — if any cell in that column has differing content sizes (e.g. `$10.99/lb` vs `$24.99/lb` rendering at fractionally different widths), the column can render at slightly different sizes at subpixel level. More critically, `auto` gives no hard pixel guarantee for touch target sizing, which is essential for the stepper.
+
+**Why 4: Why do fixed pixel columns solve it definitively?**  
+`grid-template-columns: 1fr 96px 88px` gives the stepper and price columns an exact, immutable width regardless of content. The `1fr` name column absorbs all remaining space. Every row in the grid shares these exact column widths by CSS Grid spec — the stepper always starts at the same x-position and the price is always right-aligned within the same 88px.
+
+**Why 5: Why was fixed-width column sizing not the initial choice?**  
+The stepper dimensions (3 × 34px button = 102px total, then tuned to 96px with tighter buttons) and price character widths were not measured before writing the grid rule. Using `auto` felt sufficient. The visual misalignment was only caught after the screenshot on device confirmed the problem.
+
+---
+
+### Fix Applied
+Changed `.beef-cut-item` grid to fixed pixel columns and constrained the stepper and price elements explicitly:
+
+```css
+/* BEFORE — broken ✗ */
+.beef-cut-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+}
+
+/* FIXED ✓ */
+.beef-cut-item {
+  display: grid;
+  grid-template-columns: 1fr 96px 88px;
+  gap: 8px;
+}
+
+.beef-cut-stepper {
+  width: 96px; /* explicit, matches column */
+}
+
+.beef-cut-price {
+  text-align: right;
+  white-space: nowrap; /* prevents wrap on narrow screens */
+}
+```
+
+Additional enhancement shipped with this fix: replaced the simple `Est. Total` line with a collapsible order summary drawer (`#beefSummary`) that expands when any quantity is selected, showing each cut as a line item (qty · name · subtotal) and a grand total. This gives the user full order visibility before tapping "Contact Us to Order."
 
 ---
 
