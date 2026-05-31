@@ -630,6 +630,7 @@
   var beefSummary       = document.getElementById('beefSummary');
   var beefSummaryLines  = document.getElementById('beefSummaryLines');
   var beefSummaryCount  = document.getElementById('beefSummaryCount');
+  var beefCtaTotal      = document.getElementById('beefCtaTotal');
   var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
 
   var beefCutRows = beefModal ? Array.prototype.slice.call(
@@ -666,6 +667,10 @@
     if (beefSummary) {
       if (total > 0) { beefSummary.classList.add('beef-summary--open'); }
       else           { beefSummary.classList.remove('beef-summary--open'); }
+    }
+    if (beefCtaTotal) {
+      if (total > 0) { beefCtaTotal.classList.add('beef-cta-total--visible'); }
+      else           { beefCtaTotal.classList.remove('beef-cta-total--visible'); }
     }
   }
 
