@@ -955,10 +955,11 @@ ul  { list-style: none; }
 }
 
 .beef-cut-item {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 96px 88px;
   align-items: center;
-  padding: 13px 16px;
+  gap: 8px;
+  padding: 12px 14px;
   border-radius: 6px;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(200,146,42,0.1);
@@ -974,11 +975,10 @@ ul  { list-style: none; }
 .beef-cut-stepper {
   display: flex;
   align-items: center;
-  gap: 0;
+  width: 96px;
   background: rgba(0,0,0,0.25);
   border-radius: 6px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .beef-stepper-btn {
@@ -986,7 +986,7 @@ ul  { list-style: none; }
   border: none;
   color: var(--gold);
   font-size: 18px;
-  width: 34px;
+  width: 30px;
   height: 34px;
   display: flex;
   align-items: center;
@@ -999,7 +999,7 @@ ul  { list-style: none; }
 .beef-stepper-btn:active { background: rgba(200,146,42,0.15); }
 
 .beef-stepper-qty {
-  min-width: 28px;
+  flex: 1;
   text-align: center;
   font-size: 14px;
   font-weight: 700;
@@ -1007,46 +1007,130 @@ ul  { list-style: none; }
   line-height: 34px;
 }
 
-.beef-order-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 28px;
-  border-top: 1px solid rgba(200,146,42,0.2);
+.beef-cut-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  color: var(--cream);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.beef-cut-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.beef-cut-unit {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--cream-muted);
+}
+
+/* ─── Beef Order Summary Drawer ─────────────────────────────── */
+.beef-summary {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease;
+  opacity: 0;
+  margin: 0 28px;
+}
+
+.beef-summary--open {
+  max-height: 400px;
+  opacity: 1;
   margin-bottom: 16px;
 }
 
-.beef-order-total-label {
+.beef-summary-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 8px;
+  border-top: 1px solid rgba(200,146,42,0.3);
+}
+
+.beef-summary-hdr-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.beef-summary-hdr-count {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--cream-muted);
+  text-transform: uppercase;
+}
+
+.beef-summary-lines {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.beef-summary-line {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 8px;
   font-size: 12px;
+  color: var(--cream-muted);
+  padding: 3px 0;
+}
+
+.beef-summary-qty {
+  font-weight: 700;
+  color: var(--cream);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.beef-summary-name {
+  color: var(--cream-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.beef-summary-sub {
+  font-weight: 700;
+  color: var(--gold);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.beef-summary-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(200,146,42,0.2);
+}
+
+.beef-summary-total-label {
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--cream-muted);
 }
 
-.beef-order-total-amt {
-  font-size: 20px;
+.beef-summary-total-amt {
+  font-size: 22px;
   font-weight: 700;
   color: var(--gold);
-}
-
-.beef-cut-name {
   font-family: 'Playfair Display', serif;
-  font-size: 16px;
-  color: var(--cream);
-  font-weight: 600;
-}
-
-.beef-cut-price {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--gold);
-}
-
-.beef-cut-unit {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--cream-muted);
 }
 
 .beef-modal-order-btn {

@@ -627,7 +627,9 @@
   var beefModalOrderBtn = document.getElementById('beefModalOrderBtn');
   var beefBtn           = document.getElementById('beefLearnMoreBtn');
   var beefVideo         = document.getElementById('beefVideo');
-  var beefOrderTotal    = document.getElementById('beefOrderTotal');
+  var beefSummary       = document.getElementById('beefSummary');
+  var beefSummaryLines  = document.getElementById('beefSummaryLines');
+  var beefSummaryCount  = document.getElementById('beefSummaryCount');
   var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
 
   var beefCutRows = beefModal ? Array.prototype.slice.call(
@@ -639,11 +641,32 @@
 
   function updateBeefTotal() {
     var total = 0;
+    var totalLbs = 0;
+    var html = '';
+
     beefCutRows.forEach(function (row) {
-      total += getBeefQty(row) * parseFloat(row.getAttribute('data-price'));
+      var qty   = getBeefQty(row);
+      var price = parseFloat(row.getAttribute('data-price'));
+      var sub   = qty * price;
+      total    += sub;
+      totalLbs += qty;
+      if (qty > 0) {
+        var name = row.querySelector('.beef-cut-name').textContent;
+        html += '<li class="beef-summary-line">' +
+          '<span class="beef-summary-qty">' + qty + ' lb</span>' +
+          '<span class="beef-summary-name">' + name + '</span>' +
+          '<span class="beef-summary-sub">$' + sub.toFixed(2) + '</span>' +
+          '</li>';
+      }
     });
-    if (beefOrderTotal) beefOrderTotal.style.display = total > 0 ? 'flex' : 'none';
+
+    if (beefSummaryLines) beefSummaryLines.innerHTML = html;
+    if (beefSummaryCount) beefSummaryCount.textContent = totalLbs > 0 ? totalLbs + ' lb selected' : '';
     if (beefOrderTotalAmt) beefOrderTotalAmt.textContent = '$' + total.toFixed(2);
+    if (beefSummary) {
+      if (total > 0) { beefSummary.classList.add('beef-summary--open'); }
+      else           { beefSummary.classList.remove('beef-summary--open'); }
+    }
   }
 
   function resetBeefQty() {
@@ -652,16 +675,22 @@
   }
 
   beefCutRows.forEach(function (row) {
-    row.querySelector('[data-action="plus"]').addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
-      setBeefQty(row, getBeefQty(row) + 1);
-      updateBeefTotal();
-    });
-    row.querySelector('[data-action="minus"]').addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var q = getBeefQty(row);
-      if (q > 0) { setBeefQty(row, q - 1); updateBeefTotal(); }
-    });
+    var plusBtn  = row.querySelector('[data-action="plus"]');
+    var minusBtn = row.querySelector('[data-action="minus"]');
+    if (plusBtn) {
+      plusBtn.onclick = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        setBeefQty(row, getBeefQty(row) + 1);
+        updateBeefTotal();
+      };
+    }
+    if (minusBtn) {
+      minusBtn.onclick = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        var q = getBeefQty(row);
+        if (q > 0) { setBeefQty(row, q - 1); updateBeefTotal(); }
+      };
+    }
   });
 
   function openBeefModal() {
