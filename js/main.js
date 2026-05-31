@@ -621,15 +621,52 @@
     initShopCarousel();
   }
 
-  /* ─── Beef modal — inline video + cuts & prices ─────────────── */
+  /* ─── Beef modal — inline video + cuts & prices + steppers ─── */
   var beefModal         = document.getElementById('beefModal');
   var beefModalClose    = document.getElementById('beefModalClose');
   var beefModalOrderBtn = document.getElementById('beefModalOrderBtn');
   var beefBtn           = document.getElementById('beefLearnMoreBtn');
   var beefVideo         = document.getElementById('beefVideo');
+  var beefOrderTotal    = document.getElementById('beefOrderTotal');
+  var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
+
+  var beefCutRows = beefModal ? Array.prototype.slice.call(
+    beefModal.querySelectorAll('.beef-cut-item[data-cut]')
+  ) : [];
+
+  function getBeefQty(row) { return parseInt(row.querySelector('.beef-stepper-qty').textContent, 10) || 0; }
+  function setBeefQty(row, qty) { row.querySelector('.beef-stepper-qty').textContent = qty; }
+
+  function updateBeefTotal() {
+    var total = 0;
+    beefCutRows.forEach(function (row) {
+      total += getBeefQty(row) * parseFloat(row.getAttribute('data-price'));
+    });
+    if (beefOrderTotal) beefOrderTotal.style.display = total > 0 ? 'flex' : 'none';
+    if (beefOrderTotalAmt) beefOrderTotalAmt.textContent = '$' + total.toFixed(2);
+  }
+
+  function resetBeefQty() {
+    beefCutRows.forEach(function (row) { setBeefQty(row, 0); });
+    updateBeefTotal();
+  }
+
+  beefCutRows.forEach(function (row) {
+    row.querySelector('[data-action="plus"]').addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      setBeefQty(row, getBeefQty(row) + 1);
+      updateBeefTotal();
+    });
+    row.querySelector('[data-action="minus"]').addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var q = getBeefQty(row);
+      if (q > 0) { setBeefQty(row, q - 1); updateBeefTotal(); }
+    });
+  });
 
   function openBeefModal() {
     if (!beefModal) return;
+    resetBeefQty();
     beefModal.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (beefVideo) {
@@ -662,15 +699,47 @@
       if (e.target === beefModal) closeBeefModal();
     });
   }
+
   if (beefModalOrderBtn) {
-    beefModalOrderBtn.addEventListener('click', function () {
+    beefModalOrderBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var lines = [];
+      var total = 0;
+      beefCutRows.forEach(function (row) {
+        var qty = getBeefQty(row);
+        if (qty > 0) {
+          var name  = row.querySelector('.beef-cut-name').textContent;
+          var price = parseFloat(row.getAttribute('data-price'));
+          var sub   = qty * price;
+          total += sub;
+          lines.push(qty + ' lb — ' + name + ' @ $' + price.toFixed(2) + '/lb = $' + sub.toFixed(2));
+        }
+      });
+
+      if (lines.length === 0) {
+        showToast('Please select at least one cut to order.');
+        return;
+      }
+
+      var orderText = 'BEEF ORDER\n' + lines.join('\n') + '\n\nEstimated Total: $' + total.toFixed(2);
+
       closeBeefModal();
+
+      var inquiry  = document.getElementById('contactInquiry');
+      var message  = document.getElementById('contactMessage');
+      var planIn   = document.getElementById('contactPlan');
+
+      if (inquiry) inquiry.value = 'Beef Order';
+      if (message) message.value = orderText;
+      if (planIn)  { planIn.value = orderText; planIn.dataset.beefOrder = 'true'; }
+
       var contact = document.getElementById('contact');
       if (contact) {
         setTimeout(function () {
-          var navEl = document.getElementById('nav');
+          var navEl  = document.getElementById('nav');
           var offset = navEl ? navEl.offsetHeight : 0;
           window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - offset - 16, behavior: 'smooth' });
+          setTimeout(function () { if (message) message.focus(); }, 400);
         }, 50);
       }
     });

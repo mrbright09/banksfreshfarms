@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=37" />
+  <link rel="stylesheet" href="css/style.css?v=38" />
 </head>
 <body>
 
@@ -224,6 +224,7 @@
         <input type="email" name="Email" placeholder="Email Address" required />
         <select name="Inquiry Type" id="contactInquiry" required>
           <option value="" disabled selected>I'm interested in...</option>
+          <option>Beef Order</option>
           <option>Poultry / Eggs Order</option>
           <option>BFF Seasonings</option>
           <option>Herbal Products</option>
@@ -446,32 +447,66 @@
         <p class="beef-modal-sub">Priced per pound · Farm-fresh cuts</p>
       </div>
       <ul class="beef-cuts-list">
-        <li class="beef-cut-item">
+        <li class="beef-cut-item" data-cut="ground-beef" data-price="10.99">
           <span class="beef-cut-name">Ground Beef</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$10.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item">
+        <li class="beef-cut-item" data-cut="chuck-roast" data-price="12.99">
           <span class="beef-cut-name">Chuck Roast</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$12.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item">
+        <li class="beef-cut-item" data-cut="short-ribs" data-price="13.99">
           <span class="beef-cut-name">Short Ribs</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$13.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item">
+        <li class="beef-cut-item" data-cut="ribeye" data-price="22.99">
           <span class="beef-cut-name">Ribeye</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$22.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item">
+        <li class="beef-cut-item" data-cut="t-bone" data-price="22.99">
           <span class="beef-cut-name">T-Bone</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$22.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--featured">
+        <li class="beef-cut-item beef-cut-item--featured" data-cut="oxtail" data-price="24.99">
           <span class="beef-cut-name">Oxtail</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$24.99<span class="beef-cut-unit">/lb</span></span>
         </li>
       </ul>
-      <a href="#contact" class="beef-modal-order-btn" id="beefModalOrderBtn">Contact Us to Order</a>
+      <div class="beef-order-total" id="beefOrderTotal" style="display:none">
+        <span class="beef-order-total-label">Est. Total</span>
+        <span class="beef-order-total-amt" id="beefOrderTotalAmt">$0.00</span>
+      </div>
+      <button type="button" class="beef-modal-order-btn" id="beefModalOrderBtn">Contact Us to Order</button>
     </div>
   </div>
 
