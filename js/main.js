@@ -649,7 +649,13 @@
     if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
   }
 
-  if (beefBtn) beefBtn.addEventListener('click', openBeefModal);
+  if (beefBtn) {
+    beefBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openBeefModal();
+    });
+  }
   if (beefModalClose) beefModalClose.addEventListener('click', closeBeefModal);
   if (beefModal) {
     beefModal.addEventListener('click', function (e) {
