@@ -24,8 +24,8 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   max-width: 100%;
-  overflow-x: hidden;
 }
+
 
 body {
   font-family: 'Lato', Arial, sans-serif;
@@ -33,6 +33,7 @@ body {
   color: var(--cream);
   line-height: 1.65;
   max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Grain texture overlay — fixed, sits above everything, non-interactive */
@@ -65,6 +66,7 @@ ul  { list-style: none; }
 /* =============================================================
    NAVIGATION — stacked, centered
    ============================================================= */
+
 .site-nav {
   background: var(--charcoal);
   border-bottom: 1px solid rgba(200,146,42,0.25);
@@ -83,7 +85,6 @@ ul  { list-style: none; }
   transition: padding 0.4s ease-in-out, box-shadow 0.3s ease;
 }
 
-/* Seal the sub-pixel rendering gap iOS Safari leaves below fixed elements */
 .site-nav::after {
   content: '';
   position: absolute;
@@ -95,7 +96,38 @@ ul  { list-style: none; }
   pointer-events: none;
 }
 
-/* Hamburger — hidden on desktop, always shown on mobile */
+.nav-scrolled-brand {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.nav-scrolled-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.nav-scrolled-sub {
+  font-family: 'Lato', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--cream-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
 .nav-hamburger {
   display: none;
   position: absolute;
@@ -110,7 +142,6 @@ ul  { list-style: none; }
   z-index: 10;
 }
 
-/* Logo + brand name stacked and centered */
 .nav-brand-center {
   display: flex;
   flex-direction: column;
@@ -169,16 +200,9 @@ ul  { list-style: none; }
   transition: opacity 0.35s ease-in-out, max-height 0.4s ease-in-out, margin 0.35s ease-in-out;
 }
 
-/* ── Scrolled / minimized state — desktop: shrink logo + hide brand text ── */
-.site-nav.nav--scrolled {
-  padding: 6px 20px;
-}
-.site-nav.nav--scrolled .nav-logo {
-  width: 150px;
-}
-.site-nav.nav--scrolled .nav-brand-center {
-  gap: 0;
-}
+.site-nav.nav--scrolled { padding: 6px 20px; }
+.site-nav.nav--scrolled .nav-logo { width: 150px; }
+.site-nav.nav--scrolled .nav-brand-center { gap: 0; }
 .site-nav.nav--scrolled .nav-brand,
 .site-nav.nav--scrolled .nav-sub {
   opacity: 0;
@@ -187,7 +211,6 @@ ul  { list-style: none; }
   pointer-events: none;
 }
 
-/* Nav links + CTA row — below the brand on desktop */
 .nav-bottom-bar {
   display: flex;
   align-items: center;
@@ -230,7 +253,6 @@ ul  { list-style: none; }
 
 .nav-cta:hover { background: var(--gold-light); }
 
-/* Mobile Nav Drawer */
 .mobile-nav {
   display: none;
   flex-direction: column;
@@ -265,7 +287,6 @@ ul  { list-style: none; }
 }
 
 .mobile-nav-link:hover { color: var(--gold); }
-
 .mobile-nav-cta { margin-top: 8px; }
 
 
@@ -508,9 +529,9 @@ ul  { list-style: none; }
 
 .story-line {
   color: var(--cream-muted);
-  font-size: 15px;
-  line-height: 1.9;
-  margin-bottom: 12px;
+  font-size: 17px;
+  line-height: 1.85;
+  margin-bottom: 16px;
   font-family: 'Lato', sans-serif;
 }
 
@@ -518,9 +539,10 @@ ul  { list-style: none; }
   color: var(--gold);
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 20px 0 4px;
+  font-size: 22px;
+  line-height: 1.55;
+  margin: 24px 0 4px;
+  text-align: center;
 }
 
 .btn-story {
@@ -668,6 +690,11 @@ ul  { list-style: none; }
   letter-spacing: 1.5px;
   text-transform: uppercase;
   transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .shop-card-btn:hover { background: var(--charcoal); }
@@ -681,10 +708,9 @@ ul  { list-style: none; }
 
 
 /* =============================================================
-   SHOP CAROUSEL (mobile only)
+   SHOP CAROUSEL (mobile only) — native scroll + scroll-snap
+   Keeps all overflow inside .shop-grid; nothing leaks to the page.
    ============================================================= */
-.shop-section--carousel { overflow: hidden; }
-
 .shop-section--carousel .shop-grid {
   display: flex;
   flex-wrap: nowrap;
@@ -692,13 +718,19 @@ ul  { list-style: none; }
   padding: 0 20px 20px;
   margin: 0;
   max-width: none;
-  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.shop-section--carousel .shop-grid::-webkit-scrollbar { display: none; }
 
 .shop-section--carousel .shop-card {
   flex: 0 0 82vw;
   max-width: 82vw;
+  scroll-snap-align: start;
 }
 
 .shop-carousel-dots {
@@ -785,6 +817,256 @@ ul  { list-style: none; }
 /* =============================================================
    EGGS PACK MODAL
    ============================================================= */
+/* =============================================================
+   VIDEO MODAL
+   ============================================================= */
+.video-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.94);
+  z-index: 550;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.video-modal-backdrop.open {
+  display: flex;
+}
+.video-modal {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+}
+.video-modal video {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  background: #000;
+  max-height: 80vh;
+}
+.video-modal-close {
+  position: absolute;
+  top: -44px;
+  right: 0;
+  background: none;
+  border: none;
+  color: var(--cream);
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.video-modal-close:hover { color: var(--gold); }
+
+/* =============================================================
+   BEEF CUTS MODAL
+   ============================================================= */
+.beef-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(16,7,5,0.92);
+  z-index: 500;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.beef-modal-backdrop.open { display: flex; }
+
+.beef-modal {
+  background: var(--bg-mid);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  border: 1px solid rgba(200,146,42,0.2);
+  margin: auto;
+}
+
+.beef-modal-video {
+  width: 100%;
+  display: block;
+  background: #000;
+  max-height: 260px;
+  object-fit: cover;
+}
+
+.beef-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(0,0,0,0.55);
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.beef-modal-close:hover { background: rgba(200,146,42,0.8); }
+
+.beef-modal-header { text-align: center; margin-bottom: 28px; padding: 24px 28px 0; }
+
+.beef-modal-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.beef-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--cream);
+  margin: 0 0 6px;
+}
+
+.beef-modal-sub {
+  font-size: 13px;
+  color: var(--cream-muted);
+  letter-spacing: 0.5px;
+}
+
+.beef-cuts-list {
+  list-style: none;
+  padding: 0 28px;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.beef-cut-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,146,42,0.1);
+  transition: background 0.15s;
+}
+.beef-cut-item:hover { background: rgba(200,146,42,0.08); }
+
+.beef-cut-item--featured {
+  border-color: rgba(200,146,42,0.3);
+  background: rgba(200,146,42,0.06);
+}
+
+.beef-cut-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(0,0,0,0.25);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.beef-stepper-btn {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.beef-stepper-btn:active { background: rgba(200,146,42,0.15); }
+
+.beef-stepper-qty {
+  min-width: 28px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 34px;
+}
+
+.beef-order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  border-top: 1px solid rgba(200,146,42,0.2);
+  margin-bottom: 16px;
+}
+
+.beef-order-total-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.beef-order-total-amt {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.beef-cut-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--cream);
+  font-weight: 600;
+}
+
+.beef-cut-price {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.beef-cut-unit {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--cream-muted);
+}
+
+.beef-modal-order-btn {
+  display: block;
+  text-align: center;
+  background: var(--gold);
+  color: var(--white);
+  padding: 14px;
+  margin: 0 28px 28px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: background 0.2s;
+  touch-action: manipulation;
+}
+.beef-modal-order-btn:hover { background: var(--gold-light); }
+
 .pack-modal-backdrop {
   display: none;
   position: fixed;
@@ -1054,6 +1336,71 @@ ul  { list-style: none; }
   margin-top: auto;
 }
 
+/* ─── Dozen quantity stepper (single-dozen card) ─────────────── */
+.dozen-stepper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid rgba(200,146,42,0.35);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 0 10px;
+}
+
+.stepper-btn {
+  flex: 0 0 48px;
+  background: rgba(200,146,42,0.1);
+  border: none;
+  color: var(--gold);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  padding: 0;
+}
+.stepper-btn:active { background: rgba(200,146,42,0.28); }
+
+.stepper-val {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 8px;
+  border-left: 1px solid rgba(200,146,42,0.25);
+  border-right: 1px solid rgba(200,146,42,0.25);
+}
+
+.stepper-qty {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+  min-width: 24px;
+  text-align: center;
+}
+
+.stepper-unit {
+  font-size: 10px;
+  color: var(--cream-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.stepper-total {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gold-light);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
 .pack-card-btn {
   display: block;
   text-align: center;
@@ -1154,13 +1501,127 @@ ul  { list-style: none; }
 }
 
 /* ── Pickup Calendar ───────────────────────────────────────── */
+/* ─── Schedule pickup toggle ───────────────────────────────────── */
+.pickup-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 16px;
+  background: rgba(200,146,42,0.08);
+  border: 1px solid rgba(200,146,42,0.35);
+  border-radius: 6px;
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  margin-bottom: 0;
+}
+.pickup-toggle:hover { background: rgba(200,146,42,0.14); }
+
+.pickup-toggle-chevron {
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.25s;
+}
+.pickup-toggle--open .pickup-toggle-chevron { transform: rotate(180deg); }
+
+/* ─── Pickup section (radios + calendar) ──────────────────────── */
+.pickup-section {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.pickup-section--open { max-height: 700px; }
+
+/* ─── Pickup type radios ──────────────────────────────────────── */
+.pickup-radios {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+
+.pickup-radio {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(200,146,42,0.2);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pickup-radio:hover { background: rgba(200,146,42,0.06); }
+.pickup-radio:has(input:checked) {
+  background: rgba(200,146,42,0.12);
+  border-color: var(--gold);
+}
+
+.pickup-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pickup-radio-ui {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(200,146,42,0.45);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s;
+}
+.pickup-radio-ui::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.pickup-radio:has(input:checked) .pickup-radio-ui { border-color: var(--gold); }
+.pickup-radio:has(input:checked) .pickup-radio-ui::after { opacity: 1; }
+
+.pickup-radio-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pickup-radio-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+}
+.pickup-radio-detail {
+  font-size: 10px;
+  color: var(--cream-muted);
+  letter-spacing: 0.4px;
+}
+
+/* ─── Pickup calendar ─────────────────────────────────────────── */
 .pickup-cal {
+  display: none;
   background: rgba(0,0,0,0.25);
   border: 1px solid rgba(200,146,42,0.18);
   border-radius: 8px;
   padding: 12px 10px 10px;
-  margin: 16px 0 20px;
+  margin: 12px 0 4px;
 }
+.pickup-cal--visible { display: block; }
 
 .pickup-cal-hdr {
   display: flex;
@@ -1264,7 +1725,7 @@ ul  { list-style: none; }
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
-  .pack-card--reserve { order: 3; grid-column: 1 / -1; max-width: 320px; margin: 0 auto; }
+  .pack-card--reserve { grid-column: 1 / -1; max-width: 320px; margin: 0 auto; }
 }
 
 @media (max-width: 600px) {
@@ -1277,7 +1738,6 @@ ul  { list-style: none; }
     gap: 16px;
   }
   .pack-card--reserve { max-width: 100%; }
-  .pack-card--featured { order: -1; }
 }
 
 /* =============================================================
@@ -1433,6 +1893,7 @@ ul  { list-style: none; }
 .contact-detail {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 14px;
   color: var(--cream);
@@ -1665,8 +2126,7 @@ ul  { list-style: none; }
   .nav-brand { font-size: 16px; }
   .nav-sub   { font-size: 11px; letter-spacing: 1.5px; }
 
-  /* Scrolled: collapse to hamburger-only on mobile */
-  .site-nav.nav--scrolled { padding: 0; min-height: 48px; }
+  .site-nav.nav--scrolled { padding: 0; min-height: 68px; }
   .site-nav.nav--scrolled .nav-brand-center {
     opacity: 0;
     max-height: 0;
@@ -1678,6 +2138,7 @@ ul  { list-style: none; }
     top: 50%;
     transform: translateY(-50%);
   }
+  .site-nav.nav--scrolled .nav-scrolled-brand { display: flex; }
 
   .hero-photo { aspect-ratio: 3 / 2; }
   .hero-photo img { object-position: center center; }
@@ -1737,74 +2198,4 @@ ul  { list-style: none; }
   .nav-sub        { display: none; }
   .nav-bottom-bar { margin-top: 6px; padding-top: 6px; }
   .nav-hamburger  { top: 10px; }
-}
-
-
-/* =============================================================
-   MOBILE BOTTOM NAV
-   ============================================================= */
-.mobile-bottom-nav {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--charcoal);
-  border-top: 1px solid rgba(200,146,42,0.22);
-  z-index: 300;
-  padding-bottom: 8px;
-}
-
-.mbn-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 4px 7px;
-  color: rgba(201,185,154,0.42);
-  text-decoration: none;
-  gap: 3px;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.2s;
-}
-
-.mbn-item::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 25%;
-  right: 25%;
-  height: 2px;
-  background: var(--gold);
-  border-radius: 0 0 3px 3px;
-  transform: scaleX(0);
-  transition: transform 0.25s ease;
-}
-
-.mbn-item.mbn-active {
-  color: var(--gold);
-}
-
-.mbn-item.mbn-active::after {
-  transform: scaleX(1);
-}
-
-.mbn-icon {
-  font-size: 20px;
-  line-height: 1;
-}
-
-.mbn-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-family: 'Lato', sans-serif;
-}
-
-@media (max-width: 768px) {
-  .mobile-bottom-nav { display: flex; }
-  body { padding-bottom: 72px; }
 }

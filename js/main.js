@@ -87,8 +87,8 @@
     if (successEl)    successEl.style.display     = 'block';
     var contactSec = document.getElementById('contact');
     if (contactSec) {
-      var navH = document.getElementById('nav');
-      var offset = navH ? navH.offsetHeight : 0;
+      var navEl = document.getElementById('nav');
+      var offset = navEl ? navEl.offsetHeight : 0;
       var top = contactSec.getBoundingClientRect().top + window.pageYOffset - offset - 16;
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
@@ -146,7 +146,7 @@
   /* ─── Pickup Calendar ─────────────────────────────────────── */
   var MONTHS = ['January','February','March','April','May','June',
                 'July','August','September','October','November','December'];
-  var calViewYear, calViewMonth, selectedPickupDate = null;
+  var calViewYear, calViewMonth, selectedPickupDate = null, pickupType = null;
 
   function renderCalendar() {
     var calTitle = document.getElementById('calTitle');
@@ -170,20 +170,21 @@
     }
 
     for (var d = 1; d <= daysInMonth; d++) {
-      var date   = new Date(calViewYear, calViewMonth, d);
-      var isSat  = date.getDay() === 6;
-      var isPast = date < today;
-      var isSel  = selectedPickupDate && date.toDateString() === selectedPickupDate.toDateString();
+      var date       = new Date(calViewYear, calViewMonth, d);
+      var dow        = date.getDay();
+      var isPickupDay = pickupType === 'church' ? dow === 0 : dow === 6;
+      var isPast     = date < today;
+      var isSel      = selectedPickupDate && date.toDateString() === selectedPickupDate.toDateString();
 
       var cell = document.createElement('button');
       cell.type = 'button';
       cell.textContent = d;
-      cell.disabled = !isSat || isPast;
+      cell.disabled = !isPickupDay || isPast;
       cell.className = 'cal-day' +
-        (isSat && !isPast ? ' cal-day--sat' : '') +
-        (isSel            ? ' cal-day--sel'  : '');
+        (isPickupDay && !isPast ? ' cal-day--sat' : '') +
+        (isSel                  ? ' cal-day--sel'  : '');
 
-      if (isSat && !isPast) {
+      if (isPickupDay && !isPast) {
         (function (captured) {
           cell.addEventListener('click', function () {
             selectedPickupDate = captured;
@@ -200,11 +201,14 @@
     var calLabel = document.getElementById('calLabel');
     if (!calLabel) return;
     if (selectedPickupDate) {
-      calLabel.textContent = '✓ Pickup: ' + MONTHS[selectedPickupDate.getMonth()] +
+      var dayName = pickupType === 'church' ? 'Sunday' : 'Saturday';
+      calLabel.textContent = '✓ ' + dayName + ' ' + MONTHS[selectedPickupDate.getMonth()] +
         ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
       calLabel.classList.add('cal-label--set');
     } else {
-      calLabel.textContent = 'Select a Saturday for pickup';
+      calLabel.textContent = pickupType === 'church' ? 'Select a Sunday for drop-off' :
+                             pickupType === 'atlanta' ? 'Select a Saturday — Atlanta' :
+                             'Select a Saturday — Farm Pickup';
       calLabel.classList.remove('cal-label--set');
     }
   }
@@ -214,9 +218,39 @@
     calViewYear  = now.getFullYear();
     calViewMonth = now.getMonth();
     selectedPickupDate = null;
+    pickupType = null;
+    document.querySelectorAll('input[name="pickupType"]').forEach(function (r) { r.checked = false; });
+    var pickupCal = document.getElementById('pickupCal');
+    if (pickupCal) pickupCal.classList.remove('pickup-cal--visible');
+    var calSatHdr = document.getElementById('calSatHdr');
+    var calSunHdr = document.getElementById('calSunHdr');
+    if (calSatHdr) calSatHdr.className = 'cal-sat-hdr';
+    if (calSunHdr) calSunHdr.className = '';
     renderCalendar();
     updateCalLabel();
   }
+
+
+  /* ─── Pickup type radios ─────────────────────────────────────── */
+  document.querySelectorAll('input[name="pickupType"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      pickupType = radio.value;
+      selectedPickupDate = null;
+      var calSatHdr = document.getElementById('calSatHdr');
+      var calSunHdr = document.getElementById('calSunHdr');
+      if (pickupType === 'church') {
+        if (calSatHdr) calSatHdr.className = '';
+        if (calSunHdr) calSunHdr.className = 'cal-sat-hdr';
+      } else {
+        if (calSatHdr) calSatHdr.className = 'cal-sat-hdr';
+        if (calSunHdr) calSunHdr.className = '';
+      }
+      renderCalendar();
+      updateCalLabel();
+      var pickupCal = document.getElementById('pickupCal');
+      if (pickupCal) pickupCal.classList.add('pickup-cal--visible');
+    });
+  });
 
   var calPrevBtn = document.getElementById('calPrev');
   var calNextBtn = document.getElementById('calNext');
@@ -240,10 +274,81 @@
   var packModalClose = document.getElementById('packModalClose');
   var shopEggsBtn    = document.getElementById('shopEggsBtn');
 
+  /* ─── Dozen stepper ──────────────────────────────────────── */
+  var eggsQty       = 1;
+  var EGG_PRICE     = 5;
+  var eggsQtyEl     = document.getElementById('eggsQty');
+  var eggsTotalEl   = document.getElementById('eggsStepperTotal');
+  var eggsOrderBtn  = document.getElementById('eggsOrderBtn');
+  var eggsQtyMinus  = document.getElementById('eggsQtyMinus');
+  var eggsQtyPlus   = document.getElementById('eggsQtyPlus');
+
+  function updateEggsStepper() {
+    var total = eggsQty * EGG_PRICE;
+    if (eggsQtyEl)    eggsQtyEl.textContent   = eggsQty;
+    if (eggsTotalEl)  eggsTotalEl.textContent  = '$' + total + ' total';
+    if (eggsOrderBtn) {
+      eggsOrderBtn.textContent = 'Order Now — $' + total;
+      eggsOrderBtn.setAttribute('data-order',
+        eggsQty + ' dozen pasture-raised eggs · $' + total + ' one-time');
+    }
+  }
+
+  if (eggsQtyMinus) {
+    eggsQtyMinus.addEventListener('click', function () {
+      if (eggsQty > 1) { eggsQty--; updateEggsStepper(); }
+    });
+  }
+  if (eggsQtyPlus) {
+    eggsQtyPlus.addEventListener('click', function () {
+      eggsQty++;
+      updateEggsStepper();
+    });
+  }
+
+  /* Pre-handler: validate pickup type + date, build order string before generic handler reads it */
+  if (eggsOrderBtn) {
+    eggsOrderBtn.addEventListener('click', function (e) {
+      if (!pickupType) {
+        showToast('Please choose a pickup option first.');
+        e.stopImmediatePropagation();
+        return;
+      }
+      if (!selectedPickupDate) {
+        showToast('Please select a date for your pickup.');
+        e.stopImmediatePropagation();
+        return;
+      }
+      var total     = eggsQty * EGG_PRICE;
+      var dayName   = pickupType === 'church' ? 'Sunday' : 'Saturday';
+      var typeLabel = pickupType === 'farm'    ? 'Farm Pickup · Georgia' :
+                      pickupType === 'church'  ? 'Church Drop-off · Savannah GA' :
+                                                 'City Pickup · Atlanta GA';
+      var dateStr   = MONTHS[selectedPickupDate.getMonth()] + ' ' +
+                      selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
+      eggsOrderBtn.setAttribute('data-order',
+        eggsQty + ' dozen pasture-raised eggs · $' + total + ' · ' +
+        typeLabel + ' · ' + dayName + ' ' + dateStr);
+    });
+  }
+
   function openPackModal() {
     if (!packModal) return;
     packModal.classList.add('open');
     document.body.style.overflow = 'hidden';
+    eggsQty = 1;
+    updateEggsStepper();
+    var pickupSec = document.getElementById('pickupSection');
+    var tog       = document.getElementById('pickupToggle');
+    if (pickupSec) pickupSec.classList.remove('pickup-section--open');
+    if (tog)       tog.classList.remove('pickup-toggle--open');
+    if (tog && pickupSec) {
+      tog.onclick = function (e) {
+        e.stopPropagation();
+        var isOpen = pickupSec.classList.toggle('pickup-section--open');
+        tog.classList.toggle('pickup-toggle--open', isOpen);
+      };
+    }
     initCalendar();
     if (window.BFF) window.BFF.loadCapacity();
   }
@@ -314,8 +419,9 @@
 
           var contact = document.getElementById('contact');
           if (contact) {
-            var navH = nav ? nav.offsetHeight : 0;
-            var top  = contact.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+            var navEl2 = document.getElementById('nav');
+            var navOffset = navEl2 ? navEl2.offsetHeight : 0;
+            var top  = contact.getBoundingClientRect().top + window.pageYOffset - navOffset - 16;
             window.scrollTo({ top: top, behavior: 'smooth' });
           }
 
@@ -333,7 +439,6 @@
 
   function setSpacerToFullNav() {
     if (!nav || !navSpacer) return;
-    // Temporarily remove nav--scrolled so we measure the full nav height
     var wasScrolled = nav.classList.contains('nav--scrolled');
     if (wasScrolled) nav.classList.remove('nav--scrolled');
     navSpacer.style.height = nav.offsetHeight + 'px';
@@ -348,11 +453,8 @@
 
   var logoImg = nav && nav.querySelector('.nav-logo img');
   if (logoImg) {
-    if (logoImg.complete) {
-      setSpacerToFullNav();
-    } else {
-      logoImg.addEventListener('load', setSpacerToFullNav);
-    }
+    if (logoImg.complete) { setSpacerToFullNav(); }
+    else { logoImg.addEventListener('load', setSpacerToFullNav); }
   }
 
   function syncMobileNavTop() {
@@ -435,40 +537,6 @@
     });
   }
 
-  /* ─── Mobile Bottom Nav — active section highlight ───────── */
-  var mbnItems = document.querySelectorAll('.mbn-item');
-
-  function setMbnActive(sectionId) {
-    mbnItems.forEach(function (item) {
-      item.classList.toggle('mbn-active', item.getAttribute('data-section') === sectionId);
-    });
-  }
-
-  if (mbnItems.length && 'IntersectionObserver' in window) {
-    var sectionIds = ['home', 'story', 'shop', 'contact'];
-    var sectionVisible = {};
-
-    var mbnObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        sectionVisible[entry.target.id] = entry.isIntersecting;
-      });
-      for (var i = sectionIds.length - 1; i >= 0; i--) {
-        if (sectionVisible[sectionIds[i]]) {
-          setMbnActive(sectionIds[i]);
-          break;
-        }
-      }
-    }, { threshold: 0.25 });
-
-    sectionIds.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) mbnObserver.observe(el);
-    });
-  }
-
-  setMbnActive('home');
-
-
   /* ─── Shop Card Carousel (mobile) ──────────────────────────── */
   function initShopCarousel() {
     if (window.innerWidth > 768) return;
@@ -498,13 +566,21 @@
     });
     shopGrid.insertAdjacentElement('afterend', dotsWrap);
 
-    function goTo(n) {
+    function updateDots(n) {
       idx = ((n % cards.length) + cards.length) % cards.length;
-      var cardW = cards[0] ? cards[0].offsetWidth : 0;
-      shopGrid.style.transform = 'translateX(' + (-idx * (cardW + 16)) + 'px)';
       dots.forEach(function (d, i) {
         d.classList.toggle('shop-carousel-dot--active', i === idx);
       });
+    }
+
+    function cardStride() {
+      return cards[0] ? cards[0].offsetWidth + 16 : 0;
+    }
+
+    function goTo(n) {
+      n = ((n % cards.length) + cards.length) % cards.length;
+      shopGrid.scrollTo({ left: n * cardStride(), behavior: 'smooth' });
+      updateDots(n);
     }
 
     function startAuto() {
@@ -512,22 +588,30 @@
       autoTimer = setInterval(function () { goTo(idx + 1); }, 3500);
     }
 
+    /* Sync dots when user swipes natively */
+    var scrollDebounce;
+    shopGrid.addEventListener('scroll', function () {
+      clearTimeout(scrollDebounce);
+      scrollDebounce = setTimeout(function () {
+        var stride = cardStride();
+        if (!stride) return;
+        var newIdx = Math.round(shopGrid.scrollLeft / stride);
+        if (newIdx !== idx) updateDots(newIdx);
+      }, 80);
+    }, { passive: true });
+
+    shopGrid.addEventListener('touchstart', function () {
+      clearInterval(autoTimer);
+    }, { passive: true });
+    shopGrid.addEventListener('touchend', function () {
+      startAuto();
+    }, { passive: true });
+
     dots.forEach(function (dot, i) {
       dot.addEventListener('click', function () { goTo(i); startAuto(); });
     });
 
-    var touchStartX = 0;
-    shopGrid.addEventListener('touchstart', function (e) {
-      touchStartX = e.touches[0].clientX;
-      clearInterval(autoTimer);
-    }, { passive: true });
-    shopGrid.addEventListener('touchend', function (e) {
-      var dx = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(dx) > 40) goTo(idx + (dx > 0 ? 1 : -1));
-      startAuto();
-    }, { passive: true });
-
-    goTo(0);
+    updateDots(0);
     startAuto();
   }
 
@@ -535,6 +619,136 @@
     window.addEventListener('load', initShopCarousel);
   } else {
     initShopCarousel();
+  }
+
+  /* ─── Beef modal — inline video + cuts & prices + steppers ─── */
+  var beefModal         = document.getElementById('beefModal');
+  var beefModalClose    = document.getElementById('beefModalClose');
+  var beefModalOrderBtn = document.getElementById('beefModalOrderBtn');
+  var beefBtn           = document.getElementById('beefLearnMoreBtn');
+  var beefVideo         = document.getElementById('beefVideo');
+  var beefOrderTotal    = document.getElementById('beefOrderTotal');
+  var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
+
+  var beefCutRows = beefModal ? Array.prototype.slice.call(
+    beefModal.querySelectorAll('.beef-cut-item[data-cut]')
+  ) : [];
+
+  function getBeefQty(row) { return parseInt(row.querySelector('.beef-stepper-qty').textContent, 10) || 0; }
+  function setBeefQty(row, qty) { row.querySelector('.beef-stepper-qty').textContent = qty; }
+
+  function updateBeefTotal() {
+    var total = 0;
+    beefCutRows.forEach(function (row) {
+      total += getBeefQty(row) * parseFloat(row.getAttribute('data-price'));
+    });
+    if (beefOrderTotal) beefOrderTotal.style.display = total > 0 ? 'flex' : 'none';
+    if (beefOrderTotalAmt) beefOrderTotalAmt.textContent = '$' + total.toFixed(2);
+  }
+
+  function resetBeefQty() {
+    beefCutRows.forEach(function (row) { setBeefQty(row, 0); });
+    updateBeefTotal();
+  }
+
+  beefCutRows.forEach(function (row) {
+    var plusBtn  = row.querySelector('[data-action="plus"]');
+    var minusBtn = row.querySelector('[data-action="minus"]');
+    if (plusBtn) {
+      plusBtn.onclick = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        setBeefQty(row, getBeefQty(row) + 1);
+        updateBeefTotal();
+      };
+    }
+    if (minusBtn) {
+      minusBtn.onclick = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        var q = getBeefQty(row);
+        if (q > 0) { setBeefQty(row, q - 1); updateBeefTotal(); }
+      };
+    }
+  });
+
+  function openBeefModal() {
+    if (!beefModal) return;
+    resetBeefQty();
+    beefModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (beefVideo) {
+      setTimeout(function () {
+        try {
+          var p = beefVideo.play();
+          if (p && p.catch) p.catch(function () {});
+        } catch (err) {}
+      }, 50);
+    }
+  }
+
+  function closeBeefModal() {
+    if (!beefModal) return;
+    beefModal.classList.remove('open');
+    document.body.style.overflow = '';
+    if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
+  }
+
+  if (beefBtn) {
+    beefBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      openBeefModal();
+    });
+  }
+  if (beefModalClose) beefModalClose.addEventListener('click', closeBeefModal);
+  if (beefModal) {
+    beefModal.addEventListener('click', function (e) {
+      if (e.target === beefModal) closeBeefModal();
+    });
+  }
+
+  if (beefModalOrderBtn) {
+    beefModalOrderBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var lines = [];
+      var total = 0;
+      beefCutRows.forEach(function (row) {
+        var qty = getBeefQty(row);
+        if (qty > 0) {
+          var name  = row.querySelector('.beef-cut-name').textContent;
+          var price = parseFloat(row.getAttribute('data-price'));
+          var sub   = qty * price;
+          total += sub;
+          lines.push(qty + ' lb — ' + name + ' @ $' + price.toFixed(2) + '/lb = $' + sub.toFixed(2));
+        }
+      });
+
+      if (lines.length === 0) {
+        showToast('Please select at least one cut to order.');
+        return;
+      }
+
+      var orderText = 'BEEF ORDER\n' + lines.join('\n') + '\n\nEstimated Total: $' + total.toFixed(2);
+
+      closeBeefModal();
+
+      var inquiry  = document.getElementById('contactInquiry');
+      var message  = document.getElementById('contactMessage');
+      var planIn   = document.getElementById('contactPlan');
+
+      if (inquiry) inquiry.value = 'Beef Order';
+      if (message) message.value = orderText;
+      if (planIn)  { planIn.value = orderText; planIn.dataset.beefOrder = 'true'; }
+
+      var contact = document.getElementById('contact');
+      if (contact) {
+        setTimeout(function () {
+          var navEl  = document.getElementById('nav');
+          var offset = navEl ? navEl.offsetHeight : 0;
+          window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - offset - 16, behavior: 'smooth' });
+          setTimeout(function () { if (message) message.focus(); }, 400);
+        }, 50);
+      }
+    });
   }
 
 })();

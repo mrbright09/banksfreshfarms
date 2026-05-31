@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=9" />
+  <link rel="stylesheet" href="css/style.css?v=39" />
 </head>
 <body>
 
@@ -26,6 +26,11 @@
   <nav class="site-nav" id="nav">
     <!-- Hamburger — absolute top-right on mobile, hidden on desktop -->
     <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
+    <!-- Compact brand shown only in mobile scrolled state -->
+    <span class="nav-scrolled-brand" aria-hidden="true">
+      <span class="nav-scrolled-name">Banks Fresh Farms</span>
+      <span class="nav-scrolled-sub">A Georgia Grown Heritage</span>
+    </span>
 
     <!-- Always-centered brand block -->
     <div class="nav-brand-center">
@@ -97,11 +102,10 @@
       </div>
 
       <div class="story-copy">
-        <p class="story-line">Banks Fresh Farms isn't just land — it's legacy.</p>
-        <p class="story-line">What started as a commitment to family, faith, and self-sufficiency has grown into a multi-generational operation grounded in purpose. Every step we take is connected to those who came before us and those we're building for next.</p>
-        <p class="story-line">We don't just grow food — we cultivate responsibility, ownership, and community. From our soil to your table, everything we produce carries the weight of our name and the pride of our family.</p>
-        <p class="story-quote">&ldquo;This isn't just farming. This is stewardship.&rdquo;</p>
-        <a href="#contact" class="btn-story">Contact Us</a>
+        <p class="story-line">We know what it means to be far from home, to build a life in borrowed towns, to raise children on new streets while the heart remains tethered to somewhere it has never quite left. We were a military family. Moving was our first language.</p>
+        <p class="story-line">When we left Wisconsin and made our way back to Georgia, the outlook for his health was not good. The doctors weren't hopeful. But God had other plans, and so did the land, the fresh air, the clean food, the slower pace of life close to the earth. He is 72 years old today.</p>
+        <p class="story-line">Banks Fresh Farms is that story made into something you can hold. Every seed is a vow renewed. Every harvest, a testament to what God and good soil can do for a family willing to come home to both.</p>
+        <p class="story-quote">&ldquo;From every corner of this country God guided us back to this soil and gave us back our life.&rdquo;</p>
       </div>
 
     </div>
@@ -126,12 +130,26 @@
         <div class="shop-card-photo">
           <img src="images/product-eggs.png" alt="BFF Fresh Eggs — Pre Order Now"
             onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
-          <div class="shop-card-badge">Pre Order Now</div>
+          <div class="shop-card-badge">Order Now</div>
         </div>
         <div class="shop-card-body">
           <h3 class="shop-card-title">Pasture-Raised Eggs</h3>
           <p class="shop-card-desc">Nutrient-rich, pasture-raised. Collected daily from naturally foraging hens on Georgia farmland.</p>
           <button class="shop-card-btn" id="shopEggsBtn">Shop Eggs</button>
+        </div>
+      </div>
+
+      <!-- BEEF — AVAILABLE NOW -->
+      <div class="shop-card fade-in">
+        <div class="shop-card-photo">
+          <img src="images/product-beef.png" alt="BFF Black Angus Beef"
+            onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
+          <div class="shop-card-badge">Order Now</div>
+        </div>
+        <div class="shop-card-body">
+          <h3 class="shop-card-title">Grass Fed Angus Beef</h3>
+          <p class="shop-card-desc">Premium pasture-raised Black Angus beef. From our land to your table.</p>
+          <button type="button" class="shop-card-btn" id="beefLearnMoreBtn">Shop Beef</button>
         </div>
       </div>
 
@@ -145,20 +163,6 @@
         <div class="shop-card-body">
           <h3 class="shop-card-title">BFF Signature Seasonings</h3>
           <p class="shop-card-desc">Hand-crafted spice blends made from farm-grown herbs. Four signature blends, Georgia-made.</p>
-          <a href="#contact" class="shop-card-btn shop-card-btn--soon">Learn More</a>
-        </div>
-      </div>
-
-      <!-- BEEF & POULTRY — COMING SOON -->
-      <div class="shop-card shop-card--soon fade-in">
-        <div class="shop-card-photo">
-          <img src="images/product-beef.png" alt="BFF Beef and Poultry — Coming Soon"
-            onerror="this.style.display='none'; this.parentElement.classList.add('no-photo');" />
-          <div class="shop-card-badge shop-card-badge--soon">Coming Soon</div>
-        </div>
-        <div class="shop-card-body">
-          <h3 class="shop-card-title">Grass Fed Angus Beef</h3>
-          <p class="shop-card-desc">Premium pasture-raised beef and poultry. Humanely raised on BFF land. Coming soon to your table.</p>
           <a href="#contact" class="shop-card-btn shop-card-btn--soon">Learn More</a>
         </div>
       </div>
@@ -220,6 +224,7 @@
         <input type="email" name="Email" placeholder="Email Address" required />
         <select name="Inquiry Type" id="contactInquiry" required>
           <option value="" disabled selected>I'm interested in...</option>
+          <option>Beef Order</option>
           <option>Poultry / Eggs Order</option>
           <option>BFF Seasonings</option>
           <option>Herbal Products</option>
@@ -272,24 +277,6 @@
   </footer>
 
   <!-- MOBILE BOTTOM NAV -->
-  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobile navigation">
-    <a href="#home"    class="mbn-item" data-section="home">
-      <span class="mbn-icon">🏡</span>
-      <span class="mbn-label">Home</span>
-    </a>
-    <a href="#shop"    class="mbn-item" data-section="shop">
-      <span class="mbn-icon">🥚</span>
-      <span class="mbn-label">Shop</span>
-    </a>
-    <a href="#story"   class="mbn-item" data-section="story">
-      <span class="mbn-icon">🌾</span>
-      <span class="mbn-label">Story</span>
-    </a>
-    <a href="#contact" class="mbn-item" data-section="contact">
-      <span class="mbn-icon">✉️</span>
-      <span class="mbn-label">Order</span>
-    </a>
-  </nav>
 
   <!-- FORM VALIDATION TOAST -->
   <div class="form-toast" id="formToast" role="alert" aria-live="assertive">
@@ -314,6 +301,76 @@
         </div>
       </div>
       <div class="pack-grid">
+
+        <!-- ONE-TIME DOZEN + PICKUP CALENDAR -->
+        <div class="pack-card">
+          <div class="pack-card-badge">One-Time</div>
+          <div class="pack-card-icon">🥚</div>
+          <h3 class="pack-card-title">Single Dozen</h3>
+          <div class="pack-card-sub">One-Time Purchase</div>
+          <p class="pack-card-desc">Fresh eggs, no strings. Pick your Saturday, show up, take home a dozen straight from the farm.</p>
+          <div class="pack-card-price">
+            <span class="pack-price-amount">$5</span>
+            <span class="pack-price-label">per dozen · 12 eggs</span>
+          </div>
+          <div class="dozen-stepper">
+            <button type="button" class="stepper-btn" id="eggsQtyMinus" aria-label="Fewer dozens">&#8722;</button>
+            <span class="stepper-val">
+              <span class="stepper-qty" id="eggsQty">1</span>
+              <span class="stepper-unit">dozen</span>
+            </span>
+            <button type="button" class="stepper-btn" id="eggsQtyPlus" aria-label="More dozens">+</button>
+          </div>
+          <p class="stepper-total" id="eggsStepperTotal">$5 total</p>
+          <button type="button" class="pickup-toggle" id="pickupToggle">
+            Schedule Your Pickup <span class="pickup-toggle-chevron">&#9660;</span>
+          </button>
+          <div class="pickup-section" id="pickupSection">
+            <div class="pickup-radios">
+              <label class="pickup-radio">
+                <input type="radio" name="pickupType" value="farm" />
+                <span class="pickup-radio-ui"></span>
+                <span class="pickup-radio-text">
+                  <span class="pickup-radio-name">Farm Pickup</span>
+                  <span class="pickup-radio-detail">Saturdays &middot; Georgia Farm</span>
+                </span>
+              </label>
+              <label class="pickup-radio">
+                <input type="radio" name="pickupType" value="church" />
+                <span class="pickup-radio-ui"></span>
+                <span class="pickup-radio-text">
+                  <span class="pickup-radio-name">Church Drop-off</span>
+                  <span class="pickup-radio-detail">Sundays &middot; Savannah, GA</span>
+                </span>
+              </label>
+              <label class="pickup-radio">
+                <input type="radio" name="pickupType" value="atlanta" />
+                <span class="pickup-radio-ui"></span>
+                <span class="pickup-radio-text">
+                  <span class="pickup-radio-name">City Pickup</span>
+                  <span class="pickup-radio-detail">Saturdays &middot; Atlanta, GA</span>
+                </span>
+              </label>
+            </div>
+            <div class="pickup-cal" id="pickupCal">
+              <div class="pickup-cal-hdr">
+                <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
+                <span class="cal-title" id="calTitle"></span>
+                <button type="button" class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
+              </div>
+              <div class="cal-weekdays">
+                <span id="calSunHdr">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span id="calSatHdr" class="cal-sat-hdr">Sa</span>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+              <div class="cal-label" id="calLabel"></div>
+            </div>
+          </div>
+          <div class="pack-card-btns">
+            <button type="button" class="pack-card-btn" id="eggsOrderBtn"
+               data-plan="single-dozen"
+               data-order="1 dozen pasture-raised eggs · $5 one-time">Order Now — $5</button>
+          </div>
+        </div>
 
         <!-- WEEKLY SUBSCRIPTION -->
         <div class="pack-card pack-card--featured">
@@ -345,37 +402,6 @@
           </div>
         </div>
 
-        <!-- ONE-TIME DOZEN + PICKUP CALENDAR -->
-        <div class="pack-card">
-          <div class="pack-card-badge">One-Time</div>
-          <div class="pack-card-icon">🥚</div>
-          <h3 class="pack-card-title">Single Dozen</h3>
-          <div class="pack-card-sub">One-Time Purchase</div>
-          <p class="pack-card-desc">Fresh eggs, no strings. Pick your Saturday, show up, take home a dozen straight from the farm.</p>
-          <div class="pack-card-price">
-            <span class="pack-price-amount">$5</span>
-            <span class="pack-price-label">one-time · 12 eggs</span>
-          </div>
-          <div class="pickup-cal">
-            <div class="pickup-cal-hdr">
-              <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
-              <span class="cal-title" id="calTitle"></span>
-              <button type="button" class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
-            </div>
-            <div class="cal-weekdays">
-              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span class="cal-sat-hdr">Sa</span>
-            </div>
-            <div class="cal-grid" id="calGrid"></div>
-            <div class="cal-label" id="calLabel">Select a Saturday for pickup</div>
-          </div>
-          <div class="pack-card-btns">
-            <button type="button" class="pack-card-btn"
-               data-plan="single-dozen"
-               data-order="Single Dozen — 12 pasture-raised eggs · $5 one-time"
-               data-requires-date="true">Order Now — $5</button>
-          </div>
-        </div>
-
         <!-- SOLO PACK — COMING SOON -->
         <div class="pack-card pack-card--reserve">
           <div class="pack-card-badge pack-card-badge--reserve">Coming Soon</div>
@@ -401,6 +427,86 @@
         </div>
 
       </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       VIDEO MODAL — Cows / Beef footage
+  ============================================================ -->
+  <!-- BEEF CUTS MODAL (video inline at top) -->
+  <div class="beef-modal-backdrop" id="beefModal" role="dialog" aria-modal="true" aria-labelledby="beefModalTitle">
+    <div class="beef-modal">
+      <button class="beef-modal-close" id="beefModalClose" aria-label="Close">&times;</button>
+      <video id="beefVideo" class="beef-modal-video" controls playsinline preload="none" loop>
+        <source src="Cows.mov" type="video/quicktime" />
+        <source src="Cows.mov" type="video/mp4" />
+      </video>
+      <div class="beef-modal-header">
+        <div class="beef-modal-eyebrow">Black Angus · Pasture Raised</div>
+        <h2 class="beef-modal-title" id="beefModalTitle">Grass Fed Angus Beef</h2>
+        <p class="beef-modal-sub">Priced per pound · Farm-fresh cuts</p>
+      </div>
+      <ul class="beef-cuts-list">
+        <li class="beef-cut-item" data-cut="ground-beef" data-price="10.99">
+          <span class="beef-cut-name">Ground Beef</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
+          <span class="beef-cut-price">$10.99<span class="beef-cut-unit">/lb</span></span>
+        </li>
+        <li class="beef-cut-item" data-cut="chuck-roast" data-price="12.99">
+          <span class="beef-cut-name">Chuck Roast</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
+          <span class="beef-cut-price">$12.99<span class="beef-cut-unit">/lb</span></span>
+        </li>
+        <li class="beef-cut-item" data-cut="short-ribs" data-price="13.99">
+          <span class="beef-cut-name">Short Ribs</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
+          <span class="beef-cut-price">$13.99<span class="beef-cut-unit">/lb</span></span>
+        </li>
+        <li class="beef-cut-item" data-cut="ribeye" data-price="22.99">
+          <span class="beef-cut-name">Ribeye</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
+          <span class="beef-cut-price">$22.99<span class="beef-cut-unit">/lb</span></span>
+        </li>
+        <li class="beef-cut-item" data-cut="t-bone" data-price="22.99">
+          <span class="beef-cut-name">T-Bone</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
+          <span class="beef-cut-price">$22.99<span class="beef-cut-unit">/lb</span></span>
+        </li>
+        <li class="beef-cut-item beef-cut-item--featured" data-cut="oxtail" data-price="24.99">
+          <span class="beef-cut-name">Oxtail</span>
+          <div class="beef-cut-stepper">
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
+          <span class="beef-cut-price">$24.99<span class="beef-cut-unit">/lb</span></span>
+        </li>
+      </ul>
+      <div class="beef-order-total" id="beefOrderTotal" style="display:none">
+        <span class="beef-order-total-label">Est. Total</span>
+        <span class="beef-order-total-amt" id="beefOrderTotalAmt">$0.00</span>
+      </div>
+      <button type="button" class="beef-modal-order-btn" id="beefModalOrderBtn">Contact Us to Order</button>
     </div>
   </div>
 
