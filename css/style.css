@@ -871,39 +871,56 @@ ul  { list-style: none; }
   inset: 0;
   background: rgba(16,7,5,0.92);
   z-index: 500;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 20px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .beef-modal-backdrop.open { display: flex; }
 
 .beef-modal {
   background: var(--bg-card-light);
   border-radius: 12px;
-  padding: 36px 32px 32px;
+  overflow: hidden;
   width: 100%;
   max-width: 460px;
   position: relative;
   border: 1px solid rgba(200,146,42,0.2);
+  margin: auto;
+}
+
+.beef-modal-video {
+  width: 100%;
+  display: block;
+  background: #000;
+  max-height: 260px;
+  object-fit: cover;
 }
 
 .beef-modal-close {
   position: absolute;
-  top: 14px;
-  right: 16px;
-  background: none;
+  top: 10px;
+  right: 12px;
+  background: rgba(0,0,0,0.55);
   border: none;
-  color: var(--cream-muted);
-  font-size: 28px;
+  color: #fff;
+  font-size: 26px;
   cursor: pointer;
   line-height: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-.beef-modal-close:hover { color: var(--gold); }
+.beef-modal-close:hover { background: rgba(200,146,42,0.8); }
 
-.beef-modal-header { text-align: center; margin-bottom: 28px; }
+.beef-modal-header { text-align: center; margin-bottom: 28px; padding: 24px 28px 0; }
 
 .beef-modal-eyebrow {
   font-size: 10px;
@@ -930,7 +947,7 @@ ul  { list-style: none; }
 
 .beef-cuts-list {
   list-style: none;
-  padding: 0;
+  padding: 0 28px;
   margin: 0 0 28px;
   display: flex;
   flex-direction: column;
@@ -979,6 +996,7 @@ ul  { list-style: none; }
   background: var(--gold);
   color: var(--white);
   padding: 14px;
+  margin: 0 28px 28px;
   border-radius: 6px;
   font-size: 12px;
   font-weight: 700;

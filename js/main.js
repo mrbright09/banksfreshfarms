@@ -621,69 +621,31 @@
     initShopCarousel();
   }
 
-  /* ─── Beef video → cuts modal flow ──────────────────────────── */
+  /* ─── Beef modal — inline video + cuts & prices ─────────────── */
   var beefModal         = document.getElementById('beefModal');
   var beefModalClose    = document.getElementById('beefModalClose');
   var beefModalOrderBtn = document.getElementById('beefModalOrderBtn');
   var beefBtn           = document.getElementById('beefLearnMoreBtn');
-  var videoModal        = document.getElementById('videoModal');
-  var videoModalClose   = document.getElementById('videoModalClose');
   var beefVideo         = document.getElementById('beefVideo');
 
   function openBeefModal() {
     if (!beefModal) return;
     beefModal.classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (beefVideo) {
+      var p = beefVideo.play();
+      if (p && p.catch) p.catch(function () {});
+    }
   }
 
   function closeBeefModal() {
     if (!beefModal) return;
     beefModal.classList.remove('open');
     document.body.style.overflow = '';
-  }
-
-  function exitFullscreen() {
-    if (document.exitFullscreen) document.exitFullscreen();
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-  }
-
-  function closeVideoModal() {
-    if (!videoModal) return;
-    exitFullscreen();
-    videoModal.classList.remove('open');
     if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
-    openBeefModal();
   }
 
-  function requestFullscreen(el) {
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen();
-  }
-
-  function openVideoModal() {
-    if (!videoModal) return;
-    videoModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    if (beefVideo) {
-      var p = beefVideo.play();
-      var doFs = function () { requestFullscreen(beefVideo); };
-      if (p && p.then) { p.then(doFs).catch(function () {}); }
-      else { doFs(); }
-    }
-  }
-
-  if (beefBtn) beefBtn.addEventListener('click', openVideoModal);
-
-  if (beefVideo) {
-    beefVideo.addEventListener('fullscreenchange', function () {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
-    });
-    beefVideo.addEventListener('webkitfullscreenchange', function () {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) closeVideoModal();
-    });
-  }
-
+  if (beefBtn) beefBtn.addEventListener('click', openBeefModal);
   if (beefModalClose) beefModalClose.addEventListener('click', closeBeefModal);
   if (beefModal) {
     beefModal.addEventListener('click', function (e) {
@@ -701,13 +663,6 @@
           window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - offset - 16, behavior: 'smooth' });
         }, 50);
       }
-    });
-  }
-
-  if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
-  if (videoModal) {
-    videoModal.addEventListener('click', function (e) {
-      if (e.target === videoModal) closeVideoModal();
     });
   }
 
