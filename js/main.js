@@ -207,8 +207,8 @@
       calLabel.classList.add('cal-label--set');
     } else {
       calLabel.textContent = pickupType === 'church' ? 'Select a Sunday for drop-off' :
-                             pickupType === 'atlanta' ? 'Select a Saturday — Atlanta' :
-                             'Select a Saturday — Farm Pickup';
+                             pickupType === 'atlanta' ? 'Select a Saturday, Atlanta' :
+                             'Select a Saturday, Farm Pickup';
       calLabel.classList.remove('cal-label--set');
     }
   }
