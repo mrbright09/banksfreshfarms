@@ -2,6 +2,90 @@
 
 ---
 
+## Standing Process Rule
+
+**Before diagnosing any issue, always read this file first.**  
+Known root causes are documented here. Many bugs share the same underlying failure mode (e.g., iOS `-webkit-overflow-scrolling: touch` tap swallowing). Reviewing prior defects prevents re-investigating already-solved patterns and ensures fixes are consistent with proven approaches.
+
+---
+
+## DEF-006 · Branch Strategy Failure — Main Persistently Behind Feature Branch
+
+**Status:** Resolved (forced merge)  
+**Severity:** High — production website (`main`) was missing all recent bug fixes and features; users saw stale, broken code  
+**Reported:** Session — user confirmed "make sure it was fixed and pushed to main"
+
+---
+
+### Description
+The `main` branch (which deploys to the live GitHub Pages site) was 3+ commits behind the designated feature branch `claude/fix-header-scroll-text-Au66e` for the entirety of the session. All critical fixes — DEF-003 iOS stepper fix, DEF-005 alignment fix, order summary drawer — were committed to the feature branch but never merged to `main`. The production website remained broken until a forced merge at the end of the session.
+
+In addition, `main` had accumulated 25+ direct commits over multiple sessions that never existed on the feature branch, while the feature branch had its own separate chain of commits (Supabase integration, admin pickup tracker, contact layout) that were never merged back to `main`. Both branches diverged independently with no synchronization.
+
+### Steps to Reproduce
+1. Commit fixes to `claude/fix-header-scroll-text-Au66e`
+2. Check `git log --oneline main`
+3. **Expected:** Main contains all recent commits
+4. **Actual:** Main is missing all commits from this session; live site still broken
+
+---
+
+### Root Cause Analysis — 5 Whys
+
+**Why 1: Why was main missing the fixes?**  
+All fixes in this session were committed directly to `claude/fix-header-scroll-text-Au66e`, which was never merged into `main` until the user explicitly requested it at the end of the session.
+
+**Why 2: Why were fixes going to the feature branch instead of main?**  
+The session environment specifies a target development branch (`claude/fix-header-scroll-text-Au66e`). Development correctly targeted that branch. However, merging back to `main` was treated as an optional end-of-session step rather than a required part of completing each fix.
+
+**Why 3: Why was merging to main not done after each fix?**  
+No rule existed in the workflow to require a main merge after each meaningful commit. The implicit assumption was that working code on any branch is sufficient — but for a GitHub Pages site, only `main` deploys.
+
+**Why 4: Why did the two branches diverge so severely over time?**  
+Both branches were used as simultaneous development targets across multiple sessions:
+- `main` received UI/feature work (beef modal, nav fixes, story copy) directly
+- `claude/fix-header-scroll-text-Au66e` received infrastructure work (Supabase, admin tracker) and the latest bug fixes
+
+No merge or rebase was performed between sessions to keep them in sync. The git graph shows a `|` split at a common ancestor with 25+ commits on `main`'s side and 5+ on the feature branch side — two independent lines of development.
+
+**Why 5: Why was no merge/rebase discipline enforced between sessions?**  
+No explicit branch strategy was defined for this project. GitHub Pages deploys from `main`, but that constraint was not connected to a rule mandating that `main` always reflect the latest working state. Without a documented policy, each session defaulted to committing to whatever branch was active.
+
+---
+
+### Evidence — Git Graph at Time of Discovery
+
+```
+*   cad102d  merge: bring all beef modal fixes (this session's forced merge)
+|\
+| * 46a2932  docs: DEF-005 root cause
+| * 6030772  feat: alignment + order summary drawer
+| * 5ad47a1  fix(DEF-003): iOS stepper fix
+* | 8788867  Beef modal: per-cut steppers         ← main stopped here
+* | 838d429  Beef modal: dark background
+* | 6f9704a  Fix DEF-001: Shop Beef iOS
+  ...25 more commits only on main, never on feature branch
+```
+
+Main was 3 commits behind the feature branch for all critical fixes in this session, and the feature branch was 25+ commits behind main for prior work — a full two-way divergence.
+
+---
+
+### Fix Applied
+Performed a forced merge of `claude/fix-header-scroll-text-Au66e` into `main` using `git checkout --theirs` to resolve conflicts in favor of the feature branch (the more recent and correct version). Pushed `main` to origin to trigger GitHub Pages deployment.
+
+---
+
+### Prevention — Required Branch Rules Going Forward
+
+1. **`main` is the deployment branch.** Every session must end with `main` containing all working changes. No fix is complete until it is on `main` and pushed.
+2. **Merge to `main` after every meaningful commit group.** Do not accumulate commits on a feature branch across sessions without merging back.
+3. **Before starting any session**, run `git log --oneline main..HEAD` and `git log --oneline HEAD..main` to understand divergence. If either shows commits, resolve before adding new work.
+4. **Review DEFECTS.md before diagnosing any issue.** Known failure patterns (iOS tap swallowing, branch drift) must be checked first to avoid re-investigating solved problems.
+5. **Feature branches are for in-progress work only.** Once a fix is confirmed working, merge to `main` immediately.
+
+---
+
 ## DEF-001 · Shop Beef Button — No Response on iOS Safari
 
 **Status:** Fixed  
