@@ -633,8 +633,12 @@
     beefModal.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (beefVideo) {
-      var p = beefVideo.play();
-      if (p && p.catch) p.catch(function () {});
+      setTimeout(function () {
+        try {
+          var p = beefVideo.play();
+          if (p && p.catch) p.catch(function () {});
+        } catch (err) {}
+      }, 50);
     }
   }
 
