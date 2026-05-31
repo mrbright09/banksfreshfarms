@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=39" />
+  <link rel="stylesheet" href="css/style.css?v=40" />
 </head>
 <body>
 
@@ -502,9 +502,16 @@
           <span class="beef-cut-price">$24.99<span class="beef-cut-unit">/lb</span></span>
         </li>
       </ul>
-      <div class="beef-order-total" id="beefOrderTotal" style="display:none">
-        <span class="beef-order-total-label">Est. Total</span>
-        <span class="beef-order-total-amt" id="beefOrderTotalAmt">$0.00</span>
+      <div class="beef-summary" id="beefSummary">
+        <div class="beef-summary-hdr">
+          <span class="beef-summary-hdr-label">Your Order</span>
+          <span class="beef-summary-hdr-count" id="beefSummaryCount"></span>
+        </div>
+        <ul class="beef-summary-lines" id="beefSummaryLines"></ul>
+        <div class="beef-summary-total-row">
+          <span class="beef-summary-total-label">Est. Total</span>
+          <span class="beef-summary-total-amt" id="beefOrderTotalAmt">$0.00</span>
+        </div>
       </div>
       <button type="button" class="beef-modal-order-btn" id="beefModalOrderBtn">Contact Us to Order</button>
     </div>
