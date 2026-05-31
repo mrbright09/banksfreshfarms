@@ -880,7 +880,7 @@ ul  { list-style: none; }
 .beef-modal-backdrop.open { display: flex; }
 
 .beef-modal {
-  background: var(--bg-card-light);
+  background: var(--bg-mid);
   border-radius: 12px;
   overflow: hidden;
   width: 100%;
