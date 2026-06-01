@@ -144,17 +144,55 @@ QuantityAvailableToPromise = QuantityAvailable − QuantityReserved
 ```
 Expose this as a computed column or API-layer calculation. Never let `QuantityReserved` exceed `QuantityAvailable`.
 
-### BFF Reorder Thresholds (Suggested Starting Points)
+### BFF Reorder Thresholds
 
-| Product | ReorderPoint | MinStock | MaxStock | Notes |
+> **Note on eggs:** BFF is the producer, so "reorder" does not apply. `ReorderPoint` for eggs is used as a **low-availability alert threshold** — the point at which new orders should be paused or waitlisted until the next collection cycle. See Production Capacity below.
+
+| Product | ReorderPoint | MinStock | MaxStock | Basis |
 |---|---|---|---|---|
-| Eggs (dozen) | 10 | 5 | 100 | Weekly laying cycle |
+| Eggs (dozen) | 5 | 3 | 15.5 | See production capacity below |
 | Ground Beef (lb) | 20 | 10 | 200 | Freeze for shelf life |
 | Chuck Roast (lb) | 10 | 5 | 100 | — |
 | Short Ribs (lb) | 8 | 4 | 80 | — |
 | Ribeye (lb) | 5 | 2 | 50 | Premium, lower volume |
 | T-Bone (lb) | 5 | 2 | 50 | Premium, lower volume |
 | Oxtail (lb) | 5 | 2 | 40 | Specialty item |
+| Seasonings (jar) | 15 | 10 | 150 | Per blend |
+
+### Egg Production Capacity
+
+| Metric | Value | Notes |
+|---|---|---|
+| Daily production | 30 eggs | 2.5 dozen/day |
+| Weekly gross production | 210 eggs | 17.5 dozen/week |
+| Personal use + defects | 30 eggs | 2.5 dozen/week withheld |
+| **Weekly sellable output** | **186 eggs** | **15.5 dozen/week available to sell** |
+| Daily sellable rate | ~2.2 dozen/day | 15.5 ÷ 7 |
+| Weekly fulfillment ceiling | 15.5 dozen | Max orders to accept per week |
+
+**Threshold rationale:**
+
+- `MaximumStockLevel = 15.5 dozen` — one week of sellable output; eggs are perishable so stock should not significantly exceed one week's production
+- `ReorderPoint = 5 dozen` — alert threshold; at 5 dozen on hand, pause new order intake for the current week's cycle until next collection adds inventory
+- `MinimumStockLevel = 3 dozen` — hard floor; below this, fulfil only pre-existing confirmed orders, no new sales
+- Capacity is refreshed weekly. If demand exceeds 15.5 dozen, implement a waitlist; do not over-promise
+
+**Weekly inventory cycle (eggs):**
+
+```
+Monday (start of week)
+  └── Opening stock: carry-forward from prior week (ideally near 0)
+  └── Add: +15.5 dozen (week's sellable collection)
+  └── QuantityAvailable = carry-forward + 15.5
+
+Throughout week
+  └── Sale transactions reduce QuantityAvailable
+  └── When QuantityAvailable <= 5 → trigger low-stock alert
+  └── When QuantityAvailable <= 3 → suspend new orders
+
+Sunday (end of week)
+  └── Any unsold stock rolls to next week (max 2-3 dozen if managed well)
+```
 | Seasonings (jar) | 15 | 10 | 150 | Per blend |
 
 ---
