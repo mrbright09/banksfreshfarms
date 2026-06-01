@@ -180,19 +180,42 @@ Expose this as a computed column or API-layer calculation. Never let `QuantityRe
 **Weekly inventory cycle (eggs):**
 
 ```
-Monday (start of week)
-  └── Opening stock: carry-forward from prior week (ideally near 0)
-  └── Add: +15.5 dozen (week's sellable collection)
-  └── QuantityAvailable = carry-forward + 15.5
+THE DATABASE ACCUMULATES — it does not reset each week.
+QuantityAvailable is the running total of all transactions since launch.
 
-Throughout week
-  └── Sale transactions reduce QuantityAvailable
-  └── When QuantityAvailable <= 5 → trigger low-stock alert
-  └── When QuantityAvailable <= 3 → suspend new orders
+Week 1 — Monday
+  Restock +15.5 dozen
+  QuantityAvailable = 15.5
 
-Sunday (end of week)
-  └── Any unsold stock rolls to next week (max 2-3 dozen if managed well)
+Week 1 — throughout
+  Sales reduce stock
+  e.g. 12 dozen sold → QuantityAvailable = 3.5
+
+Week 2 — Monday
+  Restock +15.5 dozen added ON TOP of carry-forward
+  QuantityAvailable = 3.5 (carry) + 15.5 (new) = 19.0
+
+...and so on, accumulating indefinitely.
 ```
+
+**Perishability rule (critical for eggs):**
+The database does not know an egg has gone bad — it only knows what you tell it. Any stock disposed of, consumed personally, or expired must be written as an `Adjustment_Down` transaction before the next weekly Restock, otherwise the database will overstate available inventory.
+
+```
+Example: 2 dozen unsold at end of week, deemed too old to sell
+→ TransactionType: Adjustment_Down
+→ QuantityChange: -2
+→ Notes: "End of week disposal — exceeded freshness window"
+→ This brings QuantityAvailable to 0 before next Restock runs
+```
+
+The 2.5 dozen withheld weekly for personal use / defects should also be logged:
+```
+→ TransactionType: Adjustment_Down
+→ QuantityChange: -2.5
+→ Notes: "Weekly personal use / defect allocation"
+```
+This keeps the ledger honest. If it is not logged, `QuantityAvailable` will drift above the true sellable figure over time.
 | Seasonings (jar) | 15 | 10 | 150 | Per blend |
 
 ---
