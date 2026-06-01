@@ -165,57 +165,138 @@ Expose this as a computed column or API-layer calculation. Never let `QuantityRe
 |---|---|---|
 | Daily production | 30 eggs | 2.5 dozen/day |
 | Weekly gross production | 210 eggs | 17.5 dozen/week |
-| Personal use + defects | 30 eggs | 2.5 dozen/week withheld |
-| **Weekly sellable output** | **186 eggs** | **15.5 dozen/week available to sell** |
+| Auto-deducted (personal use + defects) | 30 eggs | 2.5 dozen/week — logged automatically |
+| **Weekly net sellable** | **186 eggs** | **15.5 dozen/week enters sellable stock** |
 | Daily sellable rate | ~2.2 dozen/day | 15.5 ÷ 7 |
-| Weekly fulfillment ceiling | 15.5 dozen | Max orders to accept per week |
+| Weekly fulfillment ceiling | 15.5 dozen | Max new orders to accept per week |
 
-**Threshold rationale:**
+---
 
-- `MaximumStockLevel = 15.5 dozen` — one week of sellable output; eggs are perishable so stock should not significantly exceed one week's production
-- `ReorderPoint = 5 dozen` — alert threshold; at 5 dozen on hand, pause new order intake for the current week's cycle until next collection adds inventory
-- `MinimumStockLevel = 3 dozen` — hard floor; below this, fulfil only pre-existing confirmed orders, no new sales
-- Capacity is refreshed weekly. If demand exceeds 15.5 dozen, implement a waitlist; do not over-promise
+### Egg Shelf Life Rules
 
-**Weekly inventory cycle (eggs):**
+Shelf life depends entirely on whether eggs have been washed. BFF should track wash status per batch.
+
+| Condition | Storage | Shelf Life |
+|---|---|---|
+| **Unwashed** (bloom intact) | Room temperature | 3 weeks |
+| **Unwashed** (bloom intact) | Refrigerated | 3 months |
+| **Washed** (bloom removed) | Room temperature | Not safe — must refrigerate |
+| **Washed** (bloom removed) | Refrigerated | 2 months |
+
+**The bloom (cuticle):** The protective coating naturally deposited on the shell during laying. It seals the pores, blocking bacteria and moisture loss. Once washed off, that barrier is gone permanently and refrigeration becomes mandatory.
+
+**Operational implication:** BFF should decide and document a standard wash policy per batch. Unwashed eggs stored at room temperature offer the longest practical shelf life for farm-stand sales. Refrigerated storage extends shelf life further but requires cold chain management through to the customer.
+
+#### Shelf Life by Storage Location (BFF)
+
+| LocationID | Location Name | Egg Condition | Max Shelf Life |
+|---|---|---|---|
+| `loc-001` | Main Cold Storage (Refrigerated) | Either | 2–3 months |
+| `loc-002` | Freezer | N/A | Not applicable for eggs |
+| `loc-003` | Dry Storage (Ambient) | Unwashed only | 3 weeks |
+| `loc-004` | Farm Stand Pickup Counter | Unwashed only | 3 weeks from collection |
+| `loc-005` | Atlanta Pickup Point | Unwashed only | 3 weeks from collection |
+| `loc-006` | Church Drop-off, Savannah | Unwashed only | 3 weeks from collection |
+
+---
+
+### Automatic Weekly Transactions (Eggs)
+
+The 2.5 dozen personal use / defect deduction is treated as a **scheduled automatic transaction** — it runs every week without manual input. When the API is connected, implement as a Supabase scheduled function (pg_cron) or equivalent cron job.
+
+**Automatic transaction fired each Monday at 06:00:**
+```
+TransactionType:  Adjustment_Down
+ProductID:        prod-001  (Pasture-Raised Eggs)
+LocationID:       loc-001   (Main Cold Storage)
+QuantityChange:   -2.5
+UserID:           system
+Notes:            "Auto: weekly personal use and defect allocation (2.5 doz)"
+Timestamp:        auto (UTC)
+```
+
+**Automatic transaction fired each Monday at 06:01 (weekly restock):**
+```
+TransactionType:  Restock
+ProductID:        prod-001
+LocationID:       loc-001
+QuantityChange:   +15.5
+UserID:           system
+Notes:            "Auto: weekly net sellable production (17.5 gross minus 2.5 withheld)"
+Timestamp:        auto (UTC)
+```
+
+Both run on the same schedule. The deduction runs first (06:00) to close out the prior week before the new batch is added (06:01).
+
+---
+
+### Egg Expiry Tracking (Batch FIFO)
+
+To enforce shelf life, each weekly Restock batch must carry a collection date. Stock is always sold **FIFO — First In, First Out** (oldest batch first).
+
+Add `BatchID` and `CollectionDate` to the Transaction Ledger rows for egg Restock entries:
+
+| Field | Type | Notes |
+|---|---|---|
+| `BatchID` | UUID | Groups all eggs from the same weekly collection |
+| `CollectionDate` | DATE | Date hens laid / batch was collected |
+| `WashStatus` | ENUM `Washed` / `Unwashed` | Determines applicable shelf life |
+| `ExpiryDate` | DATE | Calculated: CollectionDate + shelf life per wash status and location |
+
+**Expiry date calculation at Restock time:**
+```
+If WashStatus = Unwashed AND LocationType = Ambient:
+    ExpiryDate = CollectionDate + 21 days
+
+If WashStatus = Unwashed AND LocationType = Refrigerated:
+    ExpiryDate = CollectionDate + 90 days
+
+If WashStatus = Washed AND LocationType = Refrigerated:
+    ExpiryDate = CollectionDate + 60 days
+```
+
+**Automatic expiry sweep — fires nightly at 02:00:**
+```
+Query: SELECT all egg batch rows WHERE ExpiryDate <= TODAY() AND QuantityRemaining > 0
+Action: INSERT Adjustment_Down transaction for each expired batch
+Notes: "Auto: batch [BatchID] expired — CollectionDate [date], ExpiryDate [date]"
+```
+
+This ensures `QuantityAvailable` never includes expired stock, even if no one manually disposed of it.
+
+---
+
+### Updated Threshold Rationale (Eggs)
+
+- `MaximumStockLevel = 46.5 dozen` — 3 weeks of net production (3 × 15.5), the full unwashed room-temperature window. In practice, healthy demand should keep stock well below this ceiling. Alert if stock approaches 31 dozen (2 weeks) without movement.
+- `ReorderPoint = 5 dozen` — low-availability alert; pause new order intake and notify
+- `MinimumStockLevel = 3 dozen` — hard floor; fulfill existing confirmed orders only, no new sales
+
+---
+
+### Weekly Inventory Cycle (Eggs — Full Picture)
 
 ```
-THE DATABASE ACCUMULATES — it does not reset each week.
-QuantityAvailable is the running total of all transactions since launch.
+THE DATABASE ACCUMULATES WEEK TO WEEK.
+QuantityAvailable = running sum of all transactions since launch.
 
-Week 1 — Monday
-  Restock +15.5 dozen
-  QuantityAvailable = 15.5
+Monday 06:00 — Auto: Adjustment_Down -2.5 (personal use / defects from prior week)
+Monday 06:01 — Auto: Restock +15.5 (new week's net sellable production)
 
-Week 1 — throughout
-  Sales reduce stock
-  e.g. 12 dozen sold → QuantityAvailable = 3.5
+Throughout the week:
+  Customer orders    → Sale transactions reduce QuantityAvailable
+  Pickups confirmed  → Sale confirmed, Reserved quantity released
+  Any disposal       → Manual Adjustment_Down (e.g. cracked egg found)
 
-Week 2 — Monday
-  Restock +15.5 dozen added ON TOP of carry-forward
-  QuantityAvailable = 3.5 (carry) + 15.5 (new) = 19.0
+Nightly 02:00 — Auto: Expiry sweep — any batch past ExpiryDate → Adjustment_Down
 
-...and so on, accumulating indefinitely.
+End of week carry-forward example:
+  Week 1: +15.5 in, 12.0 sold, 0 expired → 3.5 carry-forward
+  Week 2: -2.5 auto deduction, +15.5 restock → 3.5 + 15.5 - 2.5 = 16.5 available
+  Week 3: -2.5 auto deduction, +15.5 restock → 16.5 + 15.5 - 2.5 = 29.5 available
+  ⚠ Week 3 carry of 29.5 triggers a review — demand may need attention
 ```
 
-**Perishability rule (critical for eggs):**
-The database does not know an egg has gone bad — it only knows what you tell it. Any stock disposed of, consumed personally, or expired must be written as an `Adjustment_Down` transaction before the next weekly Restock, otherwise the database will overstate available inventory.
-
-```
-Example: 2 dozen unsold at end of week, deemed too old to sell
-→ TransactionType: Adjustment_Down
-→ QuantityChange: -2
-→ Notes: "End of week disposal — exceeded freshness window"
-→ This brings QuantityAvailable to 0 before next Restock runs
-```
-
-The 2.5 dozen withheld weekly for personal use / defects should also be logged:
-```
-→ TransactionType: Adjustment_Down
-→ QuantityChange: -2.5
-→ Notes: "Weekly personal use / defect allocation"
-```
-This keeps the ledger honest. If it is not logged, `QuantityAvailable` will drift above the true sellable figure over time.
 | Seasonings (jar) | 15 | 10 | 150 | Per blend |
 
 ---
