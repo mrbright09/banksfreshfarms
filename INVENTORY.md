@@ -43,14 +43,14 @@ Stores static, rarely-changing information about each sellable item.
 | `prod-004` | `BFF-BEEF-SHR` | Short Ribs | Beef | — | $13.99 | lb |
 | `prod-005` | `BFF-BEEF-RIB` | Ribeye | Beef | — | $22.99 | lb |
 | `prod-006` | `BFF-BEEF-TBN` | T-Bone | Beef | — | $22.99 | lb |
-| `prod-007` | `BFF-BEEF-OXT` | Oxtail | Beef | $8.59 | $24.99 | lb |
+| `prod-007` | `BFF-BEEF-OXT` | Oxtail | Beef | $12.00 | $24.99 | lb |
 | `prod-008` | `BFF-SEAS-001` | BFF Signature Blend No. 1 | Seasonings | — | TBD | oz jar |
 | `prod-009` | `BFF-SEAS-002` | BFF Signature Blend No. 2 | Seasonings | — | TBD | oz jar |
 | `prod-010` | `BFF-SEAS-003` | BFF Signature Blend No. 3 | Seasonings | — | TBD | oz jar |
 | `prod-011` | `BFF-SEAS-004` | BFF Signature Blend No. 4 | Seasonings | — | TBD | oz jar |
 
 > `StandardCost` fields to be filled once production cost tracking is established.  
-> **BFF-BEEF-OXT cost reference:** $8.59/lb — Costco (Kirkland Signature, McDonough GA, Jun 2026). Update when sourcing changes.
+> **BFF-BEEF-OXT cost reference:** $12.00/lb. Update when sourcing changes.
 
 ### SKU Format Convention
 
