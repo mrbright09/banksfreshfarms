@@ -130,6 +130,21 @@
       submit
         .then(function (res) {
           if (res && res.ok) {
+            if (res.fallback) {
+              var subject = 'BFF Order — ' + (data.inquiryType || 'Inquiry');
+              var body =
+                'Name: ' + data.firstName + ' ' + data.lastName + '\n' +
+                'Email: ' + data.email + '\n' +
+                'Phone: ' + (data.phone || '') + '\n' +
+                'Interest: ' + (data.inquiryType || '') + '\n' +
+                (data.pickupDate ? 'Pickup Date: ' + data.pickupDate + '\n' : '') +
+                (data.plan && data.plan !== 'inquiry' ? 'Plan: ' + data.plan + '\n' : '') +
+                '\n' + (data.message || '');
+              window.location.href =
+                'mailto:banksfreshfarms@gmail.com' +
+                '?subject=' + encodeURIComponent(subject) +
+                '&body=' + encodeURIComponent(body);
+            }
             showFormSuccess();
           } else {
             showToast('Something went wrong. Email us at banksfreshfarms@gmail.com');
