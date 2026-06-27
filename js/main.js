@@ -131,8 +131,25 @@
         .then(function (res) {
           if (res && res.ok) {
             if (res.fallback) {
-              var subject = 'BFF Order — ' + (data.inquiryType || 'Inquiry');
+              var typeMap = {
+                'Beef Order':        'BEEF',
+                'Poultry / Eggs Order': 'EGG',
+                'BFF Seasonings':    'SEAS',
+                'Herbal Products':   'HERB',
+                'Merch':             'MERCH',
+                'Wholesale / B2B':   'B2B'
+              };
+              var now = new Date();
+              var ymd = now.getFullYear().toString() +
+                        ('0' + (now.getMonth() + 1)).slice(-2) +
+                        ('0' + now.getDate()).slice(-2);
+              var hhmm = ('0' + now.getHours()).slice(-2) +
+                         ('0' + now.getMinutes()).slice(-2);
+              var typeCode = typeMap[data.inquiryType] || 'INQ';
+              var orderId = 'BFF-' + typeCode + '-' + ymd + '-' + hhmm;
+              var subject = 'BFF Order — ' + (data.inquiryType || 'Inquiry') + ' [' + orderId + ']';
               var body =
+                'Order ID: ' + orderId + '\n' +
                 'Name: ' + data.firstName + ' ' + data.lastName + '\n' +
                 'Email: ' + data.email + '\n' +
                 'Phone: ' + (data.phone || '') + '\n' +
