@@ -147,7 +147,7 @@
                          ('0' + now.getMinutes()).slice(-2);
               var typeCode = typeMap[data.inquiryType] || 'INQ';
               var orderId = 'BFF-' + typeCode + '-' + ymd + '-' + hhmm;
-              var subject = 'BFF Order — ' + (data.inquiryType || 'Inquiry') + ' [' + orderId + ']';
+              var subject = 'BFF Order [' + orderId + ']';
               var body =
                 'Order ID: ' + orderId + '\n' +
                 'Name: ' + data.firstName + ' ' + data.lastName + '\n' +
