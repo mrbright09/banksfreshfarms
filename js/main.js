@@ -5,6 +5,63 @@
 (function () {
   'use strict';
 
+  /* ─── Global Cart ─────────────────────────────────────────────────── */
+  var cart = { beef: [], eggs: null };
+
+  function cartTotal() {
+    var t = 0;
+    cart.beef.forEach(function (item) { t += item.sub; });
+    if (cart.eggs) t += cart.eggs.total;
+    return t;
+  }
+
+  function cartLineCount() {
+    return cart.beef.length + (cart.eggs ? 1 : 0);
+  }
+
+  function updateOrderTray() {
+    var tray      = document.getElementById('orderTray');
+    var trayCount = document.getElementById('orderTrayCount');
+    var trayTotal = document.getElementById('orderTrayTotal');
+    var trayLines = document.getElementById('orderTrayLines');
+    if (!tray) return;
+
+    var count = cartLineCount();
+    if (count === 0) {
+      tray.classList.remove('order-tray--visible');
+      document.body.classList.remove('tray-active');
+      return;
+    }
+    tray.classList.add('order-tray--visible');
+    document.body.classList.add('tray-active');
+
+    if (trayTotal) trayTotal.textContent = '$' + cartTotal().toFixed(2);
+
+    var parts = [];
+    cart.beef.forEach(function (i) { parts.push(i.qty + ' lb ' + i.name); });
+    if (cart.eggs) parts.push(cart.eggs.label);
+    if (trayCount) trayCount.textContent = parts.join(' · ');
+
+    if (trayLines) {
+      var html = '';
+      cart.beef.forEach(function (item) {
+        html += '<li class="order-tray-line">' +
+          '<span class="order-tray-line-name">' + item.qty + ' lb ' + item.name + '</span>' +
+          '<span class="order-tray-line-sub">$' + item.sub.toFixed(2) + '</span>' +
+          '<button type="button" class="order-tray-line-remove" data-remove="beef|' + item.name + '" aria-label="Remove">&times;</button>' +
+          '</li>';
+      });
+      if (cart.eggs) {
+        html += '<li class="order-tray-line">' +
+          '<span class="order-tray-line-name">' + cart.eggs.label + '</span>' +
+          '<span class="order-tray-line-sub">$' + cart.eggs.total.toFixed(2) + '</span>' +
+          '<button type="button" class="order-tray-line-remove" data-remove="eggs" aria-label="Remove">&times;</button>' +
+          '</li>';
+      }
+      trayLines.innerHTML = html;
+    }
+  }
+
   /* ─── Smooth Scroll ───────────────────────────────────────────────── */
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {
@@ -82,6 +139,7 @@
   }
 
   function showFormSuccess() {
+    cart.beef = []; cart.eggs = null; updateOrderTray();
     var successEl = document.getElementById('formSuccess');
     if (contactForm)  contactForm.style.display  = 'none';
     if (successEl)    successEl.style.display     = 'block';
@@ -132,12 +190,13 @@
           if (res && res.ok) {
             if (res.fallback) {
               var typeMap = {
-                'Beef Order':        'BEEF',
+                'Beef Order':           'BEEF',
                 'Poultry / Eggs Order': 'EGG',
-                'BFF Seasonings':    'SEAS',
-                'Herbal Products':   'HERB',
-                'Merch':             'MERCH',
-                'Wholesale / B2B':   'B2B'
+                'BFF Seasonings':       'SEAS',
+                'Herbal Products':      'HERB',
+                'Merch':                'MERCH',
+                'Wholesale / B2B':      'B2B',
+                'Mixed Order':          'MIX'
               };
               var now = new Date();
               var ymd = now.getFullYear().toString() +
@@ -409,57 +468,68 @@
 
     packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var order        = btn.getAttribute('data-order');
-        var requiresDate = btn.getAttribute('data-requires-date') === 'true';
+        var plan         = btn.getAttribute('data-plan') || '';
+        var order        = btn.getAttribute('data-order') || '';
 
-        if (requiresDate && !selectedPickupDate) {
-          showToast('Please select a Saturday for pickup before placing your order.');
-          return;
-        }
-
-        var fullOrder = order || '';
-        if (requiresDate && selectedPickupDate) {
-          fullOrder += ' · Pickup: Saturday ' + MONTHS[selectedPickupDate.getMonth()] +
-            ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
-        }
-
-        var planInput = document.getElementById('contactPlan');
-        if (planInput) {
-          planInput.value = btn.getAttribute('data-plan') || '';
-          planInput.dataset.pickupDate = (requiresDate && selectedPickupDate)
-            ? selectedPickupDate.toISOString().split('T')[0] : '';
-        }
-
-        closePackModal();
-
-        setTimeout(function () {
-          if (fullOrder) {
+        /* Solo pack notify — goes directly to contact form */
+        if (plan === 'solo-notify') {
+          var planInput = document.getElementById('contactPlan');
+          if (planInput) { planInput.value = plan; planInput.dataset.pickupDate = ''; }
+          closePackModal();
+          setTimeout(function () {
             var inquiry = document.getElementById('contactInquiry');
             var message = document.getElementById('contactMessage');
             if (inquiry) {
               for (var i = 0; i < inquiry.options.length; i++) {
-                if (inquiry.options[i].text === 'Poultry / Eggs Order') {
-                  inquiry.selectedIndex = i;
-                  break;
-                }
+                if (inquiry.options[i].text === 'Poultry / Eggs Order') { inquiry.selectedIndex = i; break; }
               }
             }
-            if (message) {
-              message.value = "I'd like to order: " + fullOrder;
+            if (message) message.value = "I'd like to order: " + order;
+            var contact = document.getElementById('contact');
+            if (contact) {
+              var navEl2 = document.getElementById('nav');
+              var off = navEl2 ? navEl2.offsetHeight : 0;
+              window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - off - 16, behavior: 'smooth' });
             }
-          }
+          }, 50);
+          return;
+        }
 
-          var contact = document.getElementById('contact');
-          if (contact) {
-            var navEl2 = document.getElementById('nav');
-            var navOffset = navEl2 ? navEl2.offsetHeight : 0;
-            var top  = contact.getBoundingClientRect().top + window.pageYOffset - navOffset - 16;
-            window.scrollTo({ top: top, behavior: 'smooth' });
-          }
+        /* Single dozen — requires pickup selection */
+        if (plan === 'single-dozen') {
+          if (!pickupType) { showToast('Please choose a pickup option first.'); return; }
+          if (!selectedPickupDate) { showToast('Please select a date for your pickup.'); return; }
+        }
 
-          var msg = document.getElementById('contactMessage');
-          if (msg) { setTimeout(function () { msg.focus(); }, 400); }
-        }, 50);
+        /* Build cart egg item */
+        var eggTotal = 0;
+        var eggLabel = '';
+        var pickupDateStr = '';
+
+        if (plan === 'single-dozen') {
+          eggTotal = eggsQty * EGG_PRICE;
+          var typeLabel = pickupType === 'farm'   ? 'Farm Pickup' :
+                          pickupType === 'church' ? 'Church Drop-off' : 'City Pickup · Atlanta';
+          var dateStr = MONTHS[selectedPickupDate.getMonth()] + ' ' +
+                        selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
+          eggLabel = eggsQty + ' dozen eggs · ' + typeLabel + ' ' + dateStr;
+          pickupDateStr = selectedPickupDate.toISOString().split('T')[0];
+        } else if (plan === 'monthly') {
+          eggTotal = 20;
+          eggLabel = 'Weekly Dozen — Monthly ($20/mo)';
+        } else if (plan === '6-month') {
+          eggTotal = 120;
+          eggLabel = 'Weekly Dozen — 6 Months ($120)';
+        } else if (plan === '12-month') {
+          eggTotal = 240;
+          eggLabel = 'Weekly Dozen — 12 Months ($240)';
+        } else {
+          eggLabel = order || 'Egg order';
+        }
+
+        cart.eggs = { plan: plan, label: eggLabel, total: eggTotal, pickupDate: pickupDateStr };
+        updateOrderTray();
+        closePackModal();
       });
     });
   }
@@ -733,6 +803,16 @@
   function openBeefModal() {
     if (!beefModal) return;
     resetBeefQty();
+    if (cart.beef.length > 0) {
+      cart.beef.forEach(function (item) {
+        beefCutRows.forEach(function (row) {
+          if (row.querySelector('.beef-cut-name').textContent === item.name) {
+            setBeefQty(row, item.qty);
+          }
+        });
+      });
+      updateBeefTotal();
+    }
     beefModal.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (beefVideo) {
@@ -769,44 +849,107 @@
   if (beefModalOrderBtn) {
     beefModalOrderBtn.addEventListener('click', function (e) {
       e.preventDefault();
-      var lines = [];
-      var total = 0;
+      var items = [];
       beefCutRows.forEach(function (row) {
         var qty = getBeefQty(row);
         if (qty > 0) {
           var name  = row.querySelector('.beef-cut-name').textContent;
           var price = parseFloat(row.getAttribute('data-price'));
-          var sub   = qty * price;
-          total += sub;
-          lines.push(qty + ' lb — ' + name + ' @ $' + price.toFixed(2) + '/lb = $' + sub.toFixed(2));
+          items.push({ name: name, qty: qty, price: price, sub: qty * price });
         }
       });
 
-      if (lines.length === 0) {
+      if (items.length === 0) {
         showToast('Please select at least one cut to order.');
         return;
       }
 
-      var orderText = 'BEEF ORDER\n' + lines.join('\n') + '\n\nEstimated Total: $' + total.toFixed(2);
-
+      cart.beef = items;
+      updateOrderTray();
       closeBeefModal();
+    });
+  }
 
-      var inquiry  = document.getElementById('contactInquiry');
-      var message  = document.getElementById('contactMessage');
-      var planIn   = document.getElementById('contactPlan');
+  /* ─── Order Tray handlers ─────────────────────────────────────────── */
+  var orderTrayEl     = document.getElementById('orderTray');
+  var orderTrayToggle = document.getElementById('orderTrayToggle');
+  var orderTrayBtn    = document.getElementById('orderTrayBtn');
+  var orderTrayLines  = document.getElementById('orderTrayLines');
 
-      if (inquiry) inquiry.value = 'Beef Order';
+  if (orderTrayToggle && orderTrayEl) {
+    orderTrayToggle.addEventListener('click', function () {
+      orderTrayEl.classList.toggle('order-tray--expanded');
+    });
+  }
+
+  /* Remove items via event delegation */
+  if (orderTrayLines) {
+    orderTrayLines.addEventListener('click', function (e) {
+      var btn = e.target;
+      if (!btn.hasAttribute('data-remove')) return;
+      var key = btn.getAttribute('data-remove');
+      if (key === 'eggs') {
+        cart.eggs = null;
+      } else if (key.indexOf('beef|') === 0) {
+        var cutName = key.slice(5);
+        cart.beef = cart.beef.filter(function (i) { return i.name !== cutName; });
+        beefCutRows.forEach(function (row) {
+          if (row.querySelector('.beef-cut-name').textContent === cutName) {
+            setBeefQty(row, 0);
+          }
+        });
+        updateBeefTotal();
+      }
+      if (cartLineCount() === 0 && orderTrayEl) {
+        orderTrayEl.classList.remove('order-tray--expanded');
+      }
+      updateOrderTray();
+    });
+  }
+
+  /* Tray submit — populate contact form with all cart items */
+  if (orderTrayBtn) {
+    orderTrayBtn.addEventListener('click', function () {
+      if (cartLineCount() === 0) return;
+
+      var lines = [];
+      cart.beef.forEach(function (item) {
+        lines.push(item.qty + ' lb — ' + item.name +
+          ' @ $' + item.price.toFixed(2) + '/lb = $' + item.sub.toFixed(2));
+      });
+      if (cart.eggs) lines.push(cart.eggs.label + ' — $' + cart.eggs.total.toFixed(2));
+
+      var hasBeef = cart.beef.length > 0;
+      var hasEggs = !!cart.eggs;
+      var inquiryType = hasBeef && hasEggs ? 'Mixed Order' :
+                        hasBeef ? 'Beef Order' : 'Poultry / Eggs Order';
+
+      var orderText = lines.join('\n') + '\n\nEstimated Total: $' + cartTotal().toFixed(2);
+
+      var inquiry = document.getElementById('contactInquiry');
+      var message = document.getElementById('contactMessage');
+      var planIn  = document.getElementById('contactPlan');
+
+      if (inquiry) {
+        for (var i = 0; i < inquiry.options.length; i++) {
+          if (inquiry.options[i].text === inquiryType) { inquiry.selectedIndex = i; break; }
+        }
+      }
       if (message) message.value = orderText;
-      if (planIn)  { planIn.value = orderText; planIn.dataset.beefOrder = 'true'; }
+      if (planIn) {
+        planIn.value = hasEggs && cart.eggs ? (cart.eggs.plan || 'inquiry') : 'inquiry';
+        planIn.dataset.pickupDate = (cart.eggs && cart.eggs.pickupDate) ? cart.eggs.pickupDate : '';
+      }
 
       var contact = document.getElementById('contact');
       if (contact) {
-        setTimeout(function () {
-          var navEl  = document.getElementById('nav');
-          var offset = navEl ? navEl.offsetHeight : 0;
-          window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - offset - 16, behavior: 'smooth' });
-          setTimeout(function () { if (message) message.focus(); }, 400);
-        }, 50);
+        var navEl = document.getElementById('nav');
+        var offset = navEl ? navEl.offsetHeight : 0;
+        window.scrollTo({
+          top: contact.getBoundingClientRect().top + window.pageYOffset - offset - 16,
+          behavior: 'smooth'
+        });
+        setTimeout(function () { if (message) message.focus(); }, 400);
       }
     });
   }

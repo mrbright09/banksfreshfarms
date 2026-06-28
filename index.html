@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=41" />
+  <link rel="stylesheet" href="css/style.css?v=42" />
 </head>
 <body>
 
@@ -230,6 +230,7 @@
           <option>Herbal Products</option>
           <option>Merch</option>
           <option>Wholesale / B2B</option>
+          <option>Mixed Order</option>
         </select>
         <textarea name="Message" id="contactMessage" placeholder="Your message..." rows="4"></textarea>
         <input type="hidden" id="contactPlan" name="Plan" />
@@ -514,8 +515,28 @@
           <span class="beef-cta-total-label">Est. Total</span>
           <span class="beef-cta-total-amt" id="beefOrderTotalAmt">$0.00</span>
         </div>
-        <button type="button" class="beef-modal-order-btn" id="beefModalOrderBtn">Contact Us to Order</button>
+        <button type="button" class="beef-modal-order-btn" id="beefModalOrderBtn">Add to Order</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ORDER TRAY — persistent bottom bar -->
+  <div class="order-tray" id="orderTray">
+    <div class="order-tray-bar">
+      <div class="order-tray-left" id="orderTrayToggle">
+        <div class="order-tray-info">
+          <span class="order-tray-label">Your Order</span>
+          <span class="order-tray-count" id="orderTrayCount"></span>
+        </div>
+        <span class="order-tray-chevron">&#9650;</span>
+      </div>
+      <div class="order-tray-right">
+        <span class="order-tray-total" id="orderTrayTotal"></span>
+        <button type="button" class="order-tray-btn" id="orderTrayBtn">Contact Us to Order</button>
+      </div>
+    </div>
+    <div class="order-tray-detail" id="orderTrayDetail">
+      <ul class="order-tray-lines" id="orderTrayLines"></ul>
     </div>
   </div>
 
