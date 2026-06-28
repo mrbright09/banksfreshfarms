@@ -146,7 +146,7 @@
               var hhmm = ('0' + now.getHours()).slice(-2) +
                          ('0' + now.getMinutes()).slice(-2);
               var typeCode = typeMap[data.inquiryType] || 'INQ';
-              var orderId = 'BFF-' + typeCode + '-' + ymd + '-' + hhmm;
+              var orderId = typeCode + '-' + ymd + '-' + hhmm;
               var subject = 'BFF Order [' + orderId + ']';
               var body =
                 'Order ID: ' + orderId + '\n' +
