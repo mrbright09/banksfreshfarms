@@ -6,7 +6,7 @@
   'use strict';
 
   /* ─── Global Cart ─────────────────────────────────────────────────── */
-  var cart = { beef: [], eggs: null };
+  var cart = { beef: [], eggs: null, beefPickup: { date: '', label: '' } };
 
   function cartTotal() {
     var t = 0;
@@ -74,12 +74,16 @@
     if (totalEl) totalEl.textContent = '$' + cartTotal().toFixed(2);
 
     var html = '';
+    var beefPickupConfirmed = cart.beefPickup && cart.beefPickup.date;
+
     cart.beef.forEach(function (item) {
+      var beefDetail = '$' + item.price.toFixed(2) + '/lb · Grass Fed Black Angus · ' +
+        (beefPickupConfirmed ? cart.beefPickup.label : 'Atlanta Pickup — select date below');
       html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
         '<div class="cart-item-row">' +
           '<div class="cart-item-info">' +
             '<span class="cart-item-name">' + item.qty + ' lb — ' + item.name + '</span>' +
-            '<span class="cart-item-detail">$' + item.price.toFixed(2) + '/lb · Grass Fed Black Angus</span>' +
+            '<span class="cart-item-detail">' + beefDetail + '</span>' +
           '</div>' +
           '<span class="cart-item-price">$' + item.sub.toFixed(2) + '</span>' +
         '</div>' +
@@ -112,12 +116,76 @@
 
     listEl.innerHTML = html;
 
-    var needsPickup = cart.eggs &&
+    /* Beef Atlanta pickup panel */
+    if (cart.beef.length > 0) renderBeefPickupPanel(listEl);
+
+    /* Egg pickup panel (single-dozen) */
+    var needsEggPickup = cart.eggs &&
       cart.eggs.plan === 'single-dozen' &&
       !cart.eggs.pickupDate;
-    if (pickupPan) pickupPan.style.display = needsPickup ? 'block' : 'none';
+    if (pickupPan) pickupPan.style.display = needsEggPickup ? 'block' : 'none';
 
     updateNavBadge();
+  }
+
+  function renderBeefPickupPanel(container) {
+    var today        = new Date(); today.setHours(0,0,0,0);
+    var atlantaDates = window.BFF_ATLANTA_DATES || [];
+    var future       = atlantaDates.filter(function (s) {
+      var p = s.split('-');
+      return new Date(+p[0], +p[1] - 1, +p[2]) >= today;
+    });
+
+    var panel = document.createElement('div');
+    panel.className = 'cart-pickup-panel cart-beef-pickup-panel';
+
+    var hdr = document.createElement('div');
+    hdr.className = 'cart-pickup-panel-hdr';
+    hdr.innerHTML = '<span class="cart-pickup-panel-title">Beef Pickup — Atlanta</span>';
+    panel.appendChild(hdr);
+
+    if (cart.beefPickup && cart.beefPickup.date) {
+      var setDiv = document.createElement('div');
+      setDiv.className = 'cart-pickup-set';
+      setDiv.innerHTML = '<span class="cart-pickup-set-check">✓</span>' +
+        '<span>' + cart.beefPickup.label + '</span>';
+      var changeBtn = document.createElement('button');
+      changeBtn.type = 'button';
+      changeBtn.className = 'cart-pickup-change';
+      changeBtn.textContent = 'Change';
+      changeBtn.addEventListener('click', function () {
+        cart.beefPickup = { date: '', label: '' };
+        renderCartItems();
+      });
+      setDiv.appendChild(changeBtn);
+      panel.appendChild(setDiv);
+    } else if (future.length === 0) {
+      var msg = document.createElement('p');
+      msg.className = 'cal-tbd-msg';
+      msg.textContent = "No Atlanta dates scheduled yet. Place your order and we'll reach out to confirm pickup.";
+      panel.appendChild(msg);
+      cart.beefPickup = { date: 'tbd', label: 'Atlanta Pickup — date TBD' };
+    } else {
+      future.forEach(function (s) {
+        var p    = s.split('-');
+        var date = new Date(+p[0], +p[1] - 1, +p[2]);
+        var btn  = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cal-atlanta-date';
+        btn.textContent = MONTHS[date.getMonth()].slice(0,3) + ' ' + date.getDate() + ', ' + date.getFullYear();
+        (function (dateStr, dateObj) {
+          btn.addEventListener('click', function () {
+            var label = 'Atlanta Pickup · Sat ' +
+              MONTHS[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
+            cart.beefPickup = { date: dateStr, label: label };
+            renderCartItems();
+          });
+        })(s, date);
+        panel.appendChild(btn);
+      });
+    }
+
+    container.appendChild(panel);
   }
 
   /* ─── Smooth Scroll ───────────────────────────────────────────────── */
@@ -195,7 +263,7 @@
   }
 
   function showFormSuccess() {
-    cart.beef = []; cart.eggs = null; renderCartItems(); closeCartDrawer();
+    cart.beef = []; cart.eggs = null; cart.beefPickup = { date: '', label: '' }; renderCartItems(); closeCartDrawer();
     var successEl = document.getElementById('formSuccess');
     if (contactForm)  contactForm.style.display  = 'none';
     if (successEl)    successEl.style.display     = 'block';
@@ -796,6 +864,7 @@
         } else if (key.indexOf('beef|') === 0) {
           var cutName = key.slice(5);
           cart.beef = cart.beef.filter(function (i) { return i.name !== cutName; });
+          if (cart.beef.length === 0) cart.beefPickup = { date: '', label: '' };
           beefCutRows.forEach(function (row) {
             if (row.querySelector('.beef-cut-name').textContent === cutName) {
               setBeefQty(row, 0);
@@ -825,15 +894,22 @@
     cartDrawerPlaceBtn.addEventListener('click', function () {
       if (cartLineCount() === 0) return;
 
-      /* Validate single-dozen pickup */
+      /* Validate pickups */
+      if (cart.beef.length > 0 && (!cart.beefPickup || !cart.beefPickup.date)) {
+        showToast('Please select an Atlanta pickup date for your beef order.');
+        return;
+      }
       if (cart.eggs && cart.eggs.plan === 'single-dozen' && !cart.eggs.pickupDate) {
         showToast('Please choose a pickup location and date for your eggs.');
         return;
       }
 
       var lines = [];
+      if (cart.beef.length > 0 && cart.beefPickup && cart.beefPickup.date) {
+        lines.push('Beef Pickup: ' + cart.beefPickup.label);
+      }
       cart.beef.forEach(function (item) {
-        lines.push(item.qty + ' lb — ' + item.name +
+        lines.push('  ' + item.qty + ' lb — ' + item.name +
           ' @ $' + item.price.toFixed(2) + '/lb = $' + item.sub.toFixed(2));
       });
       if (cart.eggs) {
