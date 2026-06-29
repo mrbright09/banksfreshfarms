@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=42" />
+  <link rel="stylesheet" href="css/style.css?v=43" />
 </head>
 <body>
 
@@ -50,8 +50,18 @@
         <li><a href="#shop">Shop</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
+      <button type="button" class="nav-cart-btn" id="navCartBtn" aria-label="View cart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Cart <span class="nav-cart-badge" id="navCartBadge">0</span>
+      </button>
       <a href="#shop" class="nav-cta">Order Now</a>
     </div>
+
+    <!-- Mobile cart button — shows when cart has items -->
+    <button type="button" class="nav-cart-btn" id="navCartBtnMobile" aria-label="View cart">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="nav-cart-badge" id="navCartBadgeMobile">0</span>
+    </button>
   </nav>
 
   <!-- Mobile nav drawer -->
@@ -520,25 +530,82 @@
     </div>
   </div>
 
-  <!-- ORDER TRAY — persistent bottom bar -->
-  <div class="order-tray" id="orderTray">
-    <div class="order-tray-bar">
-      <div class="order-tray-left" id="orderTrayToggle">
-        <div class="order-tray-info">
-          <span class="order-tray-label">Your Order</span>
-          <span class="order-tray-count" id="orderTrayCount"></span>
+  <!-- CART DRAWER BACKDROP -->
+  <div class="cart-backdrop" id="cartBackdrop"></div>
+
+  <!-- CART DRAWER -->
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Your order">
+    <div class="cart-drawer-hdr">
+      <div class="cart-drawer-hdr-left">
+        <h2 class="cart-drawer-title">Your Order</h2>
+        <span class="cart-drawer-item-count" id="cartDrawerCount"></span>
+      </div>
+      <button type="button" class="cart-drawer-close" id="cartDrawerClose" aria-label="Close cart">&times;</button>
+    </div>
+
+    <div class="cart-drawer-body" id="cartDrawerBody">
+      <div class="cart-empty" id="cartEmpty">
+        <div class="cart-empty-icon">🌿</div>
+        <p class="cart-empty-text">Your cart is empty.<br>Add beef cuts or eggs to get started.</p>
+      </div>
+      <!-- Cart items inserted here by JS -->
+      <div id="cartItemsList"></div>
+
+      <!-- Pickup panel — shown for single-dozen eggs without a date set -->
+      <div class="cart-pickup-panel" id="cartPickupPanel" style="display:none">
+        <div class="cart-pickup-panel-hdr">
+          <span class="cart-pickup-panel-title">Schedule Your Egg Pickup</span>
         </div>
-        <span class="order-tray-chevron">&#9650;</span>
-      </div>
-      <div class="order-tray-right">
-        <span class="order-tray-total" id="orderTrayTotal"></span>
-        <button type="button" class="order-tray-btn" id="orderTrayBtn">Contact Us to Order</button>
+        <div class="pickup-radios">
+          <label class="pickup-radio">
+            <input type="radio" name="drawerPickupType" value="farm" />
+            <span class="pickup-radio-ui"></span>
+            <span class="pickup-radio-text">
+              <span class="pickup-radio-name">Farm Pickup</span>
+              <span class="pickup-radio-detail">Saturdays &middot; Georgia Farm</span>
+            </span>
+          </label>
+          <label class="pickup-radio">
+            <input type="radio" name="drawerPickupType" value="church" />
+            <span class="pickup-radio-ui"></span>
+            <span class="pickup-radio-text">
+              <span class="pickup-radio-name">Church Drop-off</span>
+              <span class="pickup-radio-detail">Sundays &middot; Savannah, GA</span>
+            </span>
+          </label>
+          <label class="pickup-radio">
+            <input type="radio" name="drawerPickupType" value="atlanta" />
+            <span class="pickup-radio-ui"></span>
+            <span class="pickup-radio-text">
+              <span class="pickup-radio-name">City Pickup</span>
+              <span class="pickup-radio-detail">Saturdays &middot; Atlanta, GA</span>
+            </span>
+          </label>
+        </div>
+        <div class="pickup-cal" id="drawerPickupCal">
+          <div class="pickup-cal-hdr">
+            <button type="button" class="cal-nav" id="drawerCalPrev" aria-label="Previous month">&#8249;</button>
+            <span class="cal-title" id="drawerCalTitle"></span>
+            <button type="button" class="cal-nav" id="drawerCalNext" aria-label="Next month">&#8250;</button>
+          </div>
+          <div class="cal-weekdays">
+            <span id="drawerCalSunHdr">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span id="drawerCalSatHdr" class="cal-sat-hdr">Sa</span>
+          </div>
+          <div class="cal-grid" id="drawerCalGrid"></div>
+          <div class="cal-label" id="drawerCalLabel"></div>
+        </div>
       </div>
     </div>
-    <div class="order-tray-detail" id="orderTrayDetail">
-      <ul class="order-tray-lines" id="orderTrayLines"></ul>
+
+    <div class="cart-drawer-foot" id="cartDrawerFoot" style="display:none">
+      <div class="cart-drawer-total-row">
+        <span class="cart-drawer-total-label">Estimated Total</span>
+        <span class="cart-drawer-total-amt" id="cartDrawerTotalAmt">$0.00</span>
+      </div>
+      <button type="button" class="cart-drawer-place-btn" id="cartDrawerPlaceBtn">Place Order</button>
+      <p class="cart-drawer-note">We'll confirm your order within 24 hours.</p>
     </div>
-  </div>
+  </aside>
 
   <script src="js/bff-config.js"></script>
   <script src="js/bff-supabase.js"></script>

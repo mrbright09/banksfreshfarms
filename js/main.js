@@ -19,47 +19,105 @@
     return cart.beef.length + (cart.eggs ? 1 : 0);
   }
 
-  function updateOrderTray() {
-    var tray      = document.getElementById('orderTray');
-    var trayCount = document.getElementById('orderTrayCount');
-    var trayTotal = document.getElementById('orderTrayTotal');
-    var trayLines = document.getElementById('orderTrayLines');
-    if (!tray) return;
+  /* ─── Cart Drawer ─────────────────────────────────────────────────── */
+  var cartDrawerEl   = document.getElementById('cartDrawer');
+  var cartBackdropEl = document.getElementById('cartBackdrop');
+
+  function openCartDrawer() {
+    renderCartItems();
+    if (cartDrawerEl)   cartDrawerEl.classList.add('cart-drawer--open');
+    if (cartBackdropEl) cartBackdropEl.classList.add('cart-backdrop--visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCartDrawer() {
+    if (cartDrawerEl)   cartDrawerEl.classList.remove('cart-drawer--open');
+    if (cartBackdropEl) cartBackdropEl.classList.remove('cart-backdrop--visible');
+    document.body.style.overflow = '';
+  }
+
+  function updateNavBadge() {
+    var count = cartLineCount();
+    var badge    = document.getElementById('navCartBadge');
+    var badgeMob = document.getElementById('navCartBadgeMobile');
+    var btn      = document.getElementById('navCartBtn');
+    var btnMob   = document.getElementById('navCartBtnMobile');
+    if (badge)    badge.textContent    = count;
+    if (badgeMob) badgeMob.textContent = count;
+    if (btn)    btn.classList.toggle('nav-cart-btn--visible',    count > 0);
+    if (btnMob) btnMob.classList.toggle('nav-cart-btn--visible', count > 0);
+  }
+
+  function renderCartItems() {
+    var listEl    = document.getElementById('cartItemsList');
+    var emptyEl   = document.getElementById('cartEmpty');
+    var footEl    = document.getElementById('cartDrawerFoot');
+    var totalEl   = document.getElementById('cartDrawerTotalAmt');
+    var countEl   = document.getElementById('cartDrawerCount');
+    var pickupPan = document.getElementById('cartPickupPanel');
+    if (!listEl) return;
 
     var count = cartLineCount();
+
+    if (emptyEl) emptyEl.style.display = count === 0 ? 'block' : 'none';
+    if (footEl)  footEl.style.display  = count === 0 ? 'none'  : 'block';
+
     if (count === 0) {
-      tray.classList.remove('order-tray--visible');
-      document.body.classList.remove('tray-active');
+      listEl.innerHTML = '';
+      if (pickupPan) pickupPan.style.display = 'none';
+      if (countEl) countEl.textContent = '';
+      updateNavBadge();
       return;
     }
-    tray.classList.add('order-tray--visible');
-    document.body.classList.add('tray-active');
 
-    if (trayTotal) trayTotal.textContent = '$' + cartTotal().toFixed(2);
+    if (countEl) countEl.textContent = count + (count === 1 ? ' item' : ' items');
+    if (totalEl) totalEl.textContent = '$' + cartTotal().toFixed(2);
 
-    var parts = [];
-    cart.beef.forEach(function (i) { parts.push(i.qty + ' lb ' + i.name); });
-    if (cart.eggs) parts.push(cart.eggs.label);
-    if (trayCount) trayCount.textContent = parts.join(' · ');
+    var html = '';
+    cart.beef.forEach(function (item) {
+      html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
+        '<div class="cart-item-row">' +
+          '<div class="cart-item-info">' +
+            '<span class="cart-item-name">' + item.qty + ' lb — ' + item.name + '</span>' +
+            '<span class="cart-item-detail">$' + item.price.toFixed(2) + '/lb · Grass Fed Black Angus</span>' +
+          '</div>' +
+          '<span class="cart-item-price">$' + item.sub.toFixed(2) + '</span>' +
+        '</div>' +
+        '<button type="button" class="cart-item-remove" data-remove="beef|' + item.name + '">Remove</button>' +
+        '</div>';
+    });
 
-    if (trayLines) {
-      var html = '';
-      cart.beef.forEach(function (item) {
-        html += '<li class="order-tray-line">' +
-          '<span class="order-tray-line-name">' + item.qty + ' lb ' + item.name + '</span>' +
-          '<span class="order-tray-line-sub">$' + item.sub.toFixed(2) + '</span>' +
-          '<button type="button" class="order-tray-line-remove" data-remove="beef|' + item.name + '" aria-label="Remove">&times;</button>' +
-          '</li>';
-      });
-      if (cart.eggs) {
-        html += '<li class="order-tray-line">' +
-          '<span class="order-tray-line-name">' + cart.eggs.label + '</span>' +
-          '<span class="order-tray-line-sub">$' + cart.eggs.total.toFixed(2) + '</span>' +
-          '<button type="button" class="order-tray-line-remove" data-remove="eggs" aria-label="Remove">&times;</button>' +
-          '</li>';
+    if (cart.eggs) {
+      var pickupSet = cart.eggs.plan === 'single-dozen' && cart.eggs.pickupDate;
+      var pickupHtml = '';
+      if (pickupSet) {
+        pickupHtml = '<div class="cart-pickup-set">' +
+          '<span class="cart-pickup-set-check">✓</span>' +
+          '<span>' + cart.eggs.pickupLabel + '</span>' +
+          '<button type="button" class="cart-pickup-change" data-action="change-pickup">Change</button>' +
+          '</div>';
       }
-      trayLines.innerHTML = html;
+      html += '<div class="cart-item cart-item--eggs">' +
+        '<div class="cart-item-row">' +
+          '<div class="cart-item-info">' +
+            '<span class="cart-item-name">' + cart.eggs.label + '</span>' +
+            (cart.eggs.sublabel ? '<span class="cart-item-detail">' + cart.eggs.sublabel + '</span>' : '') +
+          '</div>' +
+          '<span class="cart-item-price">$' + cart.eggs.total.toFixed(2) + '</span>' +
+        '</div>' +
+        pickupHtml +
+        '<button type="button" class="cart-item-remove" data-remove="eggs">Remove</button>' +
+        '</div>';
     }
+
+    listEl.innerHTML = html;
+
+    var needsPickup = cart.eggs &&
+      cart.eggs.plan === 'single-dozen' &&
+      !cart.eggs.pickupDate;
+    if (pickupPan) pickupPan.style.display = needsPickup ? 'block' : 'none';
+
+    updateNavBadge();
   }
 
   /* ─── Smooth Scroll ───────────────────────────────────────────────── */
@@ -109,9 +167,7 @@
     });
   }
 
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeMobileNav(); closePackModal(); }
-  });
+  /* Escape handled in cart drawer section below */
 
   /* ─── Form Validation Toast ──────────────────────────────── */
   var formToast      = document.getElementById('formToast');
@@ -139,7 +195,7 @@
   }
 
   function showFormSuccess() {
-    cart.beef = []; cart.eggs = null; updateOrderTray();
+    cart.beef = []; cart.eggs = null; renderCartItems(); closeCartDrawer();
     var successEl = document.getElementById('formSuccess');
     if (contactForm)  contactForm.style.display  = 'none';
     if (successEl)    successEl.style.display     = 'block';
@@ -397,31 +453,6 @@
     });
   }
 
-  /* Pre-handler: validate pickup type + date, build order string before generic handler reads it */
-  if (eggsOrderBtn) {
-    eggsOrderBtn.addEventListener('click', function (e) {
-      if (!pickupType) {
-        showToast('Please choose a pickup option first.');
-        e.stopImmediatePropagation();
-        return;
-      }
-      if (!selectedPickupDate) {
-        showToast('Please select a date for your pickup.');
-        e.stopImmediatePropagation();
-        return;
-      }
-      var total     = eggsQty * EGG_PRICE;
-      var dayName   = pickupType === 'church' ? 'Sunday' : 'Saturday';
-      var typeLabel = pickupType === 'farm'    ? 'Farm Pickup · Georgia' :
-                      pickupType === 'church'  ? 'Church Drop-off · Savannah GA' :
-                                                 'City Pickup · Atlanta GA';
-      var dateStr   = MONTHS[selectedPickupDate.getMonth()] + ' ' +
-                      selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
-      eggsOrderBtn.setAttribute('data-order',
-        eggsQty + ' dozen pasture-raised eggs · $' + total + ' · ' +
-        typeLabel + ' · ' + dayName + ' ' + dateStr);
-    });
-  }
 
   function openPackModal() {
     if (!packModal) return;
@@ -495,41 +526,36 @@
           return;
         }
 
-        /* Single dozen — requires pickup selection */
-        if (plan === 'single-dozen') {
-          if (!pickupType) { showToast('Please choose a pickup option first.'); return; }
-          if (!selectedPickupDate) { showToast('Please select a date for your pickup.'); return; }
-        }
-
         /* Build cart egg item */
         var eggTotal = 0;
         var eggLabel = '';
-        var pickupDateStr = '';
+        var eggSublabel = '';
 
         if (plan === 'single-dozen') {
           eggTotal = eggsQty * EGG_PRICE;
-          var typeLabel = pickupType === 'farm'   ? 'Farm Pickup' :
-                          pickupType === 'church' ? 'Church Drop-off' : 'City Pickup · Atlanta';
-          var dateStr = MONTHS[selectedPickupDate.getMonth()] + ' ' +
-                        selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
-          eggLabel = eggsQty + ' dozen eggs · ' + typeLabel + ' ' + dateStr;
-          pickupDateStr = selectedPickupDate.toISOString().split('T')[0];
+          eggLabel = eggsQty + (eggsQty === 1 ? ' Dozen' : ' Dozen') + ' Pasture-Raised Eggs';
+          eggSublabel = '$5/dozen · One-Time · Pickup TBD';
         } else if (plan === 'monthly') {
           eggTotal = 20;
-          eggLabel = 'Weekly Dozen — Monthly ($20/mo)';
+          eggLabel = 'Weekly Dozen — Monthly Plan';
+          eggSublabel = '$20/mo · 5 dozen/month · Cancel anytime';
         } else if (plan === '6-month') {
           eggTotal = 120;
-          eggLabel = 'Weekly Dozen — 6 Months ($120)';
+          eggLabel = 'Weekly Dozen — 6-Month Plan';
+          eggSublabel = '$120 · 5 dozen/month · Save 5%';
         } else if (plan === '12-month') {
           eggTotal = 240;
-          eggLabel = 'Weekly Dozen — 12 Months ($240)';
+          eggLabel = 'Weekly Dozen — 12-Month Plan';
+          eggSublabel = '$240 · 5 dozen/month · Save 10%';
         } else {
           eggLabel = order || 'Egg order';
         }
 
-        cart.eggs = { plan: plan, label: eggLabel, total: eggTotal, pickupDate: pickupDateStr };
-        updateOrderTray();
+        cart.eggs = { plan: plan, label: eggLabel, sublabel: eggSublabel,
+                      total: eggTotal, pickupDate: '', pickupLabel: '', qty: eggsQty };
         closePackModal();
+        openCartDrawer();
+        initDrawerCalendar();
       });
     });
   }
@@ -865,59 +891,93 @@
       }
 
       cart.beef = items;
-      updateOrderTray();
       closeBeefModal();
+      openCartDrawer();
     });
   }
 
-  /* ─── Order Tray handlers ─────────────────────────────────────────── */
-  var orderTrayEl     = document.getElementById('orderTray');
-  var orderTrayToggle = document.getElementById('orderTrayToggle');
-  var orderTrayBtn    = document.getElementById('orderTrayBtn');
-  var orderTrayLines  = document.getElementById('orderTrayLines');
+  /* ─── Cart Drawer Event Handlers ─────────────────────────────────── */
 
-  if (orderTrayToggle && orderTrayEl) {
-    orderTrayToggle.addEventListener('click', function () {
-      orderTrayEl.classList.toggle('order-tray--expanded');
-    });
-  }
+  /* Close button + backdrop click */
+  var cartDrawerCloseBtn = document.getElementById('cartDrawerClose');
+  if (cartDrawerCloseBtn) cartDrawerCloseBtn.addEventListener('click', closeCartDrawer);
+  if (cartBackdropEl)    cartBackdropEl.addEventListener('click', closeCartDrawer);
 
-  /* Remove items via event delegation */
-  if (orderTrayLines) {
-    orderTrayLines.addEventListener('click', function (e) {
+  /* Nav cart buttons */
+  var navCartBtn    = document.getElementById('navCartBtn');
+  var navCartBtnMob = document.getElementById('navCartBtnMobile');
+  if (navCartBtn)    navCartBtn.addEventListener('click',    openCartDrawer);
+  if (navCartBtnMob) navCartBtnMob.addEventListener('click', openCartDrawer);
+
+  /* Escape key closes drawer */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeCartDrawer(); closeMobileNav(); closePackModal(); }
+  });
+
+  /* Item remove + pickup change — event delegation on drawer body */
+  var cartDrawerBodyEl = document.getElementById('cartDrawerBody');
+  if (cartDrawerBodyEl) {
+    cartDrawerBodyEl.addEventListener('click', function (e) {
       var btn = e.target;
-      if (!btn.hasAttribute('data-remove')) return;
-      var key = btn.getAttribute('data-remove');
-      if (key === 'eggs') {
-        cart.eggs = null;
-      } else if (key.indexOf('beef|') === 0) {
-        var cutName = key.slice(5);
-        cart.beef = cart.beef.filter(function (i) { return i.name !== cutName; });
-        beefCutRows.forEach(function (row) {
-          if (row.querySelector('.beef-cut-name').textContent === cutName) {
-            setBeefQty(row, 0);
-          }
-        });
-        updateBeefTotal();
+
+      /* Remove button */
+      if (btn.hasAttribute('data-remove')) {
+        var key = btn.getAttribute('data-remove');
+        if (key === 'eggs') {
+          cart.eggs = null;
+          var pickupPan = document.getElementById('cartPickupPanel');
+          if (pickupPan) pickupPan.style.display = 'none';
+          drawerSelectedPickupDate = null;
+          drawerPickupType = null;
+        } else if (key.indexOf('beef|') === 0) {
+          var cutName = key.slice(5);
+          cart.beef = cart.beef.filter(function (i) { return i.name !== cutName; });
+          beefCutRows.forEach(function (row) {
+            if (row.querySelector('.beef-cut-name').textContent === cutName) {
+              setBeefQty(row, 0);
+            }
+          });
+          updateBeefTotal();
+        }
+        if (cartLineCount() === 0) closeCartDrawer();
+        else renderCartItems();
       }
-      if (cartLineCount() === 0 && orderTrayEl) {
-        orderTrayEl.classList.remove('order-tray--expanded');
+
+      /* Change pickup */
+      if (btn.getAttribute('data-action') === 'change-pickup') {
+        if (cart.eggs) { cart.eggs.pickupDate = ''; cart.eggs.pickupLabel = ''; }
+        drawerSelectedPickupDate = null;
+        drawerPickupType = null;
+        document.querySelectorAll('input[name="drawerPickupType"]').forEach(function (r) { r.checked = false; });
+        renderCartItems();
+        initDrawerCalendar();
       }
-      updateOrderTray();
     });
   }
 
-  /* Tray submit — populate contact form with all cart items */
-  if (orderTrayBtn) {
-    orderTrayBtn.addEventListener('click', function () {
+  /* Place Order button */
+  var cartDrawerPlaceBtn = document.getElementById('cartDrawerPlaceBtn');
+  if (cartDrawerPlaceBtn) {
+    cartDrawerPlaceBtn.addEventListener('click', function () {
       if (cartLineCount() === 0) return;
+
+      /* Validate single-dozen pickup */
+      if (cart.eggs && cart.eggs.plan === 'single-dozen' && !cart.eggs.pickupDate) {
+        showToast('Please choose a pickup location and date for your eggs.');
+        return;
+      }
 
       var lines = [];
       cart.beef.forEach(function (item) {
         lines.push(item.qty + ' lb — ' + item.name +
           ' @ $' + item.price.toFixed(2) + '/lb = $' + item.sub.toFixed(2));
       });
-      if (cart.eggs) lines.push(cart.eggs.label + ' — $' + cart.eggs.total.toFixed(2));
+      if (cart.eggs) {
+        var eggLine = cart.eggs.label;
+        if (cart.eggs.pickupLabel) eggLine += ' · ' + cart.eggs.pickupLabel;
+        eggLine += ' — $' + cart.eggs.total.toFixed(2);
+        lines.push(eggLine);
+      }
 
       var hasBeef = cart.beef.length > 0;
       var hasEggs = !!cart.eggs;
@@ -941,6 +1001,8 @@
         planIn.dataset.pickupDate = (cart.eggs && cart.eggs.pickupDate) ? cart.eggs.pickupDate : '';
       }
 
+      closeCartDrawer();
+
       var contact = document.getElementById('contact');
       if (contact) {
         var navEl = document.getElementById('nav');
@@ -951,6 +1013,142 @@
         });
         setTimeout(function () { if (message) message.focus(); }, 400);
       }
+    });
+  }
+
+  /* ─── Drawer Calendar (for single-dozen pickup) ───────────────────── */
+  var drawerPickupType = null;
+  var drawerCalViewYear, drawerCalViewMonth;
+  var drawerSelectedPickupDate = null;
+
+  function initDrawerCalendar() {
+    var now = new Date();
+    drawerCalViewYear  = now.getFullYear();
+    drawerCalViewMonth = now.getMonth();
+    drawerSelectedPickupDate = null;
+    drawerPickupType = null;
+    document.querySelectorAll('input[name="drawerPickupType"]').forEach(function (r) { r.checked = false; });
+    var cal = document.getElementById('drawerPickupCal');
+    if (cal) cal.classList.remove('pickup-cal--visible');
+    var satHdr = document.getElementById('drawerCalSatHdr');
+    var sunHdr = document.getElementById('drawerCalSunHdr');
+    if (satHdr) satHdr.className = 'cal-sat-hdr';
+    if (sunHdr) sunHdr.className = '';
+    renderDrawerCalendar();
+    updateDrawerCalLabel();
+  }
+
+  function renderDrawerCalendar() {
+    var title = document.getElementById('drawerCalTitle');
+    var grid  = document.getElementById('drawerCalGrid');
+    var prev  = document.getElementById('drawerCalPrev');
+    if (!title || !grid) return;
+
+    var today = new Date(); today.setHours(0,0,0,0);
+    title.textContent = MONTHS[drawerCalViewMonth] + ' ' + drawerCalViewYear;
+    if (prev) prev.disabled = (drawerCalViewYear === today.getFullYear() && drawerCalViewMonth === today.getMonth());
+
+    var firstDay    = new Date(drawerCalViewYear, drawerCalViewMonth, 1).getDay();
+    var daysInMonth = new Date(drawerCalViewYear, drawerCalViewMonth + 1, 0).getDate();
+    grid.innerHTML = '';
+
+    for (var e = 0; e < firstDay; e++) {
+      var blank = document.createElement('div');
+      blank.className = 'cal-day';
+      grid.appendChild(blank);
+    }
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var date        = new Date(drawerCalViewYear, drawerCalViewMonth, d);
+      var dow         = date.getDay();
+      var isPickupDay = drawerPickupType === 'church' ? dow === 0 : dow === 6;
+      var isPast      = date < today;
+      var isSel       = drawerSelectedPickupDate &&
+                        date.toDateString() === drawerSelectedPickupDate.toDateString();
+
+      var cell = document.createElement('button');
+      cell.type = 'button';
+      cell.textContent = d;
+      cell.disabled = !isPickupDay || isPast;
+      cell.className = 'cal-day' +
+        (isPickupDay && !isPast ? ' cal-day--sat' : '') +
+        (isSel ? ' cal-day--sel' : '');
+
+      if (isPickupDay && !isPast) {
+        (function (captured) {
+          cell.addEventListener('click', function () {
+            drawerSelectedPickupDate = captured;
+            /* Persist to cart */
+            if (cart.eggs) {
+              var dayName   = drawerPickupType === 'church' ? 'Sunday' : 'Saturday';
+              var typeLabel = drawerPickupType === 'farm'   ? 'Farm Pickup' :
+                              drawerPickupType === 'church' ? 'Church Drop-off · Savannah' :
+                                                             'City Pickup · Atlanta';
+              var dateStr   = MONTHS[captured.getMonth()] + ' ' + captured.getDate() + ', ' + captured.getFullYear();
+              cart.eggs.pickupDate  = captured.toISOString().split('T')[0];
+              cart.eggs.pickupLabel = typeLabel + ' · ' + dayName + ' ' + dateStr;
+              cart.eggs.sublabel    = cart.eggs.pickupLabel;
+            }
+            renderDrawerCalendar();
+            updateDrawerCalLabel();
+            renderCartItems();
+          });
+        })(new Date(drawerCalViewYear, drawerCalViewMonth, d));
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  function updateDrawerCalLabel() {
+    var label = document.getElementById('drawerCalLabel');
+    if (!label) return;
+    if (drawerSelectedPickupDate) {
+      var dayName = drawerPickupType === 'church' ? 'Sunday' : 'Saturday';
+      label.textContent = '✓ ' + dayName + ' ' + MONTHS[drawerSelectedPickupDate.getMonth()] +
+        ' ' + drawerSelectedPickupDate.getDate() + ', ' + drawerSelectedPickupDate.getFullYear();
+      label.classList.add('cal-label--set');
+    } else {
+      label.textContent = drawerPickupType === 'church' ? 'Select a Sunday for drop-off' :
+                          drawerPickupType === 'atlanta' ? 'Select a Saturday, Atlanta' :
+                          'Select a Saturday for pickup';
+      label.classList.remove('cal-label--set');
+    }
+  }
+
+  document.querySelectorAll('input[name="drawerPickupType"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      drawerPickupType = radio.value;
+      drawerSelectedPickupDate = null;
+      var satHdr = document.getElementById('drawerCalSatHdr');
+      var sunHdr = document.getElementById('drawerCalSunHdr');
+      if (drawerPickupType === 'church') {
+        if (satHdr) satHdr.className = '';
+        if (sunHdr) sunHdr.className = 'cal-sat-hdr';
+      } else {
+        if (satHdr) satHdr.className = 'cal-sat-hdr';
+        if (sunHdr) sunHdr.className = '';
+      }
+      renderDrawerCalendar();
+      updateDrawerCalLabel();
+      var cal = document.getElementById('drawerPickupCal');
+      if (cal) cal.classList.add('pickup-cal--visible');
+    });
+  });
+
+  var drawerCalPrevBtn = document.getElementById('drawerCalPrev');
+  var drawerCalNextBtn = document.getElementById('drawerCalNext');
+  if (drawerCalPrevBtn) {
+    drawerCalPrevBtn.addEventListener('click', function () {
+      drawerCalViewMonth--;
+      if (drawerCalViewMonth < 0) { drawerCalViewMonth = 11; drawerCalViewYear--; }
+      renderDrawerCalendar();
+    });
+  }
+  if (drawerCalNextBtn) {
+    drawerCalNextBtn.addEventListener('click', function () {
+      drawerCalViewMonth++;
+      if (drawerCalViewMonth > 11) { drawerCalViewMonth = 0; drawerCalViewYear++; }
+      renderDrawerCalendar();
     });
   }
 
