@@ -290,131 +290,8 @@
     });
   }
 
-  /* ─── Pickup Calendar ─────────────────────────────────────── */
   var MONTHS = ['January','February','March','April','May','June',
                 'July','August','September','October','November','December'];
-  var calViewYear, calViewMonth, selectedPickupDate = null, pickupType = null;
-
-  function renderCalendar() {
-    var calTitle = document.getElementById('calTitle');
-    var calGrid  = document.getElementById('calGrid');
-    var calPrev  = document.getElementById('calPrev');
-    var calNext  = document.getElementById('calNext');
-    if (!calTitle || !calGrid) return;
-
-    var today = new Date(); today.setHours(0, 0, 0, 0);
-    calTitle.textContent = MONTHS[calViewMonth] + ' ' + calViewYear;
-    if (calPrev) calPrev.disabled = (calViewYear === today.getFullYear() && calViewMonth === today.getMonth());
-
-    var firstDay    = new Date(calViewYear, calViewMonth, 1).getDay();
-    var daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
-    calGrid.innerHTML = '';
-
-    for (var e = 0; e < firstDay; e++) {
-      var blank = document.createElement('div');
-      blank.className = 'cal-day';
-      calGrid.appendChild(blank);
-    }
-
-    for (var d = 1; d <= daysInMonth; d++) {
-      var date       = new Date(calViewYear, calViewMonth, d);
-      var dow        = date.getDay();
-      var isPickupDay = pickupType === 'church' ? dow === 0 : dow === 6;
-      var isPast     = date < today;
-      var isSel      = selectedPickupDate && date.toDateString() === selectedPickupDate.toDateString();
-
-      var cell = document.createElement('button');
-      cell.type = 'button';
-      cell.textContent = d;
-      cell.disabled = !isPickupDay || isPast;
-      cell.className = 'cal-day' +
-        (isPickupDay && !isPast ? ' cal-day--sat' : '') +
-        (isSel                  ? ' cal-day--sel'  : '');
-
-      if (isPickupDay && !isPast) {
-        (function (captured) {
-          cell.addEventListener('click', function () {
-            selectedPickupDate = captured;
-            renderCalendar();
-            updateCalLabel();
-          });
-        })(new Date(calViewYear, calViewMonth, d));
-      }
-      calGrid.appendChild(cell);
-    }
-  }
-
-  function updateCalLabel() {
-    var calLabel = document.getElementById('calLabel');
-    if (!calLabel) return;
-    if (selectedPickupDate) {
-      var dayName = pickupType === 'church' ? 'Sunday' : 'Saturday';
-      calLabel.textContent = '✓ ' + dayName + ' ' + MONTHS[selectedPickupDate.getMonth()] +
-        ' ' + selectedPickupDate.getDate() + ', ' + selectedPickupDate.getFullYear();
-      calLabel.classList.add('cal-label--set');
-    } else {
-      calLabel.textContent = pickupType === 'church' ? 'Select a Sunday for drop-off' :
-                             pickupType === 'atlanta' ? 'Select a Saturday, Atlanta' :
-                             'Select a Saturday, Farm Pickup';
-      calLabel.classList.remove('cal-label--set');
-    }
-  }
-
-  function initCalendar() {
-    var now = new Date();
-    calViewYear  = now.getFullYear();
-    calViewMonth = now.getMonth();
-    selectedPickupDate = null;
-    pickupType = null;
-    document.querySelectorAll('input[name="pickupType"]').forEach(function (r) { r.checked = false; });
-    var pickupCal = document.getElementById('pickupCal');
-    if (pickupCal) pickupCal.classList.remove('pickup-cal--visible');
-    var calSatHdr = document.getElementById('calSatHdr');
-    var calSunHdr = document.getElementById('calSunHdr');
-    if (calSatHdr) calSatHdr.className = 'cal-sat-hdr';
-    if (calSunHdr) calSunHdr.className = '';
-    renderCalendar();
-    updateCalLabel();
-  }
-
-
-  /* ─── Pickup type radios ─────────────────────────────────────── */
-  document.querySelectorAll('input[name="pickupType"]').forEach(function (radio) {
-    radio.addEventListener('change', function () {
-      pickupType = radio.value;
-      selectedPickupDate = null;
-      var calSatHdr = document.getElementById('calSatHdr');
-      var calSunHdr = document.getElementById('calSunHdr');
-      if (pickupType === 'church') {
-        if (calSatHdr) calSatHdr.className = '';
-        if (calSunHdr) calSunHdr.className = 'cal-sat-hdr';
-      } else {
-        if (calSatHdr) calSatHdr.className = 'cal-sat-hdr';
-        if (calSunHdr) calSunHdr.className = '';
-      }
-      renderCalendar();
-      updateCalLabel();
-      var pickupCal = document.getElementById('pickupCal');
-      if (pickupCal) pickupCal.classList.add('pickup-cal--visible');
-    });
-  });
-
-  var calPrevBtn = document.getElementById('calPrev');
-  var calNextBtn = document.getElementById('calNext');
-  if (calPrevBtn) {
-    calPrevBtn.addEventListener('click', function () {
-      calViewMonth--;
-      if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
-      renderCalendar();
-    });
-  }
-  if (calNextBtn) {
-    calNextBtn.addEventListener('click', function () {
-      calViewMonth++;
-      if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
-      renderCalendar();
-    });
-  }
 
   /* ─── Eggs Pack Modal ─────────────────────────────────────── */
   var packModal      = document.getElementById('packModal');
@@ -460,18 +337,6 @@
     document.body.style.overflow = 'hidden';
     eggsQty = 1;
     updateEggsStepper();
-    var pickupSec = document.getElementById('pickupSection');
-    var tog       = document.getElementById('pickupToggle');
-    if (pickupSec) pickupSec.classList.remove('pickup-section--open');
-    if (tog)       tog.classList.remove('pickup-toggle--open');
-    if (tog && pickupSec) {
-      tog.onclick = function (e) {
-        e.stopPropagation();
-        var isOpen = pickupSec.classList.toggle('pickup-section--open');
-        tog.classList.toggle('pickup-toggle--open', isOpen);
-      };
-    }
-    initCalendar();
     if (window.BFF) window.BFF.loadCapacity();
   }
 
@@ -499,8 +364,7 @@
 
     packModal.querySelectorAll('.pack-card-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var plan         = btn.getAttribute('data-plan') || '';
-        var order        = btn.getAttribute('data-order') || '';
+        var plan = btn.getAttribute('data-plan') || '';
 
         /* Solo pack notify — goes directly to contact form */
         if (plan === 'solo-notify') {
@@ -515,7 +379,7 @@
                 if (inquiry.options[i].text === 'Poultry / Eggs Order') { inquiry.selectedIndex = i; break; }
               }
             }
-            if (message) message.value = "I'd like to order: " + order;
+            if (message) message.value = "I'd like to be notified when the Solo Pack (6 eggs · $3) becomes available.";
             var contact = document.getElementById('contact');
             if (contact) {
               var navEl2 = document.getElementById('nav');
@@ -1039,12 +903,84 @@
   }
 
   function renderDrawerCalendar() {
-    var title = document.getElementById('drawerCalTitle');
-    var grid  = document.getElementById('drawerCalGrid');
-    var prev  = document.getElementById('drawerCalPrev');
+    var title  = document.getElementById('drawerCalTitle');
+    var grid   = document.getElementById('drawerCalGrid');
+    var prev   = document.getElementById('drawerCalPrev');
+    var next   = document.getElementById('drawerCalNext');
+    var label  = document.getElementById('drawerCalLabel');
     if (!title || !grid) return;
 
     var today = new Date(); today.setHours(0,0,0,0);
+
+    /* Atlanta: only show pre-configured dates, no free calendar */
+    if (drawerPickupType === 'atlanta') {
+      var atlantaDates = window.BFF_ATLANTA_DATES || [];
+      var future = atlantaDates.filter(function (s) {
+        var p = s.split('-');
+        return new Date(+p[0], +p[1] - 1, +p[2]) >= today;
+      });
+
+      title.textContent = 'Atlanta Pickup';
+      if (prev) prev.style.display = 'none';
+      if (next) next.style.display = 'none';
+      grid.innerHTML = '';
+
+      if (future.length === 0) {
+        var msg = document.createElement('p');
+        msg.className = 'cal-tbd-msg';
+        msg.textContent = 'No Atlanta dates scheduled yet. Place your order and we\'ll reach out to confirm.';
+        grid.appendChild(msg);
+        if (label) { label.textContent = "We'll confirm your date after you place the order."; label.classList.remove('cal-label--set'); }
+        /* Auto-set a placeholder so "Place Order" isn't blocked */
+        if (cart.eggs) {
+          cart.eggs.pickupDate  = 'tbd';
+          cart.eggs.pickupLabel = 'City Pickup · Atlanta — date TBD';
+          cart.eggs.sublabel    = cart.eggs.pickupLabel;
+          renderCartItems();
+        }
+      } else {
+        future.forEach(function (s) {
+          var p    = s.split('-');
+          var date = new Date(+p[0], +p[1] - 1, +p[2]);
+          var isSel = drawerSelectedPickupDate &&
+                      date.toDateString() === drawerSelectedPickupDate.toDateString();
+          var cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = 'cal-atlanta-date' + (isSel ? ' cal-day--sel' : '');
+          cell.textContent = MONTHS[date.getMonth()].slice(0,3) + ' ' + date.getDate() + ', ' + date.getFullYear();
+          (function (captured) {
+            cell.addEventListener('click', function () {
+              drawerSelectedPickupDate = captured;
+              if (cart.eggs) {
+                var dateStr = MONTHS[captured.getMonth()] + ' ' + captured.getDate() + ', ' + captured.getFullYear();
+                cart.eggs.pickupDate  = s;
+                cart.eggs.pickupLabel = 'City Pickup · Atlanta · Saturday ' + dateStr;
+                cart.eggs.sublabel    = cart.eggs.pickupLabel;
+              }
+              renderDrawerCalendar();
+              renderCartItems();
+            });
+          })(date);
+          grid.appendChild(cell);
+        });
+        if (label) {
+          if (drawerSelectedPickupDate) {
+            label.textContent = '✓ Saturday ' + MONTHS[drawerSelectedPickupDate.getMonth()] + ' ' +
+              drawerSelectedPickupDate.getDate() + ', ' + drawerSelectedPickupDate.getFullYear();
+            label.classList.add('cal-label--set');
+          } else {
+            label.textContent = 'Select an available Atlanta date';
+            label.classList.remove('cal-label--set');
+          }
+        }
+      }
+      return;
+    }
+
+    /* Farm / Church — free calendar, show all applicable days */
+    if (prev) prev.style.display = '';
+    if (next) next.style.display = '';
+
     title.textContent = MONTHS[drawerCalViewMonth] + ' ' + drawerCalViewYear;
     if (prev) prev.disabled = (drawerCalViewYear === today.getFullYear() && drawerCalViewMonth === today.getMonth());
 
@@ -1078,12 +1014,9 @@
         (function (captured) {
           cell.addEventListener('click', function () {
             drawerSelectedPickupDate = captured;
-            /* Persist to cart */
             if (cart.eggs) {
               var dayName   = drawerPickupType === 'church' ? 'Sunday' : 'Saturday';
-              var typeLabel = drawerPickupType === 'farm'   ? 'Farm Pickup' :
-                              drawerPickupType === 'church' ? 'Church Drop-off · Savannah' :
-                                                             'City Pickup · Atlanta';
+              var typeLabel = drawerPickupType === 'church' ? 'Church Pickup · Savannah' : 'Farm Pickup · Georgia';
               var dateStr   = MONTHS[captured.getMonth()] + ' ' + captured.getDate() + ', ' + captured.getFullYear();
               cart.eggs.pickupDate  = captured.toISOString().split('T')[0];
               cart.eggs.pickupLabel = typeLabel + ' · ' + dayName + ' ' + dateStr;
@@ -1097,6 +1030,7 @@
       }
       grid.appendChild(cell);
     }
+    updateDrawerCalLabel();
   }
 
   function updateDrawerCalLabel() {
@@ -1108,8 +1042,7 @@
         ' ' + drawerSelectedPickupDate.getDate() + ', ' + drawerSelectedPickupDate.getFullYear();
       label.classList.add('cal-label--set');
     } else {
-      label.textContent = drawerPickupType === 'church' ? 'Select a Sunday for drop-off' :
-                          drawerPickupType === 'atlanta' ? 'Select a Saturday, Atlanta' :
+      label.textContent = drawerPickupType === 'church' ? 'Select a Sunday for pickup' :
                           'Select a Saturday for pickup';
       label.classList.remove('cal-label--set');
     }

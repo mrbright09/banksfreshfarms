@@ -313,13 +313,13 @@
       </div>
       <div class="pack-grid">
 
-        <!-- ONE-TIME DOZEN + PICKUP CALENDAR -->
+        <!-- ONE-TIME DOZEN -->
         <div class="pack-card">
           <div class="pack-card-badge">One-Time</div>
           <div class="pack-card-icon">🥚</div>
           <h3 class="pack-card-title">Single Dozen</h3>
           <div class="pack-card-sub">One-Time Purchase</div>
-          <p class="pack-card-desc">Fresh eggs, no strings. Pick your Saturday, show up, take home a dozen straight from the farm.</p>
+          <p class="pack-card-desc">Fresh eggs, no strings. Add to cart, choose your pickup location and date, and we'll have them ready for you.</p>
           <div class="pack-card-price">
             <span class="pack-price-amount">$5</span>
             <span class="pack-price-label">per dozen · 12 eggs</span>
@@ -333,53 +333,9 @@
             <button type="button" class="stepper-btn" id="eggsQtyPlus" aria-label="More dozens">+</button>
           </div>
           <p class="stepper-total" id="eggsStepperTotal">$5 total</p>
-          <button type="button" class="pickup-toggle" id="pickupToggle">
-            Schedule Your Pickup <span class="pickup-toggle-chevron">&#9660;</span>
-          </button>
-          <div class="pickup-section" id="pickupSection">
-            <div class="pickup-radios">
-              <label class="pickup-radio">
-                <input type="radio" name="pickupType" value="farm" />
-                <span class="pickup-radio-ui"></span>
-                <span class="pickup-radio-text">
-                  <span class="pickup-radio-name">Farm Pickup</span>
-                  <span class="pickup-radio-detail">Saturdays &middot; Georgia Farm</span>
-                </span>
-              </label>
-              <label class="pickup-radio">
-                <input type="radio" name="pickupType" value="church" />
-                <span class="pickup-radio-ui"></span>
-                <span class="pickup-radio-text">
-                  <span class="pickup-radio-name">Church Drop-off</span>
-                  <span class="pickup-radio-detail">Sundays &middot; Savannah, GA</span>
-                </span>
-              </label>
-              <label class="pickup-radio">
-                <input type="radio" name="pickupType" value="atlanta" />
-                <span class="pickup-radio-ui"></span>
-                <span class="pickup-radio-text">
-                  <span class="pickup-radio-name">City Pickup</span>
-                  <span class="pickup-radio-detail">Saturdays &middot; Atlanta, GA</span>
-                </span>
-              </label>
-            </div>
-            <div class="pickup-cal" id="pickupCal">
-              <div class="pickup-cal-hdr">
-                <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month">&#8249;</button>
-                <span class="cal-title" id="calTitle"></span>
-                <button type="button" class="cal-nav" id="calNext" aria-label="Next month">&#8250;</button>
-              </div>
-              <div class="cal-weekdays">
-                <span id="calSunHdr">Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span id="calSatHdr" class="cal-sat-hdr">Sa</span>
-              </div>
-              <div class="cal-grid" id="calGrid"></div>
-              <div class="cal-label" id="calLabel"></div>
-            </div>
-          </div>
           <div class="pack-card-btns">
             <button type="button" class="pack-card-btn" id="eggsOrderBtn"
-               data-plan="single-dozen"
-               data-order="1 dozen pasture-raised eggs · $5 one-time">Order Now — $5</button>
+               data-plan="single-dozen">Add to Cart — $5</button>
           </div>
         </div>
 
@@ -402,14 +358,11 @@
           <div class="pack-sub-tiers">
             <div class="pack-tier-label">Choose your plan:</div>
             <button type="button" class="pack-card-btn pack-card-btn--tier"
-               data-plan="monthly"
-               data-order="Weekly Dozen — Monthly Subscription · $20/month · 5 dozen/month (cancel anytime)">Monthly — $20/mo</button>
+               data-plan="monthly">Monthly — $20/mo</button>
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
-               data-plan="6-month"
-               data-order="Weekly Dozen — 6-Month Subscription · $20/month × 6 = $120 · 5 dozen/month">6 Months — $120 <span class="pack-tier-save">Save 5%</span></button>
+               data-plan="6-month">6 Months — $120 <span class="pack-tier-save">Save 5%</span></button>
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
-               data-plan="12-month"
-               data-order="Weekly Dozen — 12-Month Subscription · $20/month × 12 = $240 · 5 dozen/month">12 Months — $240 <span class="pack-tier-save">Save 10%</span></button>
+               data-plan="12-month">12 Months — $240 <span class="pack-tier-save">Save 10%</span></button>
           </div>
         </div>
 
@@ -432,8 +385,7 @@
           </ul>
           <div class="pack-card-btns">
             <button type="button" class="pack-card-btn pack-card-btn--reserve"
-               data-plan="solo-notify"
-               data-order="Solo Pack interest — please notify me when the Solo Pack (6 eggs · $3) becomes available">Notify Me When Available</button>
+               data-plan="solo-notify">Notify Me When Available</button>
           </div>
         </div>
 
@@ -569,7 +521,7 @@
             <input type="radio" name="drawerPickupType" value="church" />
             <span class="pickup-radio-ui"></span>
             <span class="pickup-radio-text">
-              <span class="pickup-radio-name">Church Drop-off</span>
+              <span class="pickup-radio-name">Church Pickup</span>
               <span class="pickup-radio-detail">Sundays &middot; Savannah, GA</span>
             </span>
           </label>

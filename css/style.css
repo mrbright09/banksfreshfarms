@@ -2587,6 +2587,33 @@ ul  { list-style: none; }
 #drawerPickupCal { display: none; }
 #drawerPickupCal.pickup-cal--visible { display: block; }
 
+/* Atlanta specific date buttons (list, not grid) */
+.cal-atlanta-date {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,146,42,0.25);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.cal-atlanta-date:hover { background: rgba(200,146,42,0.12); border-color: var(--gold); }
+.cal-atlanta-date.cal-day--sel { background: var(--gold); color: var(--charcoal); border-color: var(--gold); }
+.cal-tbd-msg {
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  color: var(--cream-muted);
+  line-height: 1.6;
+  padding: 8px 0 4px;
+}
+
 @media (max-width: 480px) {
   .cart-drawer { width: 100vw; }
   .cart-drawer-hdr { padding: 18px 20px 14px; }
