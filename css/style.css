@@ -621,6 +621,7 @@ ul  { list-style: none; }
 }
 
 .shop-card:hover .shop-card-photo img { transform: scale(1.05); }
+.eggs-card-img { object-position: left top !important; }
 
 /* Fallback when no photo */
 .shop-card-photo.no-photo {
