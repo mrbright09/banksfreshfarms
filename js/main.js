@@ -694,7 +694,7 @@
   var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
 
   var beefCutRows = beefModal ? Array.prototype.slice.call(
-    beefModal.querySelectorAll('.beef-cut-item[data-cut]')
+    beefModal.querySelectorAll('.beef-cut-item[data-cut]:not(.beef-cut-item--sold-out)')
   ) : [];
 
   function getBeefQty(row) { return parseInt(row.querySelector('.beef-stepper-qty').textContent, 10) || 0; }

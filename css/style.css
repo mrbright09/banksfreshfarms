@@ -972,6 +972,40 @@ ul  { list-style: none; }
   background: rgba(200,146,42,0.06);
 }
 
+.beef-cut-item--sold-out {
+  opacity: 0.45;
+  pointer-events: none;
+}
+.beef-cut-item--sold-out:hover { background: rgba(255,255,255,0.04); }
+
+.beef-cut-sold-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #C08060;
+  background: rgba(192, 128, 96, 0.12);
+  border: 1px solid rgba(192, 128, 96, 0.25);
+  border-radius: 4px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  text-align: center;
+  align-self: center;
+}
+
+.beef-cut-name-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.beef-cut-stock {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7BB85A;
+  letter-spacing: .02em;
+}
+
 .beef-cut-stepper {
   display: flex;
   align-items: center;
