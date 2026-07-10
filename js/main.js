@@ -316,7 +316,7 @@
               var typeMap = {
                 'Beef Order':           'BEEF',
                 'Poultry / Eggs Order': 'EGG',
-                'BFF Seasonings':       'SEAS',
+                'Signature Seasonings': 'SEAS',
                 'Herbal Products':      'HERB',
                 'Merch':                'MERCH',
                 'Wholesale / B2B':      'B2B',
