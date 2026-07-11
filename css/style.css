@@ -2413,6 +2413,21 @@ ul  { list-style: none; }
   flex-shrink: 0;
 }
 .cart-drawer-hdr-left { display: flex; align-items: baseline; gap: 10px; }
+.cart-drawer-hdr-right { display: flex; align-items: center; gap: 12px; }
+.cart-clear-btn {
+  background: none;
+  border: none;
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(200,146,42,0.55);
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.cart-clear-btn:hover { color: #c0392b; }
 .cart-drawer-title {
   font-family: 'Playfair Display', serif;
   font-size: 20px;
