@@ -145,12 +145,19 @@
       html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
         '<div class="cart-item-row">' +
           '<div class="cart-item-info">' +
-            '<span class="cart-item-name">' + item.qty + ' lb — ' + item.name + '</span>' +
+            '<span class="cart-item-name">' + item.name + '</span>' +
             '<span class="cart-item-detail">' + beefDetail + '</span>' +
           '</div>' +
-          '<span class="cart-item-price">$' + item.sub.toFixed(2) + '</span>' +
+          '<span class="cart-item-price" id="beefPrice|' + item.name + '">$' + item.sub.toFixed(2) + '</span>' +
         '</div>' +
-        '<button type="button" class="cart-item-remove" data-remove="beef|' + item.name + '">Remove</button>' +
+        '<div class="cart-item-footer">' +
+          '<div class="cart-qty-stepper">' +
+            '<button type="button" class="cart-qty-btn" data-qty-change="beef|' + item.name + '|-1" aria-label="Decrease">&#8722;</button>' +
+            '<span class="cart-qty-val" id="beefQty|' + item.name + '">' + item.qty + ' lb</span>' +
+            '<button type="button" class="cart-qty-btn" data-qty-change="beef|' + item.name + '|1" aria-label="Increase">+</button>' +
+          '</div>' +
+          '<button type="button" class="cart-item-remove" data-remove="beef|' + item.name + '">Remove</button>' +
+        '</div>' +
         '</div>';
     });
 
@@ -923,6 +930,32 @@
   if (cartDrawerBodyEl) {
     cartDrawerBodyEl.addEventListener('click', function (e) {
       var btn = e.target;
+
+      /* Qty stepper */
+      if (btn.hasAttribute('data-qty-change')) {
+        var parts   = btn.getAttribute('data-qty-change').split('|');
+        var cutName = parts[1];
+        var delta   = parseInt(parts[2], 10);
+        var item    = null;
+        for (var ci = 0; ci < cart.beef.length; ci++) {
+          if (cart.beef[ci].name === cutName) { item = cart.beef[ci]; break; }
+        }
+        if (item) {
+          var newQty = item.qty + delta;
+          if (newQty < 1) newQty = 1;
+          item.qty = newQty;
+          item.sub = +(item.qty * item.price).toFixed(2);
+          /* Sync the product modal stepper if it's open */
+          beefCutRows.forEach(function (row) {
+            if (row.querySelector('.beef-cut-name').textContent === cutName) {
+              setBeefQty(row, item.qty);
+            }
+          });
+          updateBeefTotal();
+          renderCartItems();
+        }
+        return;
+      }
 
       /* Remove button */
       if (btn.hasAttribute('data-remove')) {
