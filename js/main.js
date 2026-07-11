@@ -15,6 +15,59 @@
     return t;
   }
 
+  /* GA sales tax: raw meat + eggs are exempt; seasonings are taxable.
+     Rate depends on pickup location (Atlanta 8.9%, farm/church 7%).    */
+  function getTaxRate() {
+    var rates = (typeof BFF_TAX_RATES !== 'undefined') ? BFF_TAX_RATES : { farm: 0.07, church: 0.07, atlanta: 0.089 };
+    var hasAtlantaItem = cart.beef.length > 0 ||
+      (cart.eggs && cart.eggs.pickupType === 'atlanta');
+    return hasAtlantaItem ? rates.atlanta : rates.farm;
+  }
+
+  /* Delivery fee: flat fee unless subtotal meets free threshold. */
+  function getDeliveryFee(subtotal) {
+    var fee      = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
+    var freeOver = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
+    var toggle   = document.getElementById('cartDeliveryToggle');
+    if (!toggle || !toggle.checked) return 0;
+    return subtotal >= freeOver ? 0 : fee;
+  }
+
+  /* Recompute and write all totals to the cart drawer footer. */
+  function updateCartTotals() {
+    var subtotal  = cartTotal();
+    var delivery  = getDeliveryFee(subtotal);
+    /* Tax applies only to seasonings (not raw meat/eggs). Since we don't
+       sell seasonings online yet, tax is $0 for all current cart items.
+       When seasonings are added, compute their taxable share and apply getTaxRate(). */
+    var taxable   = 0;
+    var tax       = +(taxable * getTaxRate()).toFixed(2);
+    var grand     = subtotal + delivery + tax;
+
+    var subEl      = document.getElementById('cartSubtotalAmt');
+    var delivEl    = document.getElementById('cartDeliveryLine');
+    var delivAmtEl = document.getElementById('cartDeliveryLineAmt');
+    var noteEl     = document.getElementById('cartDeliveryNote');
+    var taxEl      = document.getElementById('cartTaxAmt');
+    var totalEl    = document.getElementById('cartDrawerTotalAmt');
+
+    if (subEl)   subEl.textContent   = '$' + subtotal.toFixed(2);
+    if (taxEl)   taxEl.textContent   = '$' + tax.toFixed(2);
+    if (totalEl) totalEl.textContent = '$' + grand.toFixed(2);
+
+    var freeOver     = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
+    var fee          = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
+    var toggle       = document.getElementById('cartDeliveryToggle');
+    var wantsDelivery = toggle && toggle.checked;
+    if (delivEl) delivEl.style.display = wantsDelivery ? 'flex' : 'none';
+    if (delivAmtEl) {
+      delivAmtEl.textContent = (delivery === 0 && wantsDelivery) ? 'FREE' : '$' + delivery.toFixed(2);
+    }
+    if (noteEl) {
+      noteEl.textContent = subtotal >= freeOver ? 'Free on this order!' : '+$' + fee + ' · free over $' + freeOver;
+    }
+  }
+
   function cartLineCount() {
     return cart.beef.length + (cart.eggs ? 1 : 0);
   }
@@ -52,7 +105,6 @@
     var listEl    = document.getElementById('cartItemsList');
     var emptyEl   = document.getElementById('cartEmpty');
     var footEl    = document.getElementById('cartDrawerFoot');
-    var totalEl   = document.getElementById('cartDrawerTotalAmt');
     var countEl   = document.getElementById('cartDrawerCount');
     var pickupPan = document.getElementById('cartPickupPanel');
     if (!listEl) return;
@@ -71,7 +123,7 @@
     }
 
     if (countEl) countEl.textContent = count + (count === 1 ? ' item' : ' items');
-    if (totalEl) totalEl.textContent = '$' + cartTotal().toFixed(2);
+    updateCartTotals();
 
     var html = '';
     var beefPickupConfirmed = cart.beefPickup && cart.beefPickup.date;
@@ -888,6 +940,14 @@
     });
   }
 
+  /* Delivery toggle — recalculate totals on change */
+  var cartDeliveryToggle = document.getElementById('cartDeliveryToggle');
+  if (cartDeliveryToggle) {
+    cartDeliveryToggle.addEventListener('change', function () {
+      updateCartTotals();
+    });
+  }
+
   /* Place Order button */
   var cartDrawerPlaceBtn = document.getElementById('cartDrawerPlaceBtn');
   if (cartDrawerPlaceBtn) {
@@ -924,7 +984,15 @@
       var inquiryType = hasBeef && hasEggs ? 'Mixed Order' :
                         hasBeef ? 'Beef Order' : 'Poultry / Eggs Order';
 
-      var orderText = lines.join('\n') + '\n\nEstimated Total: $' + cartTotal().toFixed(2);
+      var subtotal  = cartTotal();
+      var delivery  = getDeliveryFee(subtotal);
+      var grand     = subtotal + delivery;
+      var orderText = lines.join('\n');
+      if (delivery > 0) {
+        orderText += '\n\nSubtotal:  $' + subtotal.toFixed(2);
+        orderText += '\nDelivery:  $' + delivery.toFixed(2);
+      }
+      orderText += '\n\nEstimated Total: $' + grand.toFixed(2);
 
       var inquiry = document.getElementById('contactInquiry');
       var message = document.getElementById('contactMessage');

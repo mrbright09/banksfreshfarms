@@ -18,3 +18,22 @@ var BFF_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 var BFF_ATLANTA_DATES = [
   /* Example: '2026-07-12', '2026-08-02' */
 ];
+
+/* ─── Tax Rates ────────────────────────────────────────────────────────
+   Raw meat and eggs are exempt from Georgia state sales tax.
+   Seasonings are taxable. We collect the combined rate (state + county):
+     Farm / Church pickup  → Chatham County 7%
+     Atlanta pickup        → Fulton County 8.9%
+   Rate applied only when the cart contains taxable items (seasonings).  */
+
+var BFF_TAX_RATES = {
+  farm:    0.07,
+  church:  0.07,
+  atlanta: 0.089
+};
+
+/* ─── Delivery ─────────────────────────────────────────────────────────
+   Flat $15 delivery fee; waived when order subtotal is $75 or more.    */
+
+var BFF_DELIVERY_FEE       = 15;
+var BFF_DELIVERY_FREE_OVER = 75;
