@@ -673,9 +673,60 @@ ul  { list-style: none; }
   font-size: 13px;
   color: rgba(26,15,10,0.72);
   line-height: 1.65;
-  margin-bottom: 20px;
-  flex: 1;
+  margin-bottom: 14px;
   font-family: 'Lato', sans-serif;
+}
+
+/* Beef cut price list on the main shop card */
+.beef-price-list {
+  list-style: none;
+  margin: 0 0 18px;
+  border-top: 1px solid rgba(26,15,10,0.1);
+}
+.beef-price-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(26,15,10,0.07);
+  font-family: 'Lato', sans-serif;
+}
+.beef-price-cut {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(26,15,10,0.85);
+}
+.beef-price-stock {
+  font-size: 11px;
+  font-weight: 700;
+  color: #5A8A3A;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.beef-price-sold {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(26,15,10,0.3);
+  white-space: nowrap;
+}
+.beef-price-amt {
+  font-size: 13px;
+  font-weight: 700;
+  color: #7A4A1A;
+  white-space: nowrap;
+  text-align: right;
+}
+.beef-price-unit {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(26,15,10,0.45);
+}
+.beef-price-row--soldout .beef-price-cut,
+.beef-price-row--soldout .beef-price-amt {
+  opacity: 0.38;
 }
 
 .shop-card-btn {
