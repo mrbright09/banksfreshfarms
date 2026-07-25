@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=45" />
+  <link rel="stylesheet" href="css/style.css?v=48" />
 </head>
 <body>
 
@@ -91,6 +91,9 @@
   <section class="headline-block">
     <h1 class="headline-title">One Legacy. <em>Real Food Raised with Faith, Family, and Purpose.</em></h1>
     <p class="headline-sub">What helped save our family is now feeding yours.</p>
+    <div class="headline-btns">
+      <a href="#shop" class="headline-shop-btn">Shop Now</a>
+    </div>
   </section>
 
 
@@ -158,8 +161,40 @@
         </div>
         <div class="shop-card-body">
           <h3 class="shop-card-title">Grass Fed Angus Beef</h3>
-          <p class="shop-card-desc">Premium pasture-raised Black Angus beef. From our land to your table.</p>
-          <button type="button" class="shop-card-btn" id="beefLearnMoreBtn">Shop Beef</button>
+          <p class="shop-card-desc">Premium pasture-raised Black Angus beef. Atlanta pickup · Priced per pound.</p>
+          <ul class="beef-price-list">
+            <li class="beef-price-row">
+              <span class="beef-price-cut">Ground Beef</span>
+              <span class="beef-price-stock">250 lbs left</span>
+              <span class="beef-price-amt">$10.99<span class="beef-price-unit">/lb</span></span>
+            </li>
+            <li class="beef-price-row">
+              <span class="beef-price-cut">Short Ribs</span>
+              <span class="beef-price-stock">50 lbs left</span>
+              <span class="beef-price-amt">$13.99<span class="beef-price-unit">/lb</span></span>
+            </li>
+            <li class="beef-price-row beef-price-row--soldout">
+              <span class="beef-price-cut">Chuck Roast</span>
+              <span class="beef-price-sold">Sold Out</span>
+              <span class="beef-price-amt">$12.99<span class="beef-price-unit">/lb</span></span>
+            </li>
+            <li class="beef-price-row beef-price-row--soldout">
+              <span class="beef-price-cut">Ribeye</span>
+              <span class="beef-price-sold">Sold Out</span>
+              <span class="beef-price-amt">$22.99<span class="beef-price-unit">/lb</span></span>
+            </li>
+            <li class="beef-price-row beef-price-row--soldout">
+              <span class="beef-price-cut">T-Bone</span>
+              <span class="beef-price-sold">Sold Out</span>
+              <span class="beef-price-amt">$22.99<span class="beef-price-unit">/lb</span></span>
+            </li>
+            <li class="beef-price-row beef-price-row--soldout">
+              <span class="beef-price-cut">Oxtail</span>
+              <span class="beef-price-sold">Sold Out</span>
+              <span class="beef-price-amt">$24.99<span class="beef-price-unit">/lb</span></span>
+            </li>
+          </ul>
+          <button type="button" class="shop-card-btn" id="beefLearnMoreBtn">Order Beef</button>
         </div>
       </div>
 
@@ -482,7 +517,10 @@
         <h2 class="cart-drawer-title">Your Order</h2>
         <span class="cart-drawer-item-count" id="cartDrawerCount"></span>
       </div>
-      <button type="button" class="cart-drawer-close" id="cartDrawerClose" aria-label="Close cart">&times;</button>
+      <div class="cart-drawer-hdr-right">
+        <button type="button" class="cart-clear-btn" id="cartClearBtn" aria-label="Clear cart" style="display:none">Clear</button>
+        <button type="button" class="cart-drawer-close" id="cartDrawerClose" aria-label="Close cart">&times;</button>
+      </div>
     </div>
 
     <div class="cart-drawer-body" id="cartDrawerBody">
@@ -540,6 +578,29 @@
     </div>
 
     <div class="cart-drawer-foot" id="cartDrawerFoot" style="display:none">
+      <!-- Delivery toggle -->
+      <label class="cart-delivery-toggle">
+        <input type="checkbox" id="cartDeliveryToggle" />
+        <span class="cart-delivery-toggle-track"></span>
+        <span class="cart-delivery-toggle-label">Add home delivery</span>
+        <span class="cart-delivery-toggle-note" id="cartDeliveryNote">+$15 · free over $75</span>
+      </label>
+      <!-- Line items -->
+      <div class="cart-breakdown">
+        <div class="cart-breakdown-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotalAmt">$0.00</span>
+        </div>
+        <div class="cart-breakdown-row cart-breakdown-delivery" id="cartDeliveryLine" style="display:none">
+          <span>Delivery</span>
+          <span id="cartDeliveryLineAmt">$15.00</span>
+        </div>
+        <div class="cart-breakdown-row cart-breakdown-tax">
+          <span>Tax (GA)</span>
+          <span id="cartTaxAmt">$0.00</span>
+        </div>
+      </div>
+      <!-- Grand total -->
       <div class="cart-drawer-total-row">
         <span class="cart-drawer-total-label">Estimated Total</span>
         <span class="cart-drawer-total-amt" id="cartDrawerTotalAmt">$0.00</span>
@@ -548,6 +609,15 @@
       <p class="cart-drawer-note">We'll confirm your order within 24 hours.</p>
     </div>
   </aside>
+
+  <!-- Mobile bottom shop bar -->
+  <div class="mobile-shop-bar" id="mobileShopBar">
+    <div class="mobile-shop-bar-text">
+      <span class="mobile-shop-bar-label">Beef &amp; Eggs</span>
+      <span class="mobile-shop-bar-sub">Now available online</span>
+    </div>
+    <a href="#shop" class="mobile-shop-bar-btn">Order Now</a>
+  </div>
 
   <script src="js/bff-config.js"></script>
   <script src="js/bff-supabase.js"></script>

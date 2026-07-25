@@ -15,6 +15,59 @@
     return t;
   }
 
+  /* GA sales tax: raw meat + eggs are exempt; seasonings are taxable.
+     Rate depends on pickup location (Atlanta 8.9%, farm/church 7%).    */
+  function getTaxRate() {
+    var rates = (typeof BFF_TAX_RATES !== 'undefined') ? BFF_TAX_RATES : { farm: 0.07, church: 0.07, atlanta: 0.089 };
+    var hasAtlantaItem = cart.beef.length > 0 ||
+      (cart.eggs && cart.eggs.pickupType === 'atlanta');
+    return hasAtlantaItem ? rates.atlanta : rates.farm;
+  }
+
+  /* Delivery fee: flat fee unless subtotal meets free threshold. */
+  function getDeliveryFee(subtotal) {
+    var fee      = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
+    var freeOver = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
+    var toggle   = document.getElementById('cartDeliveryToggle');
+    if (!toggle || !toggle.checked) return 0;
+    return subtotal >= freeOver ? 0 : fee;
+  }
+
+  /* Recompute and write all totals to the cart drawer footer. */
+  function updateCartTotals() {
+    var subtotal  = cartTotal();
+    var delivery  = getDeliveryFee(subtotal);
+    /* Tax applies only to seasonings (not raw meat/eggs). Since we don't
+       sell seasonings online yet, tax is $0 for all current cart items.
+       When seasonings are added, compute their taxable share and apply getTaxRate(). */
+    var taxable   = 0;
+    var tax       = +(taxable * getTaxRate()).toFixed(2);
+    var grand     = subtotal + delivery + tax;
+
+    var subEl      = document.getElementById('cartSubtotalAmt');
+    var delivEl    = document.getElementById('cartDeliveryLine');
+    var delivAmtEl = document.getElementById('cartDeliveryLineAmt');
+    var noteEl     = document.getElementById('cartDeliveryNote');
+    var taxEl      = document.getElementById('cartTaxAmt');
+    var totalEl    = document.getElementById('cartDrawerTotalAmt');
+
+    if (subEl)   subEl.textContent   = '$' + subtotal.toFixed(2);
+    if (taxEl)   taxEl.textContent   = '$' + tax.toFixed(2);
+    if (totalEl) totalEl.textContent = '$' + grand.toFixed(2);
+
+    var freeOver     = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
+    var fee          = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
+    var toggle       = document.getElementById('cartDeliveryToggle');
+    var wantsDelivery = toggle && toggle.checked;
+    if (delivEl) delivEl.style.display = wantsDelivery ? 'flex' : 'none';
+    if (delivAmtEl) {
+      delivAmtEl.textContent = (delivery === 0 && wantsDelivery) ? 'FREE' : '$' + delivery.toFixed(2);
+    }
+    if (noteEl) {
+      noteEl.textContent = subtotal >= freeOver ? 'Free on this order!' : '+$' + fee + ' · free over $' + freeOver;
+    }
+  }
+
   function cartLineCount() {
     return cart.beef.length + (cart.eggs ? 1 : 0);
   }
@@ -28,6 +81,15 @@
     if (cartDrawerEl)   cartDrawerEl.classList.add('cart-drawer--open');
     if (cartBackdropEl) cartBackdropEl.classList.add('cart-backdrop--visible');
     document.body.style.overflow = 'hidden';
+  }
+
+  function clearCart() {
+    cart.beef      = [];
+    cart.eggs      = null;
+    cart.beefPickup = { date: '', label: '' };
+    drawerSelectedPickupDate = null;
+    drawerPickupType = null;
+    renderCartItems();
   }
 
   function closeCartDrawer() {
@@ -52,15 +114,16 @@
     var listEl    = document.getElementById('cartItemsList');
     var emptyEl   = document.getElementById('cartEmpty');
     var footEl    = document.getElementById('cartDrawerFoot');
-    var totalEl   = document.getElementById('cartDrawerTotalAmt');
     var countEl   = document.getElementById('cartDrawerCount');
     var pickupPan = document.getElementById('cartPickupPanel');
     if (!listEl) return;
 
-    var count = cartLineCount();
+    var count      = cartLineCount();
+    var clearBtnEl = document.getElementById('cartClearBtn');
 
-    if (emptyEl) emptyEl.style.display = count === 0 ? 'block' : 'none';
-    if (footEl)  footEl.style.display  = count === 0 ? 'none'  : 'block';
+    if (emptyEl)    emptyEl.style.display    = count === 0 ? 'block' : 'none';
+    if (footEl)     footEl.style.display     = count === 0 ? 'none'  : 'block';
+    if (clearBtnEl) clearBtnEl.style.display = count === 0 ? 'none'  : 'inline';
 
     if (count === 0) {
       listEl.innerHTML = '';
@@ -71,7 +134,7 @@
     }
 
     if (countEl) countEl.textContent = count + (count === 1 ? ' item' : ' items');
-    if (totalEl) totalEl.textContent = '$' + cartTotal().toFixed(2);
+    updateCartTotals();
 
     var html = '';
     var beefPickupConfirmed = cart.beefPickup && cart.beefPickup.date;
@@ -82,12 +145,19 @@
       html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
         '<div class="cart-item-row">' +
           '<div class="cart-item-info">' +
-            '<span class="cart-item-name">' + item.qty + ' lb — ' + item.name + '</span>' +
+            '<span class="cart-item-name">' + item.name + '</span>' +
             '<span class="cart-item-detail">' + beefDetail + '</span>' +
           '</div>' +
-          '<span class="cart-item-price">$' + item.sub.toFixed(2) + '</span>' +
+          '<span class="cart-item-price" id="beefPrice|' + item.name + '">$' + item.sub.toFixed(2) + '</span>' +
         '</div>' +
-        '<button type="button" class="cart-item-remove" data-remove="beef|' + item.name + '">Remove</button>' +
+        '<div class="cart-item-footer">' +
+          '<div class="cart-qty-stepper">' +
+            '<button type="button" class="cart-qty-btn" data-qty-change="beef|' + item.name + '|-1" aria-label="Decrease">&#8722;</button>' +
+            '<span class="cart-qty-val" id="beefQty|' + item.name + '">' + item.qty + ' lb</span>' +
+            '<button type="button" class="cart-qty-btn" data-qty-change="beef|' + item.name + '|1" aria-label="Increase">+</button>' +
+          '</div>' +
+          '<button type="button" class="cart-item-remove" data-remove="beef|' + item.name + '">Remove</button>' +
+        '</div>' +
         '</div>';
     });
 
@@ -530,6 +600,9 @@
 
   var scrollTicking = false;
 
+  var mobileShopBarEl = document.getElementById('mobileShopBar');
+  var shopSectionEl   = document.getElementById('shop');
+
   function handleScroll() {
     if (!nav) return;
     var scrolled = getScrollY() > 60;
@@ -541,6 +614,17 @@
       closeMobileNav();
     }
     syncMobileNavTop();
+
+    /* Hide mobile shop bar once the shop section is in view */
+    if (mobileShopBarEl && shopSectionEl) {
+      var shopTop = shopSectionEl.getBoundingClientRect().top;
+      if (shopTop < window.innerHeight * 0.75) {
+        mobileShopBarEl.classList.add('bar--hidden');
+      } else {
+        mobileShopBarEl.classList.remove('bar--hidden');
+      }
+    }
+
     scrollTicking = false;
   }
 
@@ -835,6 +919,15 @@
   if (cartDrawerCloseBtn) cartDrawerCloseBtn.addEventListener('click', closeCartDrawer);
   if (cartBackdropEl)    cartBackdropEl.addEventListener('click', closeCartDrawer);
 
+  /* Clear cart button */
+  var cartClearBtn = document.getElementById('cartClearBtn');
+  if (cartClearBtn) {
+    cartClearBtn.addEventListener('click', function () {
+      if (cartLineCount() === 0) return;
+      if (window.confirm('Remove everything from your order?')) clearCart();
+    });
+  }
+
   /* Nav cart buttons */
   var navCartBtn    = document.getElementById('navCartBtn');
   var navCartBtnMob = document.getElementById('navCartBtnMobile');
@@ -851,6 +944,32 @@
   if (cartDrawerBodyEl) {
     cartDrawerBodyEl.addEventListener('click', function (e) {
       var btn = e.target;
+
+      /* Qty stepper */
+      if (btn.hasAttribute('data-qty-change')) {
+        var parts   = btn.getAttribute('data-qty-change').split('|');
+        var cutName = parts[1];
+        var delta   = parseInt(parts[2], 10);
+        var item    = null;
+        for (var ci = 0; ci < cart.beef.length; ci++) {
+          if (cart.beef[ci].name === cutName) { item = cart.beef[ci]; break; }
+        }
+        if (item) {
+          var newQty = item.qty + delta;
+          if (newQty < 1) newQty = 1;
+          item.qty = newQty;
+          item.sub = +(item.qty * item.price).toFixed(2);
+          /* Sync the product modal stepper if it's open */
+          beefCutRows.forEach(function (row) {
+            if (row.querySelector('.beef-cut-name').textContent === cutName) {
+              setBeefQty(row, item.qty);
+            }
+          });
+          updateBeefTotal();
+          renderCartItems();
+        }
+        return;
+      }
 
       /* Remove button */
       if (btn.hasAttribute('data-remove')) {
@@ -885,6 +1004,14 @@
         renderCartItems();
         initDrawerCalendar();
       }
+    });
+  }
+
+  /* Delivery toggle — recalculate totals on change */
+  var cartDeliveryToggle = document.getElementById('cartDeliveryToggle');
+  if (cartDeliveryToggle) {
+    cartDeliveryToggle.addEventListener('change', function () {
+      updateCartTotals();
     });
   }
 
@@ -924,7 +1051,15 @@
       var inquiryType = hasBeef && hasEggs ? 'Mixed Order' :
                         hasBeef ? 'Beef Order' : 'Poultry / Eggs Order';
 
-      var orderText = lines.join('\n') + '\n\nEstimated Total: $' + cartTotal().toFixed(2);
+      var subtotal  = cartTotal();
+      var delivery  = getDeliveryFee(subtotal);
+      var grand     = subtotal + delivery;
+      var orderText = lines.join('\n');
+      if (delivery > 0) {
+        orderText += '\n\nSubtotal:  $' + subtotal.toFixed(2);
+        orderText += '\nDelivery:  $' + delivery.toFixed(2);
+      }
+      orderText += '\n\nEstimated Total: $' + grand.toFixed(2);
 
       var inquiry = document.getElementById('contactInquiry');
       var message = document.getElementById('contactMessage');

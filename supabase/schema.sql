@@ -4,7 +4,7 @@
 -- ============================================================
 
 
--- ─── Subscriptions / Orders ──────────────────────────────────
+-- ─── Subscriptions (Egg Plans & One-off Orders) ──────────────
 CREATE TABLE IF NOT EXISTS subscriptions (
   id               uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
   created_at       timestamptz DEFAULT now(),
@@ -17,7 +17,10 @@ CREATE TABLE IF NOT EXISTS subscriptions (
                                  'monthly','6-month','12-month',
                                  'single-dozen','solo-notify','inquiry'
                                )),
-  dozens_per_month integer     NOT NULL DEFAULT 5,
+  -- Hard cap: the website sends 5 for subscriptions, 1 for single-dozen,
+  -- 0 for non-delivery plans. Max 20 prevents capacity-abuse via direct API calls.
+  dozens_per_month integer     NOT NULL DEFAULT 5
+                               CHECK (dozens_per_month BETWEEN 0 AND 20),
   total_price      numeric(8,2),
   pickup_date      date,
   start_date       date        DEFAULT CURRENT_DATE,
@@ -28,6 +31,32 @@ CREATE TABLE IF NOT EXISTS subscriptions (
                                )),
   inquiry_type     text,
   notes            text
+);
+
+
+-- ─── Beef Orders ─────────────────────────────────────────────
+-- Separate table so beef and egg orders don't mix.
+CREATE TABLE IF NOT EXISTS beef_orders (
+  id           uuid         DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at   timestamptz  DEFAULT now(),
+  first_name   text         NOT NULL,
+  last_name    text         NOT NULL,
+  email        text         NOT NULL,
+  phone        text,
+  -- JSON array of line items: [{name, qty_lbs, price_per_lb, subtotal}]
+  items        jsonb        NOT NULL DEFAULT '[]',
+  pickup_date  date,
+  pickup_label text,
+  delivery     boolean      NOT NULL DEFAULT false,
+  delivery_fee numeric(6,2) NOT NULL DEFAULT 0
+                            CHECK (delivery_fee >= 0 AND delivery_fee <= 50),
+  subtotal     numeric(8,2) NOT NULL CHECK (subtotal > 0),
+  total        numeric(8,2) NOT NULL CHECK (total > 0),
+  status       text         NOT NULL DEFAULT 'pending'
+                            CHECK (status IN (
+                              'pending','confirmed','fulfilled','cancelled'
+                            )),
+  notes        text
 );
 
 
@@ -65,22 +94,54 @@ GROUP BY fc.dozens_per_month;
 
 
 -- ─── Row-Level Security ───────────────────────────────────────
+--
+--  The anon key is visible in bff-config.js (unavoidable for a client-side
+--  app). RLS is the only thing protecting your data. Rules enforced here:
+--
+--    anon (website visitors)
+--      subscriptions : INSERT only, status must be 'pending'
+--      beef_orders   : INSERT only, status must be 'pending'
+--      farm_capacity : SELECT only (capacity bar on the website)
+--      monthly_capacity view: SELECT (fed by the capacity bar)
+--
+--    authenticated (you, logged into Supabase Studio)
+--      All tables: full access
+--
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE farm_capacity  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE beef_orders   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE farm_capacity ENABLE ROW LEVEL SECURITY;
 
--- Website visitors: insert orders only (no reading other people's data)
+-- Visitors: insert new orders, but only with status = 'pending'.
+-- Prevents anyone from POSTing directly to the API to fake an active
+-- subscription and inflate the capacity view.
+DROP POLICY IF EXISTS "public_insert_subscriptions" ON subscriptions;
 CREATE POLICY "public_insert_subscriptions" ON subscriptions
-  FOR INSERT TO anon WITH CHECK (true);
+  FOR INSERT TO anon
+  WITH CHECK (status = 'pending');
 
--- Admin (authenticated via Supabase Studio): full access
+-- Admin: full access to subscription rows
+DROP POLICY IF EXISTS "admin_all_subscriptions" ON subscriptions;
 CREATE POLICY "admin_all_subscriptions" ON subscriptions
   FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
--- Everyone can read capacity (shown on the website)
+-- Visitors: insert beef orders (pending only)
+DROP POLICY IF EXISTS "public_insert_beef_orders" ON beef_orders;
+CREATE POLICY "public_insert_beef_orders" ON beef_orders
+  FOR INSERT TO anon
+  WITH CHECK (status = 'pending');
+
+-- Admin: full access to beef order rows
+DROP POLICY IF EXISTS "admin_all_beef_orders" ON beef_orders;
+CREATE POLICY "admin_all_beef_orders" ON beef_orders
+  FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- Visitors: read capacity (displayed on the website)
+DROP POLICY IF EXISTS "public_read_capacity" ON farm_capacity;
 CREATE POLICY "public_read_capacity" ON farm_capacity
   FOR SELECT TO anon, authenticated USING (true);
 
--- Admin can update capacity numbers
+-- Admin: update capacity numbers
+DROP POLICY IF EXISTS "admin_update_capacity" ON farm_capacity;
 CREATE POLICY "admin_update_capacity" ON farm_capacity
   FOR UPDATE TO authenticated USING (true);
 

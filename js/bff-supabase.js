@@ -134,11 +134,41 @@
   }
 
 
+  /* ─── Beef Order submission ────────────────────────────────── */
+
+  function submitBeefOrder(data) {
+    if (!configured) return Promise.resolve({ ok: true, fallback: true });
+
+    return fetch(BFF_SUPABASE_URL + '/rest/v1/beef_orders', {
+      method:  'POST',
+      headers: headers({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({
+        first_name:   data.firstName,
+        last_name:    data.lastName,
+        email:        data.email,
+        phone:        data.phone   || null,
+        items:        data.items,          // [{name, qty_lbs, price_per_lb, subtotal}]
+        pickup_date:  data.pickupDate  || null,
+        pickup_label: data.pickupLabel || null,
+        delivery:     data.delivery    || false,
+        delivery_fee: data.deliveryFee || 0,
+        subtotal:     data.subtotal,
+        total:        data.total,
+        notes:        data.notes || null,
+        status:       'pending'
+      })
+    }).then(function (res) {
+      return { ok: res.status === 201, status: res.status };
+    });
+  }
+
+
   /* ─── Public API ───────────────────────────────────────────── */
   window.BFF = {
-    loadCapacity: loadCapacity,
-    submitForm:   submitForm,
-    isConfigured: configured
+    loadCapacity:    loadCapacity,
+    submitForm:      submitForm,
+    submitBeefOrder: submitBeefOrder,
+    isConfigured:    configured
   };
 
 })();
