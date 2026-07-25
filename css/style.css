@@ -811,7 +811,7 @@ ul  { list-style: none; }
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 .seasoning-pill {
   font-family: 'Lato', sans-serif;
@@ -826,12 +826,36 @@ ul  { list-style: none; }
   background: rgba(26,15,10,0.04);
 }
 
+/* Seasoning attribute badges */
+.seasoning-attrs {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+.seasoning-attr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  color: rgba(26,15,10,0.55);
+}
+.seasoning-attr-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(200,146,42,0.5);
+  flex-shrink: 0;
+}
+
 .shop-card-btn {
   display: block;
   background: var(--bg-dark);
   color: var(--cream);
   text-align: center;
   padding: 12px;
+  margin-top: auto;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 700;
