@@ -341,7 +341,7 @@ ul  { list-style: none; }
 .headline-sub {
   color: var(--cream-muted);
   font-size: clamp(15px, 2.5vw, 19px);
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   font-weight: 300;
   font-family: 'Lato', sans-serif;
 }
@@ -352,6 +352,83 @@ ul  { list-style: none; }
   gap: 16px;
   flex-wrap: wrap;
 }
+
+.headline-shop-btn {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--white);
+  padding: 16px 52px;
+  border-radius: 4px;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.headline-shop-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+}
+
+/* ─── Mobile bottom shop bar ───────────────────────────────────────── */
+.mobile-shop-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 195;
+  background: var(--charcoal);
+  border-top: 1px solid rgba(200,146,42,0.35);
+  padding: 12px 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transform: translateY(0);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mobile-shop-bar.bar--hidden { transform: translateY(100%); }
+
+.mobile-shop-bar-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mobile-shop-bar-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+}
+.mobile-shop-bar-sub {
+  font-family: 'Lato', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.mobile-shop-bar-btn {
+  background: var(--gold);
+  color: var(--white);
+  padding: 11px 22px;
+  border-radius: 4px;
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+}
+.mobile-shop-bar-btn:hover { background: var(--gold-light); }
 
 .btn-primary {
   background: var(--bg-dark);
@@ -2297,6 +2374,10 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
+  .mobile-shop-bar { display: flex; }
+  /* Leave room so the bottom bar never covers page content */
+  body { padding-bottom: 70px; }
+
   .site-nav { padding: 10px 20px; }
 
   .nav-hamburger { display: block; transition: top 0.35s ease-in-out; }

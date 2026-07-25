@@ -600,6 +600,9 @@
 
   var scrollTicking = false;
 
+  var mobileShopBarEl = document.getElementById('mobileShopBar');
+  var shopSectionEl   = document.getElementById('shop');
+
   function handleScroll() {
     if (!nav) return;
     var scrolled = getScrollY() > 60;
@@ -611,6 +614,17 @@
       closeMobileNav();
     }
     syncMobileNavTop();
+
+    /* Hide mobile shop bar once the shop section is in view */
+    if (mobileShopBarEl && shopSectionEl) {
+      var shopTop = shopSectionEl.getBoundingClientRect().top;
+      if (shopTop < window.innerHeight * 0.75) {
+        mobileShopBarEl.classList.add('bar--hidden');
+      } else {
+        mobileShopBarEl.classList.remove('bar--hidden');
+      }
+    }
+
     scrollTicking = false;
   }
 
