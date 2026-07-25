@@ -2418,10 +2418,6 @@ ul  { list-style: none; }
    RESPONSIVE — MOBILE (≤ 768px)
    ============================================================= */
 @media (max-width: 768px) {
-  .mobile-shop-bar { display: flex; }
-  /* Leave room so the bottom bar never covers page content */
-  body { padding-bottom: 70px; }
-
   .site-nav { padding: 10px 20px; }
 
   .nav-hamburger { display: block; transition: top 0.35s ease-in-out; }
