@@ -806,6 +806,26 @@ ul  { list-style: none; }
   opacity: 0.38;
 }
 
+/* Seasoning flavor pills */
+.seasoning-flavors {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.seasoning-pill {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26,15,10,0.55);
+  border: 1px solid rgba(26,15,10,0.2);
+  border-radius: 20px;
+  padding: 5px 12px;
+  background: rgba(26,15,10,0.04);
+}
+
 .shop-card-btn {
   display: block;
   background: var(--bg-dark);
