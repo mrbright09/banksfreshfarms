@@ -2954,6 +2954,124 @@ ul  { list-style: none; }
 }
 
 /* =============================================================
+   HOMEPAGE UX ENHANCEMENTS
+   ============================================================= */
+
+/* 1. Trust bar below headline CTA */
+.headline-trust-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.headline-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+}
+
+.headline-trust-item svg {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.headline-trust-dot {
+  color: var(--gold);
+  font-size: 0.45rem;
+  opacity: 0.5;
+}
+
+/* 2. Story section — Raised Right link */
+.story-rr-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(200, 146, 42, 0.35);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.story-rr-link:hover {
+  color: var(--gold-light);
+  border-color: var(--gold-light);
+}
+
+/* 3. Shop section intro line */
+.shop-intro {
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--cream-muted);
+  max-width: 560px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+/* 4. Closing photo overlay */
+.closing-photo {
+  position: relative;
+}
+
+.closing-photo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 36px;
+  background: linear-gradient(to top, rgba(16, 7, 5, 0.65) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.closing-photo-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--cream);
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+}
+
+/* 5. Contact form response note */
+.form-response-note {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.78rem;
+  color: var(--cream-muted);
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+@media (max-width: 520px) {
+  .headline-trust-bar {
+    gap: 8px;
+  }
+  .headline-trust-dot {
+    display: none;
+  }
+  .headline-trust-bar {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+
+/* =============================================================
    RAISED RIGHT — FULL PAGE STYLES
    ============================================================= */
 
