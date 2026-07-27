@@ -3122,7 +3122,7 @@ ul  { list-style: none; }
 .rr-hero {
   background: var(--bg-mid);
   border-bottom: 1px solid rgba(200, 146, 42, 0.18);
-  padding: 96px 24px 80px;
+  padding: 72px 24px 56px;
   text-align: center;
 }
 
@@ -3164,23 +3164,7 @@ ul  { list-style: none; }
   line-height: 1.78;
   font-style: italic;
   max-width: 540px;
-  margin: 0 auto 28px;
-}
-
-.rr-hero-tags {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.rr-hero-tag {
-  font-family: 'Lato', sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cream-muted);
+  margin: 0 auto 0;
 }
 
 .rr-hero-tag-dot {
