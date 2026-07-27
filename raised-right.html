@@ -13,20 +13,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=52" />
+  <link rel="stylesheet" href="css/style.css?v=53" />
 </head>
 <body>
 
-  <!-- ============================================================
-       NAV
-  ============================================================ -->
+  <!-- NAV -->
   <nav class="site-nav" id="nav">
     <button class="nav-hamburger" id="hamburger" aria-label="Open menu">&#9776;</button>
     <span class="nav-scrolled-brand" aria-hidden="true">
       <span class="nav-scrolled-name">Banks Fresh Farms</span>
       <span class="nav-scrolled-sub">A Georgia Grown Heritage</span>
     </span>
-
     <div class="nav-brand-center">
       <div class="nav-logo">
         <a href="index.html">
@@ -37,7 +34,6 @@
       <div class="nav-brand"><a href="index.html" style="color:inherit">Banks Fresh Farms</a></div>
       <div class="nav-sub">A Georgia Grown Heritage</div>
     </div>
-
     <div class="nav-bottom-bar">
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html">Home</a></li>
@@ -52,21 +48,18 @@
       </button>
       <a href="index.html#shop" class="nav-cta">Order Now</a>
     </div>
-
     <button type="button" class="nav-cart-btn" id="navCartBtnMobile" aria-label="View cart">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span class="nav-cart-badge" id="navCartBadgeMobile">0</span>
     </button>
   </nav>
-
-  <!-- Mobile nav drawer -->
   <div class="mobile-nav" id="mobileNav">
     <ul>
-      <li><a href="index.html"          class="mobile-nav-link">Home</a></li>
-      <li><a href="index.html#story"    class="mobile-nav-link">Our Story</a></li>
-      <li><a href="index.html#shop"     class="mobile-nav-link">Shop</a></li>
-      <li><a href="raised-right.html"   class="mobile-nav-link">Raised Right</a></li>
-      <li><a href="index.html#contact"  class="mobile-nav-link">Contact</a></li>
+      <li><a href="index.html"         class="mobile-nav-link">Home</a></li>
+      <li><a href="index.html#story"   class="mobile-nav-link">Our Story</a></li>
+      <li><a href="index.html#shop"    class="mobile-nav-link">Shop</a></li>
+      <li><a href="raised-right.html"  class="mobile-nav-link">Raised Right</a></li>
+      <li><a href="index.html#contact" class="mobile-nav-link">Contact</a></li>
     </ul>
     <a href="index.html#shop" class="nav-cta mobile-nav-cta">Order Now</a>
   </div>
@@ -74,128 +67,241 @@
 
 
   <!-- ============================================================
-       PAGE HERO
+       HERO
   ============================================================ -->
   <section class="rr-hero">
     <div class="rr-hero-inner">
       <div class="rr-hero-label">Banks Fresh Farms</div>
       <h1 class="rr-hero-title">Raised Right</h1>
+      <div class="rr-hero-rule"></div>
       <p class="rr-hero-sub">Every product that leaves this farm — whether grown on our own land or sourced from a partner we've vetted — is held to one standard. Ours.</p>
+      <div class="rr-hero-tags">
+        <span class="rr-hero-tag">Georgia Grown</span>
+        <span class="rr-hero-tag-dot">&#9670;</span>
+        <span class="rr-hero-tag">Family Vetted</span>
+        <span class="rr-hero-tag-dot">&#9670;</span>
+        <span class="rr-hero-tag">Faith-First</span>
+      </div>
     </div>
   </section>
 
 
   <!-- ============================================================
-       PRACTICES CONTENT
+       FAMILY PROMISE CARD
   ============================================================ -->
-  <section class="practices-section">
+  <div class="rr-promise fade-in">
+    <div class="rr-promise-inner">
+      <div class="rr-promise-mark">&#8220;</div>
+      <blockquote class="rr-promise-quote">
+        We don't put our name on something we haven't stood in front of. That's been true since the first egg left this land, and it'll be true for every pound of beef we sell.
+      </blockquote>
+      <div class="rr-promise-attr">— The Banks Family</div>
+    </div>
+  </div>
 
-    <!-- ── Eggs block ── -->
+
+  <!-- ============================================================
+       EGGS SECTION
+  ============================================================ -->
+  <div class="rr-chapter-header fade-in">
+    <div class="rr-chapter-line"></div>
+    <div class="rr-chapter-label">&#9670; Our Eggs &#9670;</div>
+    <div class="rr-chapter-line"></div>
+  </div>
+
+  <section class="practices-section">
     <div class="practices-block fade-in">
       <div class="practices-block-copy">
-        <div class="practices-block-label">Pasture-Raised Eggs</div>
-        <h2 class="practices-block-title">Fully Ours, From the Ground Up</h2>
+        <div class="practices-block-label">Pasture-Raised</div>
+        <h2 class="practices-block-title">Fully Ours,<br>From the Ground Up</h2>
         <p>Our hens live outdoors on real pasture year-round. No cages, no shortcuts, no compromise. They forage the way chickens are designed to — which is exactly why the yolks run deep gold and the shells crack firm. Everything from the land to the carton passes through our hands.</p>
+        <div class="rr-trust-chips">
+          <span class="rr-trust-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Collected Daily
+          </span>
+          <span class="rr-trust-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Outdoor Hens Always
+          </span>
+          <span class="rr-trust-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            No Cages. Ever.
+          </span>
+          <span class="rr-trust-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Deep Gold Yolks
+          </span>
+        </div>
       </div>
       <div class="practices-block-img">
         <img src="images/product-eggs-2.jpeg" alt="Banks Fresh Farms pasture-raised eggs"
           onerror="this.style.display='none';" />
+        <div class="rr-img-badge">100% Our Farm</div>
       </div>
     </div>
+  </section>
 
-    <!-- ── Beef block ── -->
+
+  <!-- ============================================================
+       QUOTE STRIP
+  ============================================================ -->
+  <div class="rr-quote-strip">
+    <div class="rr-quote-strip-inner">
+      <span class="rr-quote-strip-mark">&#8220;</span>
+      <span class="rr-quote-strip-text">What helped save our family is now feeding yours.</span>
+      <span class="rr-quote-strip-mark">&#8221;</span>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       BEEF SECTION
+  ============================================================ -->
+  <div class="rr-chapter-header fade-in">
+    <div class="rr-chapter-line"></div>
+    <div class="rr-chapter-label">&#9670; Our Beef &#9670;</div>
+    <div class="rr-chapter-line"></div>
+  </div>
+
+  <section class="practices-section">
     <div class="practices-block practices-block--beef fade-in">
+
       <div class="practices-beef-intro">
-        <div class="practices-block-label">Grass-Fed Angus Beef</div>
-        <h2 class="practices-block-title">Our Standard. Our Name On It.</h2>
+        <div class="practices-block-label">Grass-Fed Angus</div>
+        <h2 class="practices-block-title">Our Standard.<br>Our Name On It.</h2>
         <p>Our beef comes from a Georgia ranch whose practices we reviewed before we ever put the Banks Fresh Farms name on a single cut. Leaner, cleaner, and more nutrient-dense than what sits under a grocery store light — because it was raised the way cattle are meant to live.</p>
       </div>
 
-      <div class="practices-grid">
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 8 8 4 3 4c0 5 3 8.5 9 8"/><path d="M12 12c0-4 4-8 9-8 0 5-3 8.5-9 8"/></svg>
+      <!-- What this means for your table -->
+      <div class="rr-benefits fade-in">
+        <div class="rr-benefit">
+          <div class="rr-benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </div>
-          <div class="practice-card-name">Pasture-Only, Start to Finish</div>
-          <div class="practice-card-desc">Open forage from birth to harvest. No grain, no feedlots. The land is the feed.</div>
+          <div class="rr-benefit-title">Richer Nutrition</div>
+          <div class="rr-benefit-desc">Grass-finished beef contains significantly more omega-3s, CLA, and vitamins than grain-fed. Real pasture makes the difference on your plate.</div>
         </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M3.51 15a9 9 0 0 0 14.85 3.36L23 14"/></svg>
-          </div>
-          <div class="practice-card-name">Adaptive Paddock Rotation</div>
-          <div class="practice-card-desc">The herd shifts to a fresh section every one to seven days. Each paddock rests fully before they return.</div>
-        </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V13"/><path d="M12 13C12 9 7 5 2 6c0 5 3.5 8 10 7"/><path d="M12 13c0-4 5-8 10-7 0 5-3.5 8-10 7"/></svg>
-          </div>
-          <div class="practice-card-name">Cover Cropping</div>
-          <div class="practice-card-desc">Protective crops go in the ground between grazes, rebuilding and shielding the soil for the next cycle.</div>
-        </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          </div>
-          <div class="practice-card-name">Natural Nutrient Cycling</div>
-          <div class="practice-card-desc">Herd movement distributes nutrients across pasture without synthetic fertilizer. The land feeds itself.</div>
-        </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-          </div>
-          <div class="practice-card-name">Water Stewardship</div>
-          <div class="practice-card-desc">Managed pasture reduces runoff and holds moisture in the soil where the land needs it most.</div>
-        </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="practice-card-name">Genetics &amp; Herd Selection</div>
-          <div class="practice-card-desc">Animals chosen for strength and eating quality. Breeding designed to improve the herd over generations.</div>
-        </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <div class="practice-card-name">Low-Stress Handling</div>
-          <div class="practice-card-desc">Calm, deliberate care from first day to last. Animals raised without chronic stress produce cleaner beef.</div>
-        </div>
-
-        <div class="practice-card">
-          <div class="practice-card-icon">
+        <div class="rr-benefit">
+          <div class="rr-benefit-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <div class="practice-card-name">Prevention-First Health</div>
-          <div class="practice-card-desc">Strict protocols keep the herd clean and strong without defaulting to a cabinet full of antibiotics.</div>
+          <div class="rr-benefit-title">Nothing Hidden</div>
+          <div class="rr-benefit-desc">No growth hormones. No unnecessary antibiotics. What you see is everything that's in it — clean protein, straight from Georgia pasture.</div>
         </div>
-
+        <div class="rr-benefit">
+          <div class="rr-benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="rr-benefit-title">Flavor You Can Taste</div>
+          <div class="rr-benefit-desc">Cattle that move develop real marbling from muscle use, not feedlot weight gain. That's the depth of flavor in every cut we carry.</div>
+        </div>
       </div>
-    </div>
 
-    <p class="practices-signature">Faith. Family. Real food held to a standard worth keeping.</p>
+      <!-- Practice cards — grouped -->
+      <div class="rr-practice-group fade-in">
+        <div class="rr-practice-group-label">
+          <span>Land &amp; Soil</span>
+        </div>
+        <div class="practices-grid practices-grid--half">
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 8 8 4 3 4c0 5 3 8.5 9 8"/><path d="M12 12c0-4 4-8 9-8 0 5-3 8.5-9 8"/></svg>
+            </div>
+            <div class="practice-card-name">Pasture-Only, Start to Finish</div>
+            <div class="practice-card-desc">Open forage from birth to harvest. No grain, no feedlots. The land is the feed.</div>
+          </div>
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M3.51 15a9 9 0 0 0 14.85 3.36L23 14"/></svg>
+            </div>
+            <div class="practice-card-name">Adaptive Paddock Rotation</div>
+            <div class="practice-card-desc">The herd shifts to a fresh section every one to seven days. Each paddock rests fully before they return.</div>
+          </div>
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V13"/><path d="M12 13C12 9 7 5 2 6c0 5 3.5 8 10 7"/><path d="M12 13c0-4 5-8 10-7 0 5-3.5 8-10 7"/></svg>
+            </div>
+            <div class="practice-card-name">Cover Cropping</div>
+            <div class="practice-card-desc">Protective crops go in the ground between grazes, rebuilding and shielding the soil for the next cycle.</div>
+          </div>
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <div class="practice-card-name">Natural Nutrient Cycling</div>
+            <div class="practice-card-desc">Herd movement distributes nutrients across pasture without synthetic fertilizer. The land feeds itself.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rr-practice-group fade-in">
+        <div class="rr-practice-group-label">
+          <span>Herd &amp; Animal Care</span>
+        </div>
+        <div class="practices-grid practices-grid--half">
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            </div>
+            <div class="practice-card-name">Water Stewardship</div>
+            <div class="practice-card-desc">Managed pasture reduces runoff and holds moisture in the soil where the land needs it most.</div>
+          </div>
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div class="practice-card-name">Genetics &amp; Herd Selection</div>
+            <div class="practice-card-desc">Animals chosen for strength and eating quality. Breeding designed to improve the herd over generations.</div>
+          </div>
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <div class="practice-card-name">Low-Stress Handling</div>
+            <div class="practice-card-desc">Calm, deliberate care from first day to last. Animals raised without chronic stress produce cleaner beef.</div>
+          </div>
+          <div class="practice-card">
+            <div class="practice-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="practice-card-name">Prevention-First Health</div>
+            <div class="practice-card-desc">Strict protocols keep the herd clean and strong without defaulting to a cabinet full of antibiotics.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </section>
+
+
+  <!-- ============================================================
+       SIGNATURE MOMENT
+  ============================================================ -->
+  <div class="rr-signature-moment fade-in">
+    <div class="rr-signature-deco">&#9670; &#9670; &#9670;</div>
+    <p class="rr-signature-text">Faith. Family. Real food held to a standard worth keeping.</p>
+    <div class="rr-signature-deco">&#9670; &#9670; &#9670;</div>
+  </div>
 
 
   <!-- ============================================================
        CTA BAND
   ============================================================ -->
   <div class="rr-cta-band">
-    <p class="rr-cta-text">Ready to taste the difference?</p>
-    <a href="index.html#shop" class="rr-cta-btn">Shop Now</a>
+    <div class="rr-cta-band-inner">
+      <p class="rr-cta-eyebrow">Ready to taste the difference?</p>
+      <h2 class="rr-cta-heading">From Our Land to Your Table</h2>
+      <p class="rr-cta-sub">Order eggs from our pasture or beef held to our standard — pickup in Atlanta or Savannah.</p>
+      <div class="rr-cta-btns">
+        <a href="index.html#shop" class="rr-cta-btn rr-cta-btn--primary">Shop Beef &amp; Eggs</a>
+        <a href="index.html#contact" class="rr-cta-btn rr-cta-btn--secondary">Ask the Family</a>
+      </div>
+    </div>
   </div>
 
 
-  <!-- ============================================================
-       FOOTER
-  ============================================================ -->
+  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
@@ -258,7 +364,6 @@
         <div class="cart-breakdown-row cart-breakdown-tax"><span>Tax (GA)</span><span id="cartTaxAmt">$0.00</span></div>
       </div>
       <div class="cart-drawer-total-row">
-        <span class="cart-drawer-total-label">Estimated Total</span>
         <span class="cart-drawer-total-amt" id="cartDrawerTotalAmt">$0.00</span>
       </div>
       <button type="button" class="cart-drawer-place-btn" id="cartDrawerPlaceBtn">Place Order</button>
