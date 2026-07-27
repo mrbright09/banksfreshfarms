@@ -3304,41 +3304,6 @@ ul  { list-style: none; }
   border-radius: 20px;
 }
 
-/* ── Quote strip ── */
-.rr-quote-strip {
-  background: var(--charcoal);
-  border-top: 1px solid rgba(200, 146, 42, 0.15);
-  border-bottom: 1px solid rgba(200, 146, 42, 0.15);
-  padding: 40px 24px;
-  text-align: center;
-  margin: 40px 0;
-}
-
-.rr-quote-strip-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  max-width: 700px;
-  margin: 0 auto;
-  flex-wrap: wrap;
-}
-
-.rr-quote-strip-mark {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  color: var(--gold);
-  opacity: 0.5;
-  line-height: 1;
-}
-
-.rr-quote-strip-text {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.1rem, 3vw, 1.5rem);
-  font-style: italic;
-  color: var(--cream);
-  line-height: 1.5;
-}
 
 /* ── Cattle pasture photo ── */
 .rr-cattle-photo {
@@ -3601,7 +3566,7 @@ ul  { list-style: none; }
 .practices-section {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 48px 24px 72px;
+  padding: 48px 24px 40px;
 }
 
 .practices-intro {
