@@ -3122,7 +3122,7 @@ ul  { list-style: none; }
 .rr-hero {
   background: var(--bg-mid);
   border-bottom: 1px solid rgba(200, 146, 42, 0.18);
-  padding: 72px 24px 56px;
+  padding: 52px 24px 40px;
   text-align: center;
 }
 
@@ -3223,8 +3223,8 @@ ul  { list-style: none; }
   align-items: center;
   gap: 16px;
   max-width: 1100px;
-  margin: 16px auto 0;
-  padding: 0 24px;
+  margin: 0 auto;
+  padding: 32px 24px 0;
 }
 
 .rr-chapter-line {
@@ -3407,7 +3407,7 @@ ul  { list-style: none; }
 /* ── Signature moment ── */
 .rr-signature-moment {
   text-align: center;
-  padding: 64px 24px;
+  padding: 36px 24px 32px;
   max-width: 700px;
   margin: 0 auto;
 }
@@ -3433,7 +3433,7 @@ ul  { list-style: none; }
 .rr-cta-band {
   background: var(--bg-mid);
   border-top: 1px solid rgba(200, 146, 42, 0.2);
-  padding: 72px 24px;
+  padding: 48px 24px;
   text-align: center;
 }
 
@@ -3549,7 +3549,7 @@ ul  { list-style: none; }
 .practices-section {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 48px 24px 40px;
+  padding: 28px 24px 32px;
 }
 
 .practices-intro {
