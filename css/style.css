@@ -2954,6 +2954,174 @@ ul  { list-style: none; }
 }
 
 /* =============================================================
+   OUR PRACTICES SECTION
+   ============================================================= */
+
+.practices-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+}
+
+.practices-intro {
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  color: var(--cream-muted);
+  max-width: 620px;
+  margin: 0 auto 56px;
+  line-height: 1.75;
+  font-style: italic;
+}
+
+/* ── Two-column eggs block ── */
+.practices-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 52px;
+  align-items: center;
+  margin-bottom: 64px;
+}
+
+.practices-block--beef {
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.practices-block-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.practices-block-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 16px;
+  line-height: 1.25;
+}
+
+.practices-block-copy p,
+.practices-beef-intro p {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.78;
+  color: var(--cream-muted);
+}
+
+.practices-block-img {
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--bg-mid);
+}
+
+.practices-block-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Beef intro ── */
+.practices-beef-intro {
+  margin-bottom: 36px;
+  max-width: 680px;
+}
+
+/* ── 4-column practice cards ── */
+.practices-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.practice-card {
+  background: var(--bg-mid);
+  border: 1px solid rgba(200, 146, 42, 0.22);
+  border-radius: 8px;
+  padding: 22px 18px 20px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.practice-card:hover {
+  border-color: rgba(200, 146, 42, 0.5);
+  background: rgba(38, 18, 8, 0.95);
+}
+
+.practice-card-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.practice-card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.practice-card-name {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--cream);
+  margin-bottom: 7px;
+  line-height: 1.3;
+}
+
+.practice-card-desc {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.77rem;
+  color: var(--cream-muted);
+  line-height: 1.6;
+}
+
+/* ── Closing signature ── */
+.practices-signature {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--cream);
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid rgba(200, 146, 42, 0.25);
+}
+
+@media (max-width: 900px) {
+  .practices-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .practices-block {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .practices-block-img {
+    order: -1;
+  }
+  .practices-block-title {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .practices-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =============================================================
    LANDSCAPE — short viewport (phones in landscape)
    ============================================================= */
 @media (max-height: 500px) and (orientation: landscape) {
