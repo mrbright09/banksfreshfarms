@@ -2954,6 +2954,49 @@ ul  { list-style: none; }
 }
 
 /* =============================================================
+   BEEF MODAL — PRODUCT PHOTO STRIP
+   ============================================================= */
+
+.beef-modal-photos {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 14px 20px;
+  background: var(--charcoal);
+  border-bottom: 1px solid rgba(200, 146, 42, 0.15);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200,146,42,0.3) transparent;
+}
+
+.beef-modal-photos::-webkit-scrollbar { height: 4px; }
+.beef-modal-photos::-webkit-scrollbar-track { background: transparent; }
+.beef-modal-photos::-webkit-scrollbar-thumb { background: rgba(200,146,42,0.3); border-radius: 2px; }
+
+.beef-modal-photo-item {
+  flex: 0 0 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.beef-modal-photo-item img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(200, 146, 42, 0.2);
+}
+
+.beef-modal-photo-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.7rem;
+  color: var(--cream-muted);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+
+/* =============================================================
    HOMEPAGE UX ENHANCEMENTS
    ============================================================= */
 
