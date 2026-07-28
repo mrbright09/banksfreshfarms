@@ -3311,7 +3311,11 @@ ul  { list-style: none; }
   max-width: 1100px;
   margin: 0 auto;
   padding: 28px 24px 0;
+}
+.rr-cattle-photo-inner {
+  position: relative;
   overflow: hidden;
+  border-radius: 6px;
 }
 .rr-cattle-photo img {
   width: 100%;
@@ -3319,7 +3323,6 @@ ul  { list-style: none; }
   object-fit: cover;
   object-position: center 55%;
   display: block;
-  border-radius: 6px;
 }
 @media (max-width: 640px) {
   .rr-cattle-photo img { height: 220px; }
