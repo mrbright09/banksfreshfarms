@@ -3052,6 +3052,12 @@ ul  { list-style: none; }
   border-color: var(--gold-light);
 }
 
+.shop-rr-link {
+  display: block;
+  text-align: center;
+  margin: 16px auto 28px;
+}
+
 /* 3. Shop section intro line */
 .shop-intro {
   text-align: center;
