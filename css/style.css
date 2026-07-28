@@ -3285,6 +3285,15 @@ ul  { list-style: none; }
   color: var(--gold);
 }
 
+.rr-cattle-chips {
+  justify-content: center;
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+.rr-cattle-chips .rr-trust-chip {
+  white-space: nowrap;
+}
+
 /* ── Image badge ── */
 .practices-block-img {
   position: relative;
