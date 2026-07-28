@@ -3304,7 +3304,7 @@ ul  { list-style: none; }
 .rr-cattle-photo {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 28px 24px 0;
   overflow: hidden;
 }
 .rr-cattle-photo img {
