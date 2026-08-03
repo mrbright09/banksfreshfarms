@@ -480,8 +480,7 @@
   }
   if (eggsQtyPlus) {
     eggsQtyPlus.addEventListener('click', function () {
-      eggsQty++;
-      updateEggsStepper();
+      if (eggsQty < 8) { eggsQty++; updateEggsStepper(); }
     });
   }
 

@@ -3287,11 +3287,23 @@ ul  { list-style: none; }
 
 .rr-cattle-chips {
   justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   margin-top: 14px;
   margin-bottom: 0;
+  padding-bottom: 2px;
 }
+.rr-cattle-chips::-webkit-scrollbar { display: none; }
 .rr-cattle-chips .rr-trust-chip {
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.practices-block-img-col {
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Image badge ── */
@@ -3714,6 +3726,7 @@ ul  { list-style: none; }
     grid-template-columns: 1fr;
     gap: 28px;
   }
+  .practices-block-img-col,
   .practices-block-img {
     order: -1;
   }
