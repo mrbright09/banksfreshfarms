@@ -8,6 +8,22 @@
   /* ─── Global Cart ─────────────────────────────────────────────────── */
   var cart = { beef: [], eggs: null, beefPickup: { date: '', label: '' } };
 
+  function saveCart() {
+    try { localStorage.setItem('bff_cart', JSON.stringify(cart)); } catch (e) {}
+  }
+
+  (function loadCart() {
+    try {
+      var saved = localStorage.getItem('bff_cart');
+      if (!saved) return;
+      var p = JSON.parse(saved);
+      if (!p || typeof p !== 'object') return;
+      if (Array.isArray(p.beef)) cart.beef = p.beef;
+      if (p.eggs !== undefined) cart.eggs = p.eggs;
+      if (p.beefPickup && typeof p.beefPickup === 'object') cart.beefPickup = p.beefPickup;
+    } catch (e) {}
+  })();
+
   function cartTotal() {
     var t = 0;
     cart.beef.forEach(function (item) { t += item.sub; });
@@ -196,6 +212,7 @@
     if (pickupPan) pickupPan.style.display = needsEggPickup ? 'block' : 'none';
 
     updateNavBadge();
+    saveCart();
   }
 
   function renderBeefPickupPanel(container) {
@@ -576,6 +593,7 @@
   }
 
   setSpacerToFullNav();
+  updateNavBadge(); // sync badge from any cart restored out of localStorage
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(setSpacerToFullNav);
   }
@@ -991,7 +1009,7 @@
           });
           updateBeefTotal();
         }
-        if (cartLineCount() === 0) closeCartDrawer();
+        if (cartLineCount() === 0) { updateNavBadge(); saveCart(); closeCartDrawer(); }
         else renderCartItems();
       }
 
@@ -1019,7 +1037,7 @@
   var cartDrawerPlaceBtn = document.getElementById('cartDrawerPlaceBtn');
   if (cartDrawerPlaceBtn) {
     cartDrawerPlaceBtn.addEventListener('click', function () {
-      if (cartLineCount() === 0) return;
+      if (cartDrawerPlaceBtn.disabled || cartLineCount() === 0) return;
 
       /* Validate pickups */
       if (cart.beef.length > 0 && (!cart.beefPickup || !cart.beefPickup.date)) {
@@ -1076,7 +1094,9 @@
         planIn.dataset.pickupDate = (cart.eggs && cart.eggs.pickupDate) ? cart.eggs.pickupDate : '';
       }
 
+      cartDrawerPlaceBtn.disabled = true;
       closeCartDrawer();
+      setTimeout(function () { cartDrawerPlaceBtn.disabled = false; }, 1000);
 
       var contact = document.getElementById('contact');
       if (contact) {
