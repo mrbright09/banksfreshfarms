@@ -3346,7 +3346,28 @@ ul  { list-style: none; }
   display: block;
 }
 @media (max-width: 640px) {
-  .rr-cattle-photo img { height: 220px; }
+  .rr-cattle-photo {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .rr-cattle-photo-inner {
+    border-radius: 0;
+  }
+  .rr-cattle-photo img {
+    height: 240px;
+  }
+  .rr-cattle-chips {
+    padding: 0 16px;
+    gap: 5px;
+  }
+  .rr-cattle-chips .rr-trust-chip {
+    font-size: 0.67rem;
+    padding: 4px 8px;
+    gap: 3px;
+  }
+  .rr-cattle-chips .rr-trust-chip svg {
+    display: none;
+  }
 }
 
 /* ── Customer benefits ── */
