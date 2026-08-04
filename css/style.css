@@ -3357,13 +3357,16 @@ ul  { list-style: none; }
     height: 240px;
   }
   .rr-cattle-chips {
-    padding: 0 16px;
-    gap: 5px;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+    padding: 0 8px;
+    gap: 6px;
   }
   .rr-cattle-chips .rr-trust-chip {
-    font-size: 0.67rem;
-    padding: 4px 8px;
-    gap: 3px;
+    font-size: 0.68rem;
+    padding: 4px 10px;
+    gap: 4px;
   }
   .rr-cattle-chips .rr-trust-chip svg {
     display: none;
@@ -3747,7 +3750,10 @@ ul  { list-style: none; }
     grid-template-columns: 1fr;
     gap: 28px;
   }
-  .practices-block-img-col,
+  .practices-block-img-col {
+    min-width: 0;
+    order: -1;
+  }
   .practices-block-img {
     order: -1;
   }
