@@ -3385,6 +3385,7 @@ ul  { list-style: none; }
   background: rgba(200, 146, 42, 0.06);
   border: 1px solid rgba(200, 146, 42, 0.18);
   border-top: 3px solid var(--gold);
+  text-align: center;
   border-radius: 6px;
   padding: 24px 20px;
 }
@@ -3393,7 +3394,7 @@ ul  { list-style: none; }
   width: 28px;
   height: 28px;
   color: var(--gold);
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
 }
 
 .rr-benefit-icon svg {
