@@ -427,9 +427,11 @@
                 (data.pickupDate ? 'Pickup Date: ' + data.pickupDate + '\n' : '') +
                 (data.plan && data.plan !== 'inquiry' ? 'Plan: ' + data.plan + '\n' : '') +
                 '\n' + (data.message || '');
+              var orderCC = 'becomingbanks23@gmail.com,jbanks012386@yahoo.com,ecjones20@gmail.com';
               window.location.href =
                 'mailto:banksfreshfarms@gmail.com' +
-                '?subject=' + encodeURIComponent(subject) +
+                '?cc=' + encodeURIComponent(orderCC) +
+                '&subject=' + encodeURIComponent('[HIGH PRIORITY] ' + subject) +
                 '&body=' + encodeURIComponent(body);
             }
             showFormSuccess();
