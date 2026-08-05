@@ -622,6 +622,14 @@ ul  { list-style: none; }
   text-align: center;
 }
 
+.story-quote--hero {
+  font-size: 1.45rem;
+  max-width: 680px;
+  margin: 0 auto 44px;
+  padding: 0 16px;
+  opacity: 0.92;
+}
+
 .btn-story {
   display: block;
   width: fit-content;
