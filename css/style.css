@@ -3385,6 +3385,7 @@ ul  { list-style: none; }
   background: rgba(200, 146, 42, 0.06);
   border: 1px solid rgba(200, 146, 42, 0.18);
   border-top: 3px solid var(--gold);
+  text-align: center;
   border-radius: 6px;
   padding: 24px 20px;
 }
@@ -3393,7 +3394,7 @@ ul  { list-style: none; }
   width: 28px;
   height: 28px;
   color: var(--gold);
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
 }
 
 .rr-benefit-icon svg {
@@ -3449,14 +3450,14 @@ ul  { list-style: none; }
   grid-template-columns: repeat(4, 1fr);
 }
 
-/* Gold left border on cards */
+/* Gold top border on cards */
 .practice-card {
-  border-left: 3px solid rgba(200, 146, 42, 0.35) !important;
-  transition: border-left-color 0.2s, background 0.2s;
+  border-top: 3px solid rgba(200, 146, 42, 0.35) !important;
+  transition: border-top-color 0.2s, background 0.2s;
 }
 
 .practice-card:hover {
-  border-left-color: var(--gold) !important;
+  border-top-color: var(--gold) !important;
 }
 
 /* ── Signature moment ── */
@@ -3690,6 +3691,7 @@ ul  { list-style: none; }
   background: var(--bg-mid);
   border: 1px solid rgba(200, 146, 42, 0.22);
   border-radius: 8px;
+  text-align: center;
   padding: 22px 18px 20px;
   transition: border-color 0.2s, background 0.2s;
 }
@@ -3703,7 +3705,7 @@ ul  { list-style: none; }
   width: 26px;
   height: 26px;
   color: var(--gold);
-  margin-bottom: 12px;
+  margin: 0 auto 12px;
 }
 
 .practice-card-icon svg {
