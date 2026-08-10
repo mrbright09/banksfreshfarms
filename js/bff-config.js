@@ -19,17 +19,28 @@ var BFF_ATLANTA_DATES = [
   /* Example: '2026-07-12', '2026-08-02' */
 ];
 
+/* ─── Savannah City Pickup Dates ────────────────────────────────────────
+   Add the specific Saturdays you'll be in Savannah each month.
+   Format: 'YYYY-MM-DD'  (24-hour local date, no time needed)
+   Leave the array empty if no trips are scheduled yet.                   */
+
+var BFF_SAVANNAH_DATES = [
+  /* Example: '2026-07-19', '2026-08-09' */
+];
+
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.
    Seasonings are taxable. We collect the combined rate (state + county):
      Farm / Church pickup  → Chatham County 7%
      Atlanta pickup        → Fulton County 8.9%
+     Savannah beef pickup  → Chatham County 7%
    Rate applied only when the cart contains taxable items (seasonings).  */
 
 var BFF_TAX_RATES = {
-  farm:    0.07,
-  church:  0.07,
-  atlanta: 0.089
+  farm:     0.07,
+  church:   0.07,
+  atlanta:  0.089,
+  savannah: 0.07
 };
 
 /* ─── Delivery ─────────────────────────────────────────────────────────

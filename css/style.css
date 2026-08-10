@@ -2796,6 +2796,34 @@ ul  { list-style: none; }
   text-decoration-color: rgba(200,146,42,0.4);
 }
 
+/* Beef location toggle tabs */
+.beef-loc-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.beef-loc-tab {
+  flex: 1;
+  background: none;
+  border: 1px solid rgba(200,146,42,0.3);
+  border-radius: 6px;
+  color: var(--cream-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.beef-loc-tab:hover { border-color: var(--gold); color: var(--cream); }
+.beef-loc-tab--active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--charcoal);
+}
+
 /* Drawer footer */
 .cart-drawer-foot {
   padding: 20px 24px 24px;
