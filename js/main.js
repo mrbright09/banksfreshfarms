@@ -6,7 +6,7 @@
   'use strict';
 
   /* ─── Global Cart ─────────────────────────────────────────────────── */
-  var cart = { beef: [], eggs: null, beefPickup: { date: '', label: '' } };
+  var cart = { beef: [], eggs: null, beefPickup: { date: '', label: '' }, beefPickupLocation: 'atlanta' };
 
   function saveCart() {
     try { localStorage.setItem('bff_cart', JSON.stringify(cart)); } catch (e) {}
@@ -21,6 +21,7 @@
       if (Array.isArray(p.beef)) cart.beef = p.beef;
       if (p.eggs !== undefined) cart.eggs = p.eggs;
       if (p.beefPickup && typeof p.beefPickup === 'object') cart.beefPickup = p.beefPickup;
+      if (p.beefPickupLocation) cart.beefPickupLocation = p.beefPickupLocation;
     } catch (e) {}
   })();
 
@@ -103,6 +104,7 @@
     cart.beef      = [];
     cart.eggs      = null;
     cart.beefPickup = { date: '', label: '' };
+    cart.beefPickupLocation = 'atlanta';
     drawerSelectedPickupDate = null;
     drawerPickupType = null;
     renderCartItems();
@@ -157,7 +159,7 @@
 
     cart.beef.forEach(function (item) {
       var beefDetail = '$' + item.price.toFixed(2) + '/lb · Grass Fed Black Angus · ' +
-        (beefPickupConfirmed ? cart.beefPickup.label : 'Atlanta Pickup — select date below');
+        (beefPickupConfirmed ? cart.beefPickup.label : 'Pickup — select location & date below');
       html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
         '<div class="cart-item-row">' +
           '<div class="cart-item-info">' +
@@ -216,21 +218,37 @@
   }
 
   function renderBeefPickupPanel(container) {
-    var today        = new Date(); today.setHours(0,0,0,0);
-    var atlantaDates = window.BFF_ATLANTA_DATES || [];
-    var future       = atlantaDates.filter(function (s) {
-      var p = s.split('-');
-      return new Date(+p[0], +p[1] - 1, +p[2]) >= today;
-    });
+    var today = new Date(); today.setHours(0,0,0,0);
+    var loc   = cart.beefPickupLocation || 'atlanta';
 
     var panel = document.createElement('div');
     panel.className = 'cart-pickup-panel cart-beef-pickup-panel';
 
     var hdr = document.createElement('div');
     hdr.className = 'cart-pickup-panel-hdr';
-    hdr.innerHTML = '<span class="cart-pickup-panel-title">Beef Pickup — Atlanta</span>';
+    hdr.innerHTML = '<span class="cart-pickup-panel-title">Beef Pickup Location</span>';
     panel.appendChild(hdr);
 
+    /* Location toggle tabs */
+    var tabs = document.createElement('div');
+    tabs.className = 'beef-loc-tabs';
+    ['atlanta', 'savannah'].forEach(function (locKey) {
+      var tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'beef-loc-tab' + (loc === locKey ? ' beef-loc-tab--active' : '');
+      tab.textContent = locKey === 'atlanta' ? 'Atlanta' : 'Savannah';
+      tab.addEventListener('click', function () {
+        if (cart.beefPickupLocation === locKey) return;
+        cart.beefPickupLocation = locKey;
+        cart.beefPickup = { date: '', label: '' };
+        saveCart();
+        renderCartItems();
+      });
+      tabs.appendChild(tab);
+    });
+    panel.appendChild(tabs);
+
+    /* Date selection area */
     if (cart.beefPickup && cart.beefPickup.date) {
       var setDiv = document.createElement('div');
       setDiv.className = 'cart-pickup-set';
@@ -246,30 +264,41 @@
       });
       setDiv.appendChild(changeBtn);
       panel.appendChild(setDiv);
-    } else if (future.length === 0) {
-      var msg = document.createElement('p');
-      msg.className = 'cal-tbd-msg';
-      msg.textContent = "No Atlanta dates scheduled yet. Place your order and we'll reach out to confirm pickup.";
-      panel.appendChild(msg);
-      cart.beefPickup = { date: 'tbd', label: 'Atlanta Pickup — date TBD' };
     } else {
-      future.forEach(function (s) {
-        var p    = s.split('-');
-        var date = new Date(+p[0], +p[1] - 1, +p[2]);
-        var btn  = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'cal-atlanta-date';
-        btn.textContent = MONTHS[date.getMonth()].slice(0,3) + ' ' + date.getDate() + ', ' + date.getFullYear();
-        (function (dateStr, dateObj) {
-          btn.addEventListener('click', function () {
-            var label = 'Atlanta Pickup · Sat ' +
-              MONTHS[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
-            cart.beefPickup = { date: dateStr, label: label };
-            renderCartItems();
-          });
-        })(s, date);
-        panel.appendChild(btn);
+      var srcDates = loc === 'savannah'
+        ? (window.BFF_SAVANNAH_DATES || [])
+        : (window.BFF_ATLANTA_DATES  || []);
+      var future = srcDates.filter(function (s) {
+        var p = s.split('-');
+        return new Date(+p[0], +p[1] - 1, +p[2]) >= today;
       });
+      var cityName = loc === 'savannah' ? 'Savannah' : 'Atlanta';
+
+      if (future.length === 0) {
+        var msg = document.createElement('p');
+        msg.className = 'cal-tbd-msg';
+        msg.textContent = 'No ' + cityName + ' dates scheduled yet. Place your order and we\'ll reach out to confirm pickup.';
+        panel.appendChild(msg);
+        cart.beefPickup = { date: 'tbd', label: cityName + ' Pickup — date TBD' };
+      } else {
+        future.forEach(function (s) {
+          var p    = s.split('-');
+          var date = new Date(+p[0], +p[1] - 1, +p[2]);
+          var btn  = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'cal-atlanta-date';
+          btn.textContent = MONTHS[date.getMonth()].slice(0,3) + ' ' + date.getDate() + ', ' + date.getFullYear();
+          (function (dateStr, dateObj) {
+            btn.addEventListener('click', function () {
+              var label = cityName + ' Pickup · Sat ' +
+                MONTHS[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
+              cart.beefPickup = { date: dateStr, label: label };
+              renderCartItems();
+            });
+          })(s, date);
+          panel.appendChild(btn);
+        });
+      }
     }
 
     container.appendChild(panel);
@@ -350,7 +379,7 @@
   }
 
   function showFormSuccess() {
-    cart.beef = []; cart.eggs = null; cart.beefPickup = { date: '', label: '' }; renderCartItems(); closeCartDrawer();
+    cart.beef = []; cart.eggs = null; cart.beefPickup = { date: '', label: '' }; cart.beefPickupLocation = 'atlanta'; renderCartItems(); closeCartDrawer();
     var successEl = document.getElementById('formSuccess');
     if (contactForm)  contactForm.style.display  = 'none';
     if (successEl)    successEl.style.display     = 'block';
@@ -1002,7 +1031,7 @@
         } else if (key.indexOf('beef|') === 0) {
           var cutName = key.slice(5);
           cart.beef = cart.beef.filter(function (i) { return i.name !== cutName; });
-          if (cart.beef.length === 0) cart.beefPickup = { date: '', label: '' };
+          if (cart.beef.length === 0) { cart.beefPickup = { date: '', label: '' }; cart.beefPickupLocation = 'atlanta'; }
           beefCutRows.forEach(function (row) {
             if (row.querySelector('.beef-cut-name').textContent === cutName) {
               setBeefQty(row, 0);
@@ -1042,7 +1071,7 @@
 
       /* Validate pickups */
       if (cart.beef.length > 0 && (!cart.beefPickup || !cart.beefPickup.date)) {
-        showToast('Please select an Atlanta pickup date for your beef order.');
+        showToast('Please select a pickup date for your beef order.');
         return;
       }
       if (cart.eggs && cart.eggs.plan === 'single-dozen' && !cart.eggs.pickupDate) {
