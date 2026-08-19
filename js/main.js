@@ -8,6 +8,45 @@
   /* ─── Global Cart ─────────────────────────────────────────────────── */
   var cart = { beef: [], eggs: null, beefPickup: { date: '', label: '' }, beefPickupLocation: 'atlanta' };
 
+  /* ─── Egg Subscription Helpers ───────────────────────────────────────── */
+  var EGG_SUB_HOLIDAYS = {
+    '2026-09-07':1,'2026-11-11':1,'2026-11-26':1,'2026-12-25':1,
+    '2027-01-01':1,'2027-01-18':1,'2027-02-15':1,'2027-05-31':1,
+    '2027-07-05':1,'2027-09-06':1,'2027-11-11':1,'2027-11-25':1,
+    '2027-12-24':1,'2028-01-01':1
+  };
+
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function resolveEggSubDate(nominalDate) {
+    var d = new Date(nominalDate.getTime()); d.setHours(0,0,0,0);
+    for (var i = 0; i < 10; i++) {
+      var s = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+      if (EGG_SUB_HOLIDAYS[s] || d.getDay() === 0) { d = new Date(d.getTime() + 86400000); }
+      else { break; }
+    }
+    return d;
+  }
+
+  function getEggSubDates(cadence, count) {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var earliest = new Date(today.getTime() + 5 * 86400000);
+    var nominalDays = cadence === 'all' ? [15] : [1, 15];
+    var results = []; var year = today.getFullYear(); var month = today.getMonth();
+    for (var m = 0; m < 36 && results.length < count; m++) {
+      var y = year + Math.floor((month + m) / 12);
+      var mo = (month + m) % 12;
+      for (var di = 0; di < nominalDays.length && results.length < count; di++) {
+        var nominal = new Date(y, mo, nominalDays[di]); nominal.setHours(0,0,0,0);
+        var resolved = resolveEggSubDate(nominal); resolved.setHours(0,0,0,0);
+        if (resolved >= earliest) results.push({ date: resolved, nominalDay: nominalDays[di] });
+      }
+    }
+    return results;
+  }
+
+  var EGG_SUB_PLANS = ['monthly', '6-month', '12-month'];
+
   function saveCart() {
     try { localStorage.setItem('bff_cart', JSON.stringify(cart)); } catch (e) {}
   }
@@ -19,7 +58,14 @@
       var p = JSON.parse(saved);
       if (!p || typeof p !== 'object') return;
       if (Array.isArray(p.beef)) cart.beef = p.beef;
-      if (p.eggs !== undefined) cart.eggs = p.eggs;
+      if (p.eggs !== undefined) {
+        cart.eggs = p.eggs;
+        if (cart.eggs && typeof cart.eggs === 'object') {
+          if (!('cadence' in cart.eggs)) cart.eggs.cadence = '';
+          if (!('ack1'    in cart.eggs)) cart.eggs.ack1    = false;
+          if (!('ack2'    in cart.eggs)) cart.eggs.ack2    = false;
+        }
+      }
       if (p.beefPickup && typeof p.beefPickup === 'object') cart.beefPickup = p.beefPickup;
       if (p.beefPickupLocation) cart.beefPickupLocation = p.beefPickupLocation;
     } catch (e) {}
@@ -207,7 +253,12 @@
     /* Beef Atlanta pickup panel */
     if (cart.beef.length > 0) renderBeefPickupPanel(listEl);
 
-    /* Egg pickup panel (single-dozen) */
+    /* Egg subscription pickup panel */
+    if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1) {
+      renderEggSubscriptionPanel(listEl);
+    }
+
+    /* Egg pickup panel (single-dozen only) */
     var needsEggPickup = cart.eggs &&
       cart.eggs.plan === 'single-dozen' &&
       !cart.eggs.pickupDate;
@@ -299,6 +350,156 @@
           panel.appendChild(btn);
         });
       }
+    }
+
+    container.appendChild(panel);
+  }
+
+  function renderEggSubscriptionPanel(container) {
+    var panel = document.createElement('div');
+    panel.className = 'cart-pickup-panel cart-egg-sub-panel';
+
+    var hdr = document.createElement('div');
+    hdr.className = 'cart-pickup-panel-hdr';
+    hdr.innerHTML = '<span class="cart-pickup-panel-title">Egg Pickup Preference</span>';
+    panel.appendChild(hdr);
+
+    /* Confirmed view */
+    if (cart.eggs.pickupDate) {
+      var setDiv = document.createElement('div');
+      setDiv.className = 'cart-pickup-set';
+      setDiv.innerHTML = '<span class="cart-pickup-set-check">✓</span>' +
+        '<span>' + cart.eggs.pickupLabel + '</span>';
+      var changeBtn = document.createElement('button');
+      changeBtn.type = 'button';
+      changeBtn.className = 'cart-pickup-change';
+      changeBtn.textContent = 'Change';
+      changeBtn.addEventListener('click', function () {
+        cart.eggs.pickupDate  = '';
+        cart.eggs.pickupLabel = '';
+        cart.eggs.sublabel    = '$20/mo · 5 dozen/month · Cancel anytime';
+        cart.eggs.cadence     = '';
+        cart.eggs.ack1        = false;
+        cart.eggs.ack2        = false;
+        saveCart();
+        renderCartItems();
+      });
+      setDiv.appendChild(changeBtn);
+      panel.appendChild(setDiv);
+      container.appendChild(panel);
+      return;
+    }
+
+    /* Cadence toggle */
+    var cadence = cart.eggs.cadence || '';
+    var cadenceHdr = document.createElement('p');
+    cadenceHdr.className = 'egg-sub-section-label';
+    cadenceHdr.textContent = 'How would you like your eggs delivered?';
+    panel.appendChild(cadenceHdr);
+
+    var cadenceTabs = document.createElement('div');
+    cadenceTabs.className = 'beef-loc-tabs egg-cadence-tabs';
+    [
+      { key: 'split', main: '3 + 2 Split',   detail: '3 dz on the 1st · 2 dz on the 15th' },
+      { key: 'all',   main: 'All at Once',    detail: '5 dz on the 15th each month' }
+    ].forEach(function (opt) {
+      var tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'beef-loc-tab egg-cadence-tab' + (cadence === opt.key ? ' beef-loc-tab--active' : '');
+      tab.innerHTML = '<span class="egg-cadence-tab-main">' + opt.main + '</span>' +
+                      '<span class="egg-cadence-tab-detail">' + opt.detail + '</span>';
+      tab.addEventListener('click', function () {
+        if (cart.eggs.cadence === opt.key) return;
+        cart.eggs.cadence     = opt.key;
+        cart.eggs.pickupDate  = '';
+        cart.eggs.pickupLabel = '';
+        cart.eggs.ack1        = false;
+        cart.eggs.ack2        = false;
+        saveCart();
+        renderCartItems();
+      });
+      cadenceTabs.appendChild(tab);
+    });
+    panel.appendChild(cadenceTabs);
+
+    if (!cadence) { container.appendChild(panel); return; }
+
+    /* Acknowledgment checkboxes — must check before a date can be selected */
+    var ackLabels = [
+      'My eggs arrive farm-fresh and unwashed. I\'ll store them on the counter and refrigerate only after washing.',
+      cadence === 'all'
+        ? 'I receive all 5 dozen on the 15th each month. If my first pickup falls before the 15th, my first delivery is 5 dozen.'
+        : 'My 5 dozen/month is split: 3 dozen on the 1st and 2 dozen on the 15th. If my first pickup is on a 15th, my first delivery is 2 dozen.'
+    ];
+
+    var discDiv = document.createElement('div');
+    discDiv.className = 'egg-sub-disclosures';
+
+    var discHdr = document.createElement('p');
+    discHdr.className = 'egg-sub-section-label';
+    discHdr.textContent = 'Please acknowledge before selecting a date:';
+    discDiv.appendChild(discHdr);
+
+    ackLabels.forEach(function (text, idx) {
+      var lbl = document.createElement('label');
+      lbl.className = 'egg-sub-check-label';
+      var chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.className = 'egg-sub-check';
+      chk.checked = idx === 0 ? cart.eggs.ack1 : cart.eggs.ack2;
+      chk.addEventListener('change', function () {
+        if (idx === 0) cart.eggs.ack1 = chk.checked;
+        else           cart.eggs.ack2 = chk.checked;
+        saveCart();
+      });
+      lbl.appendChild(chk);
+      lbl.appendChild(document.createTextNode(' ' + text));
+      discDiv.appendChild(lbl);
+    });
+    panel.appendChild(discDiv);
+
+    /* First pickup date selection */
+    var dateHdr = document.createElement('p');
+    dateHdr.className = 'egg-sub-section-label';
+    dateHdr.textContent = 'Select your first pickup:';
+    panel.appendChild(dateHdr);
+
+    var dates = getEggSubDates(cadence, 2);
+    if (dates.length === 0) {
+      var noMsg = document.createElement('p');
+      noMsg.className = 'cal-tbd-msg';
+      noMsg.textContent = "No upcoming dates available yet. We'll confirm your first pickup by email after ordering.";
+      panel.appendChild(noMsg);
+    } else {
+      dates.forEach(function (item) {
+        var qty = cadence === 'all' ? 5 : (item.nominalDay === 1 ? 3 : 2);
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cal-atlanta-date';
+        btn.innerHTML = MONTHS[item.date.getMonth()].slice(0,3) + ' ' + item.date.getDate() +
+          ', ' + item.date.getFullYear() +
+          ' <span class="egg-date-qty">— ' + qty + ' dz</span>';
+        (function (d, q) {
+          btn.addEventListener('click', function () {
+            if (!cart.eggs.ack1 || !cart.eggs.ack2) {
+              showToast('Please accept both notes above before selecting a date.');
+              return;
+            }
+            var cadenceDesc = cart.eggs.cadence === 'all'
+              ? 'All at Once · 5 dz on the 15th'
+              : 'Split · 3 dz on 1st + 2 dz on 15th';
+            var dateStr = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+            cart.eggs.pickupDate  = dateStr;
+            cart.eggs.pickupLabel = cadenceDesc + ' · First: ' +
+              MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
+              ' (' + q + ' dz)';
+            cart.eggs.sublabel = cart.eggs.pickupLabel;
+            saveCart();
+            renderCartItems();
+          });
+        })(item.date, qty);
+        panel.appendChild(btn);
+      });
     }
 
     container.appendChild(panel);
@@ -601,7 +802,8 @@
         }
 
         cart.eggs = { plan: plan, label: eggLabel, sublabel: eggSublabel,
-                      total: eggTotal, pickupDate: '', pickupLabel: '', qty: eggsQty };
+                      total: eggTotal, pickupDate: '', pickupLabel: '', qty: eggsQty,
+                      cadence: '', ack1: false, ack2: false };
         closePackModal();
         openCartDrawer();
         initDrawerCalendar();
@@ -1076,6 +1278,14 @@
       }
       if (cart.eggs && cart.eggs.plan === 'single-dozen' && !cart.eggs.pickupDate) {
         showToast('Please choose a pickup location and date for your eggs.');
+        return;
+      }
+      if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1 && !cart.eggs.pickupDate) {
+        showToast('Please select a pickup cadence and first date for your egg subscription.');
+        return;
+      }
+      if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1 && (!cart.eggs.ack1 || !cart.eggs.ack2)) {
+        showToast('Please accept the egg handling notes in your cart before ordering.');
         return;
       }
 
