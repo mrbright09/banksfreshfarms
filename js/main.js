@@ -377,10 +377,6 @@
       changeBtn.addEventListener('click', function () {
         cart.eggs.pickupDate  = '';
         cart.eggs.pickupLabel = '';
-        cart.eggs.sublabel    = '$20/mo · 5 dozen/month · Cancel anytime';
-        cart.eggs.cadence     = '';
-        cart.eggs.ack1        = false;
-        cart.eggs.ack2        = false;
         saveCart();
         renderCartItems();
       });
@@ -413,8 +409,7 @@
         cart.eggs.cadence     = opt.key;
         cart.eggs.pickupDate  = '';
         cart.eggs.pickupLabel = '';
-        cart.eggs.ack1        = false;
-        cart.eggs.ack2        = false;
+        cart.eggs.ack2        = false;   /* cadence-specific note must be re-read */
         saveCart();
         renderCartItems();
       });
@@ -432,12 +427,22 @@
         : 'My 5 dozen/month is split: 3 dozen on the 1st and 2 dozen on the 15th. If my first pickup is on a 15th, my first delivery is 2 dozen.'
     ];
 
+    var dateBtns = [];
+    function syncDateBtns() {
+      var ready = cart.eggs.ack1 && cart.eggs.ack2;
+      dateBtns.forEach(function (b) {
+        b.disabled = !ready;
+        b.classList.toggle('cal-atlanta-date--locked', !ready);
+      });
+      if (hint) hint.style.display = ready ? 'none' : 'block';
+    }
+
     var discDiv = document.createElement('div');
     discDiv.className = 'egg-sub-disclosures';
 
     var discHdr = document.createElement('p');
     discHdr.className = 'egg-sub-section-label';
-    discHdr.textContent = 'Please acknowledge before selecting a date:';
+    discHdr.textContent = 'Please review and accept:';
     discDiv.appendChild(discHdr);
 
     ackLabels.forEach(function (text, idx) {
@@ -451,6 +456,7 @@
         if (idx === 0) cart.eggs.ack1 = chk.checked;
         else           cart.eggs.ack2 = chk.checked;
         saveCart();
+        syncDateBtns();
       });
       lbl.appendChild(chk);
       lbl.appendChild(document.createTextNode(' ' + text));
@@ -463,6 +469,11 @@
     dateHdr.className = 'egg-sub-section-label';
     dateHdr.textContent = 'Select your first pickup:';
     panel.appendChild(dateHdr);
+
+    var hint = document.createElement('p');
+    hint.className = 'egg-sub-hint';
+    hint.textContent = 'Accept both notes above to choose your date.';
+    panel.appendChild(hint);
 
     var dates = getEggSubDates(cadence, 2);
     if (dates.length === 0) {
@@ -481,10 +492,6 @@
           ' <span class="egg-date-qty">— ' + qty + ' dz</span>';
         (function (d, q) {
           btn.addEventListener('click', function () {
-            if (!cart.eggs.ack1 || !cart.eggs.ack2) {
-              showToast('Please accept both notes above before selecting a date.');
-              return;
-            }
             var cadenceDesc = cart.eggs.cadence === 'all'
               ? 'All at Once · 5 dz on the 15th'
               : 'Split · 3 dz on 1st + 2 dz on 15th';
@@ -493,15 +500,22 @@
             cart.eggs.pickupLabel = cadenceDesc + ' · First: ' +
               MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
               ' (' + q + ' dz)';
-            cart.eggs.sublabel = cart.eggs.pickupLabel;
             saveCart();
             renderCartItems();
           });
         })(item.date, qty);
+        dateBtns.push(btn);
         panel.appendChild(btn);
       });
     }
 
+    var note = document.createElement('p');
+    note.className = 'egg-sub-note';
+    note.textContent = 'Eggs are 1–14 days old at pickup — about 7 on average. ' +
+      "We'll confirm your pickup location by email before your first date, and reach out directly if a date ever has to change.";
+    panel.appendChild(note);
+
+    syncDateBtns();
     container.appendChild(panel);
   }
 
