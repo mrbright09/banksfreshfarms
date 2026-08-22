@@ -801,16 +801,16 @@
           eggSublabel = '$5/dozen · One-Time · Pickup TBD';
         } else if (plan === 'monthly') {
           eggTotal = 20;
-          eggLabel = 'Weekly Dozen — Monthly Plan';
-          eggSublabel = '$20/mo · 5 dozen/month · Cancel anytime';
+          eggLabel = 'Egg Share — Monthly Plan';
+          eggSublabel = '$20/mo · 5 dozen/month · $4.00/dozen · Cancel anytime';
         } else if (plan === '6-month') {
-          eggTotal = 120;
-          eggLabel = 'Weekly Dozen — 6-Month Plan';
-          eggSublabel = '$120 · 5 dozen/month · Save 5%';
+          eggTotal = 117;
+          eggLabel = 'Egg Share — 6-Month Plan';
+          eggSublabel = '$117 · 5 dozen/month · $3.90/dozen · 22% off';
         } else if (plan === '12-month') {
-          eggTotal = 240;
-          eggLabel = 'Weekly Dozen — 12-Month Plan';
-          eggSublabel = '$240 · 5 dozen/month · Save 10%';
+          eggTotal = 228;
+          eggLabel = 'Egg Share — 12-Month Plan';
+          eggSublabel = '$228 · 5 dozen/month · $3.80/dozen · 24% off';
         } else {
           eggLabel = order || 'Egg order';
         }
