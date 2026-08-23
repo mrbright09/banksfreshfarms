@@ -29,12 +29,14 @@ var BFF_SAVANNAH_DATES = [
 ];
 
 /* ─── Free Dozen Promotion ─────────────────────────────────────────────
-   Limited-time offer on the 6-MONTH PREPAY plan only: $120 upfront buys
-   30 dozen for the price of 24 — still 5 dozen a month, so there is
-   nothing extra to pack; the six free dozen are already inside that
-   $120. It also locks the rate for the whole term, which is the real
-   draw once standard pricing rises. The plain monthly plan gets no
-   free dozen.
+   Limited-time offer on the 6-MONTH PREPAY plan only: the customer pays
+   for 4 dozen a month and gets a 5th free every month, for six months —
+   24 dozen paid, 6 free, 30 delivered, $120 upfront.
+
+   Fulfilment is still 5 dozen a month, so there is nothing extra to
+   pack; the free dozen is already inside that $120. It also locks the
+   rate for the whole term, which is the real draw once standard pricing
+   rises. The plain monthly plan gets no free dozen.
 
    Turning this off also removes the prepay plan from the website.
 
