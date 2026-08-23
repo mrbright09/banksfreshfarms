@@ -1192,6 +1192,36 @@ ul  { list-style: none; }
   letter-spacing: .02em;
 }
 
+/* Superseded stock figure — muted so the live number reads first. */
+.stock-was {
+  color: var(--cream-muted);
+  opacity: 0.65;
+  font-weight: 400;
+  margin-right: 3px;
+}
+.beef-price-stock .stock-was { color: rgba(26,15,10,0.45); }
+
+/* Keeping note under the cuts list */
+.beef-keeping-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid rgba(200,146,42,0.28);
+  border-radius: 8px;
+  background: rgba(200,146,42,0.06);
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--cream-muted);
+}
+.beef-keeping-note svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--gold);
+}
+
 .beef-cut-stepper {
   display: flex;
   align-items: center;
