@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=80" />
+  <link rel="stylesheet" href="css/style.css?v=81" />
 </head>
 <body>
 
@@ -178,7 +178,7 @@
           </ul>
           <div class="promo-flag" id="eggPromoFlag" hidden>
             <span class="promo-flag-tag">Limited Time</span>
-            <span class="promo-flag-text">Pay for 4 dozen, get the <strong>5th free</strong> &mdash; and lock in $20/mo before prices rise</span>
+            <span class="promo-flag-text">Pay for 4 dozen, get the <strong>5th free</strong>. Prepay 6 months at $120 for <strong>another dozen free</strong>.</span>
           </div>
           <button class="shop-card-btn" id="shopEggsBtn">Order Eggs</button>
         </div>
@@ -435,7 +435,7 @@
           <div class="pack-card-icon">🥚🥚</div>
           <h3 class="pack-card-title">Monthly Egg Share</h3>
           <div class="pack-card-sub">Family Subscription</div>
-          <p class="pack-card-desc">5 dozen a month, split across two pickups &mdash; 3 dozen on the 1st, 2 dozen on the 15th. Always fresh, always farm direct, no store runs required.</p>
+          <p class="pack-card-desc">5 dozen a month, collected on the 2nd weekend &mdash; pick Saturday or Sunday and keep that day. Always fresh, always farm direct, no store runs required.</p>
           <div class="pack-card-price">
             <span class="pack-price-amount" id="packMonthlyAmt">$4<span class="pack-price-per">/dozen</span></span>
             <span class="pack-price-label" id="packMonthlyLbl">$20/month · 5 dozen per month</span>
@@ -449,10 +449,13 @@
             <span class="promo-banner-tag">Limited Time Offer</span>
             <span class="promo-banner-head">Your 5th dozen is on us</span>
             <span class="promo-banner-sub">Pay for 4 dozen at $5 each and we&rsquo;ll add the 5th free &mdash; 5 dozen every month for $20. When this offer ends, eggs go to $6 a dozen and the share to $25.</span>
+            <span class="promo-banner-extra">Prepay 6 months for <strong>$120</strong> and we&rsquo;ll add <strong>another dozen free</strong> on your first pickup.</span>
           </div>
           <div class="pack-sub-tiers">
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
                id="packMonthlyBtn" data-plan="monthly">Start Monthly — $20/mo</button>
+            <button type="button" class="pack-card-btn pack-card-btn--tier" hidden
+               id="packPrepayBtn" data-plan="6-month-prepay">Prepay 6 Months — $120 <span class="pack-tier-save">+1 free dozen</span></button>
           </div>
         </div>
 
@@ -698,8 +701,8 @@
 
 
 
-  <script src="js/bff-config.js?v=80"></script>
-  <script src="js/bff-supabase.js?v=80"></script>
-  <script src="js/main.js?v=80"></script>
+  <script src="js/bff-config.js?v=81"></script>
+  <script src="js/bff-supabase.js?v=81"></script>
+  <script src="js/main.js?v=81"></script>
 </body>
 </html>
