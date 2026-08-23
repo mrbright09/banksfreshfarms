@@ -1192,6 +1192,11 @@ ul  { list-style: none; }
   letter-spacing: .02em;
 }
 
+/* Keep the whole stock phrase on one line — the struck figure pushed
+   the ground-beef row onto three lines and out of step with its
+   neighbours. */
+.beef-cut-stock { white-space: nowrap; }
+
 /* Superseded stock figure — muted so the live number reads first. */
 .stock-was {
   color: var(--cream-muted);
