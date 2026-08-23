@@ -30,9 +30,9 @@ var BFF_SAVANNAH_DATES = [
 
 /* ─── Founding Member Offer ────────────────────────────────────────────
    A limited introductory period. While it runs, the website shows the
-   founding rates below and offers the 6-month prepaid membership.
+   founding rates below and flags the monthly share as limited time.
    Turning it off switches every price to the upcoming rates and removes
-   the prepaid option — website copy, cart and order email together.
+   the offer copy — website, cart and order email together.
 
      active  → set to false to end the founding offer immediately
      endDate → optional last day to sign up, 'YYYY-MM-DD'.
@@ -54,15 +54,15 @@ var BFF_PROMO_FREE_DOZEN = {
 
      founding  → while the founding offer runs
                  $5 a dozen one-time, $20/month for 5 dozen ($4/dozen),
-                 and a $120 prepaid membership covering six months.
+                 A $120 six-month prepaid membership is defined below
+                 but is NOT currently on the storefront.
 
      upcoming  → once the offer ends
                  $6 a dozen one-time, $25/month for 5 dozen ($5/dozen).
-                 No prepaid membership is sold at these rates.
 
-   The prepaid saving shown on the site is derived, not typed:
-     6 x upcoming monthly ($25) = $150, less the $120 prepaid = $30.
-   Change any number here and that figure follows automatically.
+   prepayTotal / prepayMonths are retained so the prepaid membership can
+   be switched back on without re-deriving its numbers. Nothing on the
+   storefront reads them while that plan is off.
 
    IMPORTANT: ending the founding offer raises prices on the live site
    the moment it takes effect. Existing members are not repriced

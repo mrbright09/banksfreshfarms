@@ -36,6 +36,10 @@
     return results;
   }
 
+  /* The 6-month prepaid membership is not currently sold — its button is
+     off the storefront. The plan stays known here so a cart saved while
+     it was offered still renders and totals correctly instead of
+     breaking. Re-adding the button is all it takes to bring it back. */
   var EGG_SUB_PLANS = ['monthly', '6-month-prepay'];
 
   /* Free-dozen promo — active only while configured on and not past endDate. */
@@ -88,7 +92,7 @@
     var on = promoActive();
     var p  = eggPricing();
 
-    ['eggPromoFlag', 'eggPromoBanner', 'packPrepayBtn', 'packPrepayTerms'].forEach(function (id) {
+    ['eggPromoFlag', 'eggPromoBanner'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = !on;
     });
@@ -101,20 +105,13 @@
       packMonthlyLbl: money(p.monthlyTotal) + '/month · ' + p.dozensPerMonth + ' dozen',
       packMonthlyBtn: 'Start Monthly — ' + money(p.monthlyTotal) + '/mo',
       packFeatQty:    p.dozensPerMonth + ' dozen farm-fresh eggs each month',
-      promoHead:      'Lock in ' + money(p.prepayPerDozen) + ' per dozen for six months',
-      promoBody:      'Prepay ' + money(p.prepayTotal) + ' and receive ' + p.dozensPerMonth +
-                      ' dozen farm-fresh eggs each month for six months—' + p.prepayDozens +
-                      ' dozen total. You’ll save ' + money(p.prepaySaving) +
-                      ' compared with our upcoming ' + money(p.upcoming.monthlyTotal) +
-                      ' monthly subscription rate.',
-      promoGuarantee: 'Your ' + money(p.prepayPerDozen) +
-                      '-per-dozen price is guaranteed for the full six-month term.',
-      promoUrgency:   'Limited to the first ' + (window.BFF_FOUNDING_LIMIT || 25) + ' families.',
-      packPrepayTerms: 'Prepaid membership includes ' + p.prepayDozens + ' dozen eggs distributed as ' +
-                      p.dozensPerMonth + ' dozen per month for six months. Prepaid purchases are ' +
-                      'nonrefundable after the first monthly pickup. Membership ends after six months ' +
-                      'unless the customer actively renews. Future renewals will be offered at the ' +
-                      'then-current subscription rate.'
+      promoHead:      'Join at ' + money(p.perDozen) + ' per dozen',
+      promoBody:      'Start the Monthly Egg Share at ' + money(p.founding.monthlyTotal) +
+                      ' a month for ' + p.dozensPerMonth + ' dozen farm-fresh eggs—' +
+                      money(p.founding.monthlyTotal / p.dozensPerMonth) + ' a dozen. When this ' +
+                      'founding round closes, the share moves to ' + money(p.upcoming.monthlyTotal) +
+                      ' a month and single dozens to ' + money(p.upcoming.singleDozen) + '.',
+      promoUrgency:   'Limited time — first ' + (window.BFF_FOUNDING_LIMIT || 25) + ' families.'
     };
     Object.keys(txt).forEach(function (id) {
       var el = document.getElementById(id);
@@ -123,12 +120,6 @@
 
     var perEl = document.getElementById('packMonthlyAmt');
     if (perEl) perEl.innerHTML = money(p.perDozen) + '<span class="pack-price-per">/dozen</span>';
-
-    var prepayBtn = document.getElementById('packPrepayBtn');
-    if (prepayBtn) {
-      prepayBtn.innerHTML = 'Lock In 6 Months — ' + money(p.prepayTotal) +
-        ' <span class="pack-tier-save">Save ' + money(p.prepaySaving) + '</span>';
-    }
   })();
 
   function saveCart() {
