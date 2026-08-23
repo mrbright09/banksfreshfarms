@@ -92,7 +92,7 @@
     if (prepayBtn) {
       prepayBtn.hidden = !on;
       prepayBtn.innerHTML = 'Prepay 6 Months — ' + money(price.monthlyTotal * 6) +
-        ' <span class="pack-tier-save">+1 free dozen/mo</span>';
+        ' <span class="pack-tier-save">6 dozen free</span>';
     }
 
     var saveEl = document.getElementById('packMonthlySave');
@@ -483,7 +483,7 @@
     var isPrepay = cart.eggs.plan === '6-month-prepay';
     var ackLabels = [
       'My eggs arrive farm-fresh and unwashed. I\'ll store them on the counter and refrigerate only after washing.',
-      'I collect all ' + (isPrepay ? '6' : '5') + ' dozen on the 2nd ' +
+      'I collect all 5 dozen on the 2nd ' +
         (cadence === 'sat' ? 'Saturday' : 'Sunday') +
         ' of each month, and it is up to me to collect them on that day.'
     ];
@@ -544,7 +544,7 @@
       panel.appendChild(noMsg);
     } else {
       var dayName = cadence === 'sat' ? 'Saturday' : 'Sunday';
-      var perPickup = isPrepay ? 6 : 5;   /* prepay includes a free dozen each month */
+      var perPickup = 5;   /* prepay is the same 5 dz a month, prepaid at a lower rate */
       dates.forEach(function (item) {
         var btn = document.createElement('button');
         btn.type = 'button';
@@ -846,7 +846,7 @@
         } else if (plan === '6-month-prepay') {
           eggTotal = pr.monthlyTotal * 6;
           eggLabel = 'Monthly Egg Share — 6 Months Prepaid';
-          eggSublabel = '$' + eggTotal + ' upfront · 6 dozen/month for 6 months (1 FREE each month) · 36 dozen total';
+          eggSublabel = '$' + eggTotal + ' upfront · 5 dozen/month for 6 months · 30 dozen for the price of 24';
         } else {
           eggLabel = order || 'Egg order';
         }
@@ -1353,7 +1353,7 @@
         eggLine += ' — $' + cart.eggs.total.toFixed(2);
         lines.push(eggLine);
         if (cart.eggs.plan === '6-month-prepay') {
-          lines.push('  ** PREPAY PROMO: pack 6 dozen EVERY month for 6 months (5 paid + 1 free) **');
+          lines.push('  (Prepay promo: 30 dozen for the price of 24 — still 5 dozen a month, nothing extra to pack)');
         }
       }
 

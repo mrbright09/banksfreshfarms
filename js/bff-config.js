@@ -30,9 +30,11 @@ var BFF_SAVANNAH_DATES = [
 
 /* ─── Free Dozen Promotion ─────────────────────────────────────────────
    Limited-time offer on the 6-MONTH PREPAY plan only: $120 upfront buys
-   six months, and a free dozen rides on every pickup — 6 dozen a month,
-   36 dozen in total for the price of 24. The plain monthly plan gets no
-   free dozen; it is 5 dozen for $20 at the promo rate.
+   30 dozen for the price of 24 — still 5 dozen a month, so there is
+   nothing extra to pack; the six free dozen are already inside that
+   $120. It also locks the rate for the whole term, which is the real
+   draw once standard pricing rises. The plain monthly plan gets no
+   free dozen.
 
    Turning this off also removes the prepay plan from the website.
 
