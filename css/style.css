@@ -2796,6 +2796,96 @@ ul  { list-style: none; }
   text-decoration-color: rgba(200,146,42,0.4);
 }
 
+/* ── Free-dozen promotion ─────────────────────────────────────── */
+
+/* Compact flag on the shop card */
+.promo-flag {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px dashed rgba(200,146,42,0.5);
+  border-radius: 7px;
+  background: rgba(200,146,42,0.08);
+}
+.promo-flag[hidden] { display: none; }
+.promo-flag-tag {
+  flex-shrink: 0;
+  font-family: 'Lato', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  background: var(--gold);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+.promo-flag-text {
+  font-family: 'Lato', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--cream-muted);
+}
+.promo-flag-text strong { color: var(--gold); font-weight: 700; }
+
+/* Fuller banner inside the pack modal */
+.promo-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+  margin: 4px 0 18px;
+  padding: 16px 14px;
+  border: 1px solid var(--gold);
+  border-radius: 9px;
+  background: linear-gradient(180deg, rgba(200,146,42,0.16), rgba(200,146,42,0.06));
+}
+.promo-banner[hidden] { display: none; }
+.promo-banner-tag {
+  font-family: 'Lato', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  background: var(--gold);
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+.promo-banner-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.18rem;
+  color: var(--gold);
+  margin-top: 3px;
+}
+.promo-banner-sub {
+  font-family: 'Lato', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--cream-muted);
+  max-width: 34ch;
+}
+
+/* Free-dozen tag on the first-pickup date buttons */
+.egg-date-bonus {
+  display: inline-block;
+  font-family: 'Lato', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  background: var(--gold);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
 /* Egg subscription panel */
 .egg-sub-section-label {
   font-family: 'Lato', sans-serif;

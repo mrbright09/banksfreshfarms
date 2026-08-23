@@ -47,6 +47,27 @@
 
   var EGG_SUB_PLANS = ['monthly'];
 
+  /* Free-dozen promo — active only while configured on and not past endDate. */
+  function promoActive() {
+    var p = window.BFF_PROMO_FREE_DOZEN;
+    if (!p || !p.active) return false;
+    if (!p.endDate) return true;
+    var parts = String(p.endDate).split('-');
+    if (parts.length !== 3) return true;
+    var end = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    end.setHours(23, 59, 59, 999);
+    return new Date() <= end;
+  }
+
+  /* Reveal the promo copy only while the offer is running. */
+  (function initPromo() {
+    if (!promoActive()) return;
+    ['eggPromoFlag', 'eggPromoBanner'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.hidden = false;
+    });
+  })();
+
   function saveCart() {
     try { localStorage.setItem('bff_cart', JSON.stringify(cart)); } catch (e) {}
   }
@@ -482,14 +503,17 @@
       noMsg.textContent = "No upcoming dates available yet. We'll confirm your first pickup by email after ordering.";
       panel.appendChild(noMsg);
     } else {
+      var bonus = promoActive() ? 1 : 0;
       dates.forEach(function (item) {
         var qty = cadence === 'all' ? 5 : (item.nominalDay === 1 ? 3 : 2);
+        var firstQty = qty + bonus;   /* free dozen rides on the first pickup */
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'cal-atlanta-date';
         btn.innerHTML = MONTHS[item.date.getMonth()].slice(0,3) + ' ' + item.date.getDate() +
           ', ' + item.date.getFullYear() +
-          ' <span class="egg-date-qty">— ' + qty + ' dz</span>';
+          ' <span class="egg-date-qty">— ' + firstQty + ' dz</span>' +
+          (bonus ? ' <span class="egg-date-bonus">incl. 1 free</span>' : '');
         (function (d, q) {
           btn.addEventListener('click', function () {
             var cadenceDesc = cart.eggs.cadence === 'all'
@@ -497,9 +521,10 @@
               : 'Split · 3 dz on 1st + 2 dz on 15th';
             var dateStr = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
             cart.eggs.pickupDate  = dateStr;
+            cart.eggs.freeDozen   = bonus === 1;
             cart.eggs.pickupLabel = cadenceDesc + ' · First: ' +
               MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
-              ' (' + q + ' dz)';
+              ' (' + q + ' dz' + (bonus ? ' + 1 FREE' : '') + ')';
             saveCart();
             renderCartItems();
           });
@@ -802,7 +827,9 @@
         } else if (plan === 'monthly') {
           eggTotal = 20;
           eggLabel = 'Monthly Egg Share';
-          eggSublabel = '$20/mo · 5 dozen/month · $4.00/dozen · Cancel anytime';
+          eggSublabel = promoActive()
+            ? '$20/mo · 5 dozen/month · +1 FREE dozen on your first pickup'
+            : '$20/mo · 5 dozen/month · $4.00/dozen · Cancel anytime';
         } else {
           eggLabel = order || 'Egg order';
         }
@@ -1308,6 +1335,9 @@
         if (cart.eggs.pickupLabel) eggLine += ' · ' + cart.eggs.pickupLabel;
         eggLine += ' — $' + cart.eggs.total.toFixed(2);
         lines.push(eggLine);
+        if (cart.eggs.freeDozen) {
+          lines.push('  ** PROMO: add 1 FREE dozen to this customer\'s first pickup **');
+        }
       }
 
       var hasBeef = cart.beef.length > 0;
