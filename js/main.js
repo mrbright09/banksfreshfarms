@@ -21,6 +21,25 @@
     return new Date(year, month, 1 + offset + 7);   /* 2nd occurrence */
   }
 
+  /* Both weekend days of the 2nd weekend, in date order. Beef pickups use
+     the same run as the egg share, so a customer buying both collects
+     everything on one trip. */
+  function getPickupWeekendDates(count) {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var earliest = new Date(today.getTime() + 5 * 86400000);
+    var out = [], year = today.getFullYear(), month = today.getMonth();
+    for (var m = 0; m < 24 && out.length < count; m++) {
+      var y  = year + Math.floor((month + m) / 12);
+      var mo = (month + m) % 12;
+      ['sat', 'sun'].forEach(function (day) {
+        if (out.length >= count) return;
+        var d = secondWeekendDate(y, mo, EGG_PICKUP_DAYS[day]); d.setHours(0,0,0,0);
+        if (d >= earliest) out.push({ date: d, day: day });
+      });
+    }
+    return out;
+  }
+
   function getEggSubDates(dayPref, count) {
     var weekday = EGG_PICKUP_DAYS[dayPref];
     if (weekday === undefined) return [];
@@ -116,7 +135,7 @@
                       'through July, and drop sharply around the September equinox as the days ' +
                       'shorten. While the season holds, the Family Subscription is ' +
                       money(p.founding.monthlyTotal) + ' a month for ' + p.dozensPerMonth +
-                      ' dozen—' + money(p.founding.monthlyTotal / p.dozensPerMonth) +
+                      ' dozen, ' + money(p.founding.monthlyTotal / p.dozensPerMonth) +
                       ' a dozen. After September the share closes for the season and ' +
                       'single dozens go to ' + money(p.upcoming.singleDozen) + '.',
       promoUrgency:   'Enrollment closes at the end of September.'
@@ -129,6 +148,19 @@
     var perEl = document.getElementById('packMonthlyAmt');
     if (perEl) perEl.innerHTML = money(p.perDozen) + '<span class="pack-price-per">/dozen</span>';
   })();
+
+  /* Several overlays lock page scrolling. Releasing it is only safe once
+     they are ALL closed, so every close path goes through here rather
+     than clearing the lock on its own and stranding whatever is still up. */
+  function releaseScrollLock() {
+    var stillOpen =
+      document.querySelector('.cart-drawer--open') ||
+      (document.getElementById('beefModal') && document.getElementById('beefModal').classList.contains('open')) ||
+      (document.getElementById('packModal') && document.getElementById('packModal').classList.contains('open')) ||
+      (document.getElementById('mobileNav') && document.getElementById('mobileNav').classList.contains('open')) ||
+      (document.getElementById('photoZoom') && !document.getElementById('photoZoom').hidden);
+    if (!stillOpen) document.body.style.overflow = '';
+  }
 
   function saveCart() {
     try { localStorage.setItem('bff_cart', JSON.stringify(cart)); } catch (e) {}
@@ -176,19 +208,18 @@
     return hasAtlantaItem ? rates.atlanta : rates.farm;
   }
 
-  /* Delivery fee: flat fee unless subtotal meets free threshold. */
-  function getDeliveryFee(subtotal) {
-    var fee      = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
-    var freeOver = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
-    var toggle   = document.getElementById('cartDeliveryToggle');
+  /* Delivery fee: a flat charge whenever delivery is chosen. */
+  function getDeliveryFee() {
+    var fee    = (typeof BFF_DELIVERY_FEE !== 'undefined') ? BFF_DELIVERY_FEE : 15;
+    var toggle = document.getElementById('cartDeliveryToggle');
     if (!toggle || !toggle.checked) return 0;
-    return subtotal >= freeOver ? 0 : fee;
+    return fee;
   }
 
   /* Recompute and write all totals to the cart drawer footer. */
   function updateCartTotals() {
     var subtotal  = cartTotal();
-    var delivery  = getDeliveryFee(subtotal);
+    var delivery  = getDeliveryFee();
     /* Tax applies only to seasonings (not raw meat/eggs). Since we don't
        sell seasonings online yet, tax is $0 for all current cart items.
        When seasonings are added, compute their taxable share and apply getTaxRate(). */
@@ -207,17 +238,12 @@
     if (taxEl)   taxEl.textContent   = '$' + tax.toFixed(2);
     if (totalEl) totalEl.textContent = '$' + grand.toFixed(2);
 
-    var freeOver     = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
-    var fee          = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
+    var fee          = (typeof BFF_DELIVERY_FEE !== 'undefined') ? BFF_DELIVERY_FEE : 15;
     var toggle       = document.getElementById('cartDeliveryToggle');
     var wantsDelivery = toggle && toggle.checked;
     if (delivEl) delivEl.style.display = wantsDelivery ? 'flex' : 'none';
-    if (delivAmtEl) {
-      delivAmtEl.textContent = (delivery === 0 && wantsDelivery) ? 'FREE' : '$' + delivery.toFixed(2);
-    }
-    if (noteEl) {
-      noteEl.textContent = subtotal >= freeOver ? 'Free on this order!' : '+$' + fee + ' · free over $' + freeOver;
-    }
+    if (delivAmtEl) delivAmtEl.textContent = '$' + delivery.toFixed(2);
+    if (noteEl) noteEl.textContent = '+$' + fee;
   }
 
   function cartLineCount() {
@@ -248,7 +274,7 @@
   function closeCartDrawer() {
     if (cartDrawerEl)   cartDrawerEl.classList.remove('cart-drawer--open');
     if (cartBackdropEl) cartBackdropEl.classList.remove('cart-backdrop--visible');
-    document.body.style.overflow = '';
+    releaseScrollLock();
   }
 
   function updateNavBadge() {
@@ -294,7 +320,7 @@
 
     cart.beef.forEach(function (item) {
       var beefDetail = '$' + item.price.toFixed(2) + '/lb · Grass Fed Black Angus · ' +
-        (beefPickupConfirmed ? cart.beefPickup.label : 'Pickup — select location & date below');
+        (beefPickupConfirmed ? cart.beefPickup.label : 'Pickup, select location & date below');
       html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
         '<div class="cart-item-row">' +
           '<div class="cart-item-info">' +
@@ -405,37 +431,42 @@
       setDiv.appendChild(changeBtn);
       panel.appendChild(setDiv);
     } else {
-      var srcDates = loc === 'savannah'
-        ? (window.BFF_SAVANNAH_DATES || [])
-        : (window.BFF_ATLANTA_DATES  || []);
-      var future = srcDates.filter(function (s) {
-        var p = s.split('-');
-        return new Date(+p[0], +p[1] - 1, +p[2]) >= today;
-      });
       var cityName = loc === 'savannah' ? 'Savannah' : 'Atlanta';
+      var dates    = getPickupWeekendDates(4);
 
-      if (future.length === 0) {
+      var whenHdr = document.createElement('p');
+      whenHdr.className = 'egg-sub-section-label';
+      whenHdr.textContent = 'Pickup is the 2nd weekend of every month. Choose your date:';
+      panel.appendChild(whenHdr);
+
+      if (dates.length === 0) {
         var msg = document.createElement('p');
         msg.className = 'cal-tbd-msg';
         msg.textContent = 'No ' + cityName + ' dates scheduled yet. Place your order and we\'ll reach out to confirm pickup.';
         panel.appendChild(msg);
-        cart.beefPickup = { date: 'tbd', label: cityName + ' Pickup — date TBD' };
+        cart.beefPickup = { date: 'tbd', label: cityName + ' Pickup, date TBD' };
       } else {
-        future.forEach(function (s) {
-          var p    = s.split('-');
-          var date = new Date(+p[0], +p[1] - 1, +p[2]);
-          var btn  = document.createElement('button');
+        dates.forEach(function (item) {
+          var dayName = item.day === 'sat' ? 'Saturday' : 'Sunday';
+          var d       = item.date;
+          var btn     = document.createElement('button');
           btn.type = 'button';
           btn.className = 'cal-atlanta-date';
-          btn.textContent = MONTHS[date.getMonth()].slice(0,3) + ' ' + date.getDate() + ', ' + date.getFullYear();
-          (function (dateStr, dateObj) {
+          btn.textContent = dayName + ' ' + MONTHS[d.getMonth()].slice(0,3) + ' ' +
+            d.getDate() + ', ' + d.getFullYear();
+          (function (dateObj, name) {
             btn.addEventListener('click', function () {
-              var label = cityName + ' Pickup · Sat ' +
-                MONTHS[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
-              cart.beefPickup = { date: dateStr, label: label };
+              var dateStr = dateObj.getFullYear() + '-' + pad2(dateObj.getMonth()+1) +
+                '-' + pad2(dateObj.getDate());
+              cart.beefPickup = {
+                date: dateStr,
+                label: cityName + ' Pickup · ' + name + ' ' + MONTHS[dateObj.getMonth()] +
+                       ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear()
+              };
+              saveCart();
               renderCartItems();
             });
-          })(s, date);
+          })(d, dayName);
           panel.appendChild(btn);
         });
       }
@@ -599,7 +630,7 @@
 
     var note = document.createElement('p');
     note.className = 'egg-sub-note';
-    note.textContent = 'Eggs are 1–14 days old at pickup — about 7 on average. ' +
+    note.textContent = 'Eggs are 1–14 days old at pickup, about 7 on average. ' +
       "We'll confirm your pickup location by email before your first date, and reach out directly if a date ever has to change.";
     panel.appendChild(note);
 
@@ -641,7 +672,7 @@
   function closeMobileNav() {
     mobileNav.classList.remove('open');
     hamburger.innerHTML = '&#9776;';
-    document.body.style.overflow = '';
+    releaseScrollLock();
   }
 
   if (hamburger && mobileNav) {
@@ -831,7 +862,7 @@
   function closePackModal() {
     if (!packModal) return;
     packModal.classList.remove('open');
-    document.body.style.overflow = '';
+    releaseScrollLock();
   }
 
   if (shopEggsBtn) {
@@ -1107,6 +1138,68 @@
   var beefCtaTotal      = document.getElementById('beefCtaTotal');
   var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
 
+  /* ── Beef stock ────────────────────────────────────────────────────
+     Paint both stock lists from BFF_BEEF_STOCK before anything reads
+     the DOM, so a cut that has sold out in config is already marked
+     sold out by the time beefCutRows is collected below. */
+  function beefStockFor(cut) {
+    var all = window.BFF_BEEF_STOCK || {};
+    var s   = all[cut];
+    /* A cut with no entry is treated as sold out. Failing this way round
+       means a missing or mistyped config never sells meat we cannot
+       account for. */
+    if (!s || typeof s.remaining !== 'number') return { started: 0, remaining: 0 };
+    return { started: typeof s.started === 'number' ? s.started : s.remaining,
+             remaining: s.remaining };
+  }
+
+  function stockLabelHtml(s) {
+    var live = s.remaining + ' lbs left';
+    return s.started > s.remaining
+      ? '<s class="stock-was">' + s.started + '</s> ' + live
+      : live;
+  }
+
+  (function paintBeefStock() {
+    /* Cuts list inside the modal */
+    document.querySelectorAll('.beef-cut-item[data-cut]').forEach(function (row) {
+      var s = beefStockFor(row.getAttribute('data-cut'));
+      if (!s) return;
+      var stockEl = row.querySelector('.beef-cut-stock');
+      var soldEl  = row.querySelector('.beef-cut-sold-badge');
+
+      var stepper = row.querySelector('.beef-cut-stepper');
+      if (s.remaining <= 0) {
+        row.classList.add('beef-cut-item--sold-out');
+        if (stockEl) stockEl.hidden = true;
+        if (soldEl)  soldEl.hidden = false;
+        if (stepper) stepper.hidden = true;
+      } else {
+        row.classList.remove('beef-cut-item--sold-out');
+        if (soldEl)  soldEl.hidden = true;
+        if (stepper) stepper.hidden = false;
+        if (stockEl) { stockEl.hidden = false; stockEl.innerHTML = stockLabelHtml(s); }
+      }
+    });
+
+    /* Price list on the shop card */
+    document.querySelectorAll('.beef-price-row[data-cut]').forEach(function (row) {
+      var s = beefStockFor(row.getAttribute('data-cut'));
+      if (!s) return;
+      var stockEl = row.querySelector('.beef-price-stock');
+      var soldEl  = row.querySelector('.beef-price-sold');
+      if (s.remaining <= 0) {
+        row.classList.add('beef-price-row--soldout');
+        if (stockEl) stockEl.hidden = true;
+        if (soldEl)  soldEl.hidden = false;
+      } else {
+        row.classList.remove('beef-price-row--soldout');
+        if (soldEl)  soldEl.hidden = true;
+        if (stockEl) { stockEl.hidden = false; stockEl.innerHTML = stockLabelHtml(s); }
+      }
+    });
+  })();
+
   var beefCutRows = beefModal ? Array.prototype.slice.call(
     beefModal.querySelectorAll('.beef-cut-item[data-cut]:not(.beef-cut-item--sold-out)')
   ) : [];
@@ -1159,7 +1252,14 @@
     if (plusBtn) {
       plusBtn.onclick = function (e) {
         e.preventDefault(); e.stopPropagation();
-        setBeefQty(row, getBeefQty(row) + 1);
+        var s    = beefStockFor(row.getAttribute('data-cut'));
+        var next = getBeefQty(row) + 1;
+        /* Never let a customer order more of a cut than is in the freezer. */
+        if (s && next > s.remaining) {
+          showToast(s.remaining + ' lbs is all we have of this cut. Get in touch about a larger order.');
+          return;
+        }
+        setBeefQty(row, next);
         updateBeefTotal();
       };
     }
@@ -1200,7 +1300,7 @@
   function closeBeefModal() {
     if (!beefModal) return;
     beefModal.classList.remove('open');
-    document.body.style.overflow = '';
+    releaseScrollLock();
     if (beefVideo) { beefVideo.pause(); beefVideo.currentTime = 0; }
   }
 
@@ -1266,7 +1366,13 @@
 
   /* Escape key closes drawer */
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeCartDrawer(); closeMobileNav(); closePackModal(); }
+    if (e.key === 'Escape') {
+      /* The photo lightbox sits on top of these; let it take the key
+         itself so one press closes only the topmost overlay. */
+      var zoom = document.getElementById('photoZoom');
+      if (zoom && !zoom.hidden) return;
+      closeCartDrawer(); closeMobileNav(); closePackModal(); closeBeefModal();
+    }
   });
 
   /* Item remove + pickup change — event delegation on drawer body */
@@ -1393,7 +1499,7 @@
             var q = eggPricing();
             lines.push('  (Founding membership: ' + money(q.prepayTotal) + ' charged ONCE, not monthly. ' +
               q.dozensPerMonth + ' dozen a month for ' + q.prepayMonths + ' months, ' +
-              q.prepayDozens + ' dozen in total — nothing extra to pack.)');
+              q.prepayDozens + ' dozen in total, nothing extra to pack.)');
           })();
         }
       }
@@ -1404,7 +1510,7 @@
                         hasBeef ? 'Beef Order' : 'Poultry / Eggs Order';
 
       var subtotal  = cartTotal();
-      var delivery  = getDeliveryFee(subtotal);
+      var delivery  = getDeliveryFee();
       var grand     = subtotal + delivery;
       var orderText = lines.join('\n');
       if (delivery > 0) {
@@ -1499,7 +1605,7 @@
         /* Auto-set a placeholder so "Place Order" isn't blocked */
         if (cart.eggs) {
           cart.eggs.pickupDate  = 'tbd';
-          cart.eggs.pickupLabel = 'City Pickup · Atlanta — date TBD';
+          cart.eggs.pickupLabel = 'City Pickup · Atlanta, date TBD';
           cart.eggs.sublabel    = cart.eggs.pickupLabel;
           renderCartItems();
         }
@@ -1649,5 +1755,175 @@
       renderDrawerCalendar();
     });
   }
+
+
+  /* ─── Photo Lightbox ─────────────────────────────────────────────────
+     Tapping a beef cut photo opens it full screen. Zoom by pinching,
+     double-tapping or scrolling; pan by dragging once zoomed. Gestures
+     are handled here rather than left to the browser because the overlay
+     is fixed, and pinching a fixed layer zooms the whole page instead.  */
+  (function photoZoom() {
+    var box     = document.getElementById('photoZoom');
+    var stage   = document.getElementById('photoZoomStage');
+    var img     = document.getElementById('photoZoomImg');
+    var caption = document.getElementById('photoZoomCaption');
+    var closeBtn = document.getElementById('photoZoomClose');
+    if (!box || !stage || !img) return;
+
+    var MIN = 1, MAX = 4;
+    var scale = 1, tx = 0, ty = 0;
+    var lastTap = 0, opener = null;
+    var drag = null, pinch = null;
+
+    function apply() {
+      img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+      stage.classList.toggle('is-zoomed', scale > 1);
+    }
+
+    /* Keep the image from being dragged off screen entirely. */
+    function clamp() {
+      var r = img.getBoundingClientRect();
+      var s = stage.getBoundingClientRect();
+      var maxX = Math.max(0, (r.width  - s.width)  / 2);
+      var maxY = Math.max(0, (r.height - s.height) / 2);
+      tx = Math.min(maxX, Math.max(-maxX, tx));
+      ty = Math.min(maxY, Math.max(-maxY, ty));
+    }
+
+    function setScale(next, originX, originY) {
+      var prev = scale;
+      scale = Math.min(MAX, Math.max(MIN, next));
+      if (scale === prev) return;
+      if (scale === MIN) { tx = 0; ty = 0; }
+      else if (originX !== undefined) {
+        /* Zoom toward the point under the fingers, not the centre. */
+        var s = stage.getBoundingClientRect();
+        var cx = originX - (s.left + s.width  / 2);
+        var cy = originY - (s.top  + s.height / 2);
+        var k  = scale / prev;
+        tx = cx - (cx - tx) * k;
+        ty = cy - (cy - ty) * k;
+      }
+      clamp();
+      apply();
+    }
+
+    function animate(fn) {
+      stage.classList.add('is-animating');
+      fn();
+      setTimeout(function () { stage.classList.remove('is-animating'); }, 240);
+    }
+
+    function open(src, label, from) {
+      opener = from || null;
+      img.src = src;
+      img.alt = label || '';
+      if (caption) caption.textContent = label || '';
+      scale = 1; tx = 0; ty = 0; apply();
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function close() {
+      box.hidden = true;
+      img.removeAttribute('src');
+      releaseScrollLock();
+      if (opener && document.contains(opener)) opener.focus();
+      opener = null;
+    }
+
+    document.querySelectorAll('[data-zoom-src]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        open(btn.getAttribute('data-zoom-src'), btn.getAttribute('data-zoom-label'), btn);
+      });
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    box.addEventListener('click', function (e) {
+      if (e.target === box || e.target === stage) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === '+' || e.key === '=') animate(function () { setScale(scale + 0.5); });
+      if (e.key === '-') animate(function () { setScale(scale - 0.5); });
+      if (e.key === '0') animate(function () { setScale(1); });
+    });
+
+    stage.addEventListener('wheel', function (e) {
+      if (box.hidden) return;
+      e.preventDefault();
+      setScale(scale * (e.deltaY < 0 ? 1.12 : 0.89), e.clientX, e.clientY);
+    }, { passive: false });
+
+    stage.addEventListener('dblclick', function (e) {
+      animate(function () {
+        if (scale > 1) setScale(1);
+        else setScale(2.5, e.clientX, e.clientY);
+      });
+    });
+
+    function dist(t) {
+      var dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    stage.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 2) {
+        drag = null;
+        pinch = { d: dist(e.touches), s: scale };
+      } else if (e.touches.length === 1) {
+        var now = Date.now();
+        if (now - lastTap < 300) {
+          var t = e.touches[0];
+          animate(function () {
+            if (scale > 1) setScale(1); else setScale(2.5, t.clientX, t.clientY);
+          });
+          lastTap = 0;
+          return;
+        }
+        lastTap = now;
+        if (scale > 1) {
+          drag = { x: e.touches[0].clientX - tx, y: e.touches[0].clientY - ty };
+        }
+      }
+    }, { passive: true });
+
+    stage.addEventListener('touchmove', function (e) {
+      if (pinch && e.touches.length === 2) {
+        e.preventDefault();
+        var mid = { x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+                    y: (e.touches[0].clientY + e.touches[1].clientY) / 2 };
+        setScale(pinch.s * (dist(e.touches) / pinch.d), mid.x, mid.y);
+      } else if (drag && e.touches.length === 1) {
+        e.preventDefault();
+        tx = e.touches[0].clientX - drag.x;
+        ty = e.touches[0].clientY - drag.y;
+        clamp(); apply();
+      }
+    }, { passive: false });
+
+    stage.addEventListener('touchend', function (e) {
+      if (e.touches.length === 0) { pinch = null; drag = null; }
+    });
+
+    /* Mouse pan when zoomed in */
+    stage.addEventListener('mousedown', function (e) {
+      if (scale <= 1) return;
+      e.preventDefault();
+      drag = { x: e.clientX - tx, y: e.clientY - ty };
+      stage.classList.add('is-panning');
+    });
+    window.addEventListener('mousemove', function (e) {
+      if (!drag || box.hidden) return;
+      tx = e.clientX - drag.x; ty = e.clientY - drag.y;
+      clamp(); apply();
+    });
+    window.addEventListener('mouseup', function () {
+      drag = null; stage.classList.remove('is-panning');
+    });
+  })();
 
 })();

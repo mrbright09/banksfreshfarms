@@ -9,23 +9,17 @@ var BFF_SUPABASE_URL      = 'YOUR_SUPABASE_PROJECT_URL';
 var BFF_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
 /* ─── Atlanta City Pickup Dates ────────────────────────────────
+   Used ONLY by the one-time single-dozen egg order, where a customer
+   picks City Pickup instead of the farm or the church. Beef and the
+   egg share both collect on the 2nd weekend and do not read this list.
+
    Add the specific Saturdays you'll be in Atlanta each month.
    Format: 'YYYY-MM-DD'  (24-hour local date, no time needed)
-   Update this list whenever you book a trip. Customers will only
-   see these exact dates as selectable — nothing else.
+   Customers see these exact dates and nothing else.
    Leave the array empty if no trips are scheduled yet.          */
 
 var BFF_ATLANTA_DATES = [
   /* Example: '2026-07-12', '2026-08-02' */
-];
-
-/* ─── Savannah City Pickup Dates ────────────────────────────────────────
-   Add the specific Saturdays you'll be in Savannah each month.
-   Format: 'YYYY-MM-DD'  (24-hour local date, no time needed)
-   Leave the array empty if no trips are scheduled yet.                   */
-
-var BFF_SAVANNAH_DATES = [
-  /* Example: '2026-07-19', '2026-08-09' */
 ];
 
 /* ─── Season Offer ─────────────────────────────────────────────────────
@@ -97,6 +91,35 @@ var BFF_EGG_PRICING = {
   }
 };
 
+/* ─── Beef Stock ───────────────────────────────────────────────────────
+   What is actually left in the freezer, by cut. This is the ONLY place
+   beef stock is written down — the shop card, the cuts list and the
+   quantity steppers all read from here.
+
+   Update 'remaining' after an order is confirmed and shipped, not when
+   it is placed. The figure on the site is a claim about real inventory,
+   so it should only move when the meat has actually left.
+
+     started    what the cut started at. Only used to show the drop, as
+                a struck-through figure beside the live one. Set it equal
+                to 'remaining' when you restock and the strike goes away.
+     remaining  pounds left. Set to 0 and the cut shows Sold Out
+                everywhere by itself — nothing else to edit.
+
+   Customers cannot order more than 'remaining' of a cut; the stepper
+   stops there and tells them to get in touch about a larger order.      */
+
+var BFF_BEEF_STOCK = {
+  'ground-beef':   { started: 250, remaining: 125 },
+  'short-ribs':    { started: 50,  remaining: 50  },
+  'chuck-roast':   { started: 40,  remaining: 0   },
+  'ribeye':        { started: 30,  remaining: 0   },
+  't-bone':        { started: 30,  remaining: 0   },
+  'oxtail':        { started: 20,  remaining: 0   },
+  'sirloin-steak': { started: 35,  remaining: 0   },
+  'ny-strip':      { started: 30,  remaining: 0   }
+};
+
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.
    Seasonings are taxable. We collect the combined rate (state + county):
@@ -113,7 +136,7 @@ var BFF_TAX_RATES = {
 };
 
 /* ─── Delivery ─────────────────────────────────────────────────────────
-   Flat $15 delivery fee; waived when order subtotal is $75 or more.    */
+   Flat delivery fee, charged on every order that chooses delivery.
+   There is no free-delivery threshold.                                 */
 
-var BFF_DELIVERY_FEE       = 15;
-var BFF_DELIVERY_FREE_OVER = 75;
+var BFF_DELIVERY_FEE = 15;
