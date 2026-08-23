@@ -28,6 +28,23 @@ var BFF_SAVANNAH_DATES = [
   /* Example: '2026-07-19', '2026-08-09' */
 ];
 
+/* ─── Free Dozen Promotion ─────────────────────────────────────────────
+   Limited-time offer: new Monthly Egg Share subscribers get one extra
+   dozen free on their FIRST pickup only (6 dozen instead of 5).
+
+     active  → set to false to end the promotion immediately
+     endDate → optional last day to sign up, 'YYYY-MM-DD'.
+               Leave '' to run until you set active to false.
+               After this date the offer stops showing on its own.
+
+   Turning this off changes the website copy, the cart, and the order
+   email together — there is nothing else to update.                    */
+
+var BFF_PROMO_FREE_DOZEN = {
+  active:  true,
+  endDate: ''   /* Example: '2026-10-31' */
+};
+
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.
    Seasonings are taxable. We collect the combined rate (state + county):
