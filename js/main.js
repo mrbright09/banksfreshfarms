@@ -105,13 +105,16 @@
       packMonthlyLbl: money(p.monthlyTotal) + '/month · ' + p.dozensPerMonth + ' dozen',
       packMonthlyBtn: 'Start Monthly — ' + money(p.monthlyTotal) + '/mo',
       packFeatQty:    p.dozensPerMonth + ' dozen farm-fresh eggs each month',
-      promoHead:      'Join at ' + money(p.perDozen) + ' per dozen',
-      promoBody:      'Start the Monthly Egg Share at ' + money(p.founding.monthlyTotal) +
-                      ' a month for ' + p.dozensPerMonth + ' dozen farm-fresh eggs—' +
-                      money(p.founding.monthlyTotal / p.dozensPerMonth) + ' a dozen. When this ' +
-                      'founding round closes, the share moves to ' + money(p.upcoming.monthlyTotal) +
-                      ' a month and single dozens to ' + money(p.upcoming.singleDozen) + '.',
-      promoUrgency:   'Limited time — first ' + (window.BFF_FOUNDING_LIMIT || 25) + ' families.'
+      promoHead:      'Join while the hens are laying',
+      promoBody:      'Our hens lay by daylight. The baskets are fullest in spring, ease off ' +
+                      'through July, and drop sharply around the September equinox as the days ' +
+                      'shorten. While the season holds, the Family Subscription is ' +
+                      money(p.founding.monthlyTotal) + ' a month for ' + p.dozensPerMonth +
+                      ' dozen—' + money(p.founding.monthlyTotal / p.dozensPerMonth) +
+                      ' a dozen. After September the share moves to ' +
+                      money(p.upcoming.monthlyTotal) + ' a month and single dozens to ' +
+                      money(p.upcoming.singleDozen) + '.',
+      promoUrgency:   'Enrollment closes at the end of September.'
     };
     Object.keys(txt).forEach(function (id) {
       var el = document.getElementById(id);
