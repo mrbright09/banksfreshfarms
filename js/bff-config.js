@@ -120,19 +120,44 @@ var BFF_BEEF_STOCK = {
   'ny-strip':      { started: 30,  remaining: 0   }
 };
 
-/* ─── Tax Rates ────────────────────────────────────────────────────────
-   Raw meat and eggs are exempt from Georgia state sales tax.
-   Seasonings are taxable. We collect the combined rate (state + county):
-     Farm / Church pickup  → Chatham County 7%
-     Atlanta pickup        → Fulton County 8.9%
-     Savannah beef pickup  → Chatham County 7%
-   Rate applied only when the cart contains taxable items (seasonings).  */
+/* ─── Sales Tax ────────────────────────────────────────────────────────
+   READ THIS BEFORE CHANGING ANYTHING HERE, AND HAVE YOUR ACCOUNTANT
+   CONFIRM IT. These are the rules the site applies, not tax advice.
 
-var BFF_TAX_RATES = {
-  farm:     0.07,
-  church:   0.07,
-  atlanta:  0.089,
-  savannah: 0.07
+   Georgia exempts food for home consumption from the 4% STATE rate.
+   It does NOT exempt it from county and city sales taxes, which still
+   apply to groceries in most Georgia jurisdictions. So eggs and raw
+   beef are taxed here at the LOCAL rate only, not at zero and not at
+   the combined rate. Anything not classed as groceries — seasonings,
+   for instance — is taxed at state plus local.
+
+   The local rates below are the county/city portion ONLY, with the 4%
+   state already removed:
+
+     Chatham County  7.0% combined  =  4% state + 3.0% local
+     Fulton/Atlanta  8.9% combined  =  4% state + 4.9% local
+
+   Verify both figures against the Georgia Department of Revenue rate
+   chart for the quarter before you rely on them; local rates change,
+   and Atlanta's differs from the rest of Fulton County.
+
+     collect       master switch. false shows no tax line at all, which
+                   is what you want until you are registered to collect.
+     stateRate     Georgia state rate, applied only to non-grocery items.
+     local         county/city portion by pickup jurisdiction.
+     taxDelivery   Georgia treats delivery as part of the sale price, so
+                   it is taxed at the same rate as what it carries.      */
+
+var BFF_TAX = {
+  collect:     true,
+  stateRate:   0.04,
+  taxDelivery: true,
+  local: {
+    farm:     0.03,   /* Chatham County */
+    church:   0.03,   /* Chatham County */
+    savannah: 0.03,   /* Chatham County */
+    atlanta:  0.049   /* Fulton County + City of Atlanta */
+  }
 };
 
 /* ─── Delivery ─────────────────────────────────────────────────────────

@@ -201,11 +201,73 @@
 
   /* GA sales tax: raw meat + eggs are exempt; seasonings are taxable.
      Rate depends on pickup location (Atlanta 8.9%, farm/church 7%).    */
-  function getTaxRate() {
-    var rates = (typeof BFF_TAX_RATES !== 'undefined') ? BFF_TAX_RATES : { farm: 0.07, church: 0.07, atlanta: 0.089 };
-    var hasAtlantaItem = cart.beef.length > 0 ||
-      (cart.eggs && cart.eggs.pickupType === 'atlanta');
-    return hasAtlantaItem ? rates.atlanta : rates.farm;
+  /* ── Sales tax ──────────────────────────────────────────────────────
+     Georgia exempts food for home consumption from the 4% state rate but
+     not from county and city tax, so groceries here are taxed at the
+     local rate alone. Each line is taxed at the jurisdiction it is
+     actually collected in, because beef and eggs can be picked up in
+     different counties on the same order. See BFF_TAX in bff-config.js. */
+  function taxCfg() {
+    var c = (typeof BFF_TAX !== 'undefined') ? BFF_TAX : {};
+    return {
+      collect:     c.collect !== false,
+      stateRate:   typeof c.stateRate === 'number' ? c.stateRate : 0.04,
+      taxDelivery: c.taxDelivery !== false,
+      local:       c.local || { farm: 0.03, church: 0.03, savannah: 0.03, atlanta: 0.049 }
+    };
+  }
+
+  /* Round half up, the way tax is normally rounded. toFixed alone rounds
+     0.245 down to 0.24, because 0.245 has no exact binary form and lands
+     a hair under; the intermediate toFixed(6) settles that first. */
+  function roundCents(n) { return Math.round((n * 100).toFixed(6)) / 100; }
+
+  function localRate(jurisdiction) {
+    var l = taxCfg().local;
+    return typeof l[jurisdiction] === 'number' ? l[jurisdiction] : l.farm;
+  }
+
+  /* Where the eggs in this cart are actually collected. The share's
+     location is confirmed by email after ordering, so it falls back to
+     the farm rate rather than guessing a city. */
+  function eggJurisdiction() {
+    if (!cart.eggs) return 'farm';
+    return cart.eggs.pickupType || 'farm';
+  }
+
+  function beefJurisdiction() { return cart.beefPickupLocation || 'atlanta'; }
+
+  /* Returns { tax, rate, lines } — rate is only meaningful when the whole
+     cart sits in one jurisdiction, and is used for the cart's label. */
+  function computeTax(delivery) {
+    var cfg = taxCfg();
+    if (!cfg.collect) return { tax: 0, rate: 0, mixed: false };
+
+    var groups = [];
+    var beefTotal = 0;
+    cart.beef.forEach(function (i) { beefTotal += i.sub; });
+    if (beefTotal > 0) groups.push({ amount: beefTotal, jur: beefJurisdiction(), grocery: true });
+    if (cart.eggs)     groups.push({ amount: cart.eggs.total, jur: eggJurisdiction(), grocery: true });
+
+    /* Delivery rides at the rate of the largest group it is carrying. */
+    if (delivery > 0 && cfg.taxDelivery && groups.length) {
+      var biggest = groups.slice().sort(function (a, b) { return b.amount - a.amount; })[0];
+      groups.push({ amount: delivery, jur: biggest.jur, grocery: biggest.grocery });
+    }
+
+    var tax = 0, seen = {};
+    groups.forEach(function (g) {
+      var rate = localRate(g.jur) + (g.grocery ? 0 : cfg.stateRate);
+      tax += g.amount * rate;
+      seen[rate] = true;
+    });
+
+    var rates = Object.keys(seen);
+    return {
+      tax:   roundCents(tax),
+      rate:  rates.length === 1 ? parseFloat(rates[0]) : 0,
+      mixed: rates.length > 1
+    };
   }
 
   /* Delivery fee: a flat charge whenever delivery is chosen. */
@@ -220,11 +282,8 @@
   function updateCartTotals() {
     var subtotal  = cartTotal();
     var delivery  = getDeliveryFee();
-    /* Tax applies only to seasonings (not raw meat/eggs). Since we don't
-       sell seasonings online yet, tax is $0 for all current cart items.
-       When seasonings are added, compute their taxable share and apply getTaxRate(). */
-    var taxable   = 0;
-    var tax       = +(taxable * getTaxRate()).toFixed(2);
+    var taxInfo   = computeTax(delivery);
+    var tax       = taxInfo.tax;
     var grand     = subtotal + delivery + tax;
 
     var subEl      = document.getElementById('cartSubtotalAmt');
@@ -236,6 +295,17 @@
 
     if (subEl)   subEl.textContent   = '$' + subtotal.toFixed(2);
     if (taxEl)   taxEl.textContent   = '$' + tax.toFixed(2);
+
+    /* Name the rate when the whole cart sits in one jurisdiction, so the
+       figure can be checked rather than taken on faith. */
+    var taxLabelEl = document.getElementById('cartTaxLabel');
+    if (taxLabelEl) {
+      taxLabelEl.textContent = taxInfo.mixed
+        ? 'Sales tax (GA, by pickup)'
+        : (taxInfo.rate > 0
+            ? 'Sales tax (GA ' + (taxInfo.rate * 100).toFixed(1).replace(/\.0$/, '') + '%)'
+            : 'Sales tax (GA)');
+    }
     if (totalEl) totalEl.textContent = '$' + grand.toFixed(2);
 
     var fee          = (typeof BFF_DELIVERY_FEE !== 'undefined') ? BFF_DELIVERY_FEE : 15;
@@ -1433,7 +1503,7 @@
 
       /* Change pickup */
       if (btn.getAttribute('data-action') === 'change-pickup') {
-        if (cart.eggs) { cart.eggs.pickupDate = ''; cart.eggs.pickupLabel = ''; }
+        if (cart.eggs) { cart.eggs.pickupDate = ''; cart.eggs.pickupLabel = ''; cart.eggs.pickupType = ''; }
         drawerSelectedPickupDate = null;
         drawerPickupType = null;
         document.querySelectorAll('input[name="drawerPickupType"]').forEach(function (r) { r.checked = false; });
@@ -1511,11 +1581,21 @@
 
       var subtotal  = cartTotal();
       var delivery  = getDeliveryFee();
-      var grand     = subtotal + delivery;
+      var taxInfo   = computeTax(delivery);
+      var tax       = taxInfo.tax;
+      var grand     = subtotal + delivery + tax;
       var orderText = lines.join('\n');
-      if (delivery > 0) {
+      /* Show the breakdown whenever anything sits on top of the subtotal,
+         so the emailed total always reconciles with the cart the customer
+         saw rather than quietly dropping the tax. */
+      if (delivery > 0 || tax > 0) {
         orderText += '\n\nSubtotal:  $' + subtotal.toFixed(2);
-        orderText += '\nDelivery:  $' + delivery.toFixed(2);
+        if (delivery > 0) orderText += '\nDelivery:  $' + delivery.toFixed(2);
+        if (tax > 0) {
+          orderText += '\nSales tax: $' + tax.toFixed(2) +
+            (taxInfo.mixed ? '  (GA, by pickup location)'
+                           : '  (GA ' + (taxInfo.rate * 100).toFixed(1).replace(/\.0$/, '') + '%)');
+        }
       }
       orderText += '\n\nEstimated Total: $' + grand.toFixed(2);
 
@@ -1606,6 +1686,7 @@
         if (cart.eggs) {
           cart.eggs.pickupDate  = 'tbd';
           cart.eggs.pickupLabel = 'City Pickup · Atlanta, date TBD';
+          cart.eggs.pickupType  = 'atlanta';
           cart.eggs.sublabel    = cart.eggs.pickupLabel;
           renderCartItems();
         }
@@ -1626,6 +1707,7 @@
                 var dateStr = MONTHS[captured.getMonth()] + ' ' + captured.getDate() + ', ' + captured.getFullYear();
                 cart.eggs.pickupDate  = s;
                 cart.eggs.pickupLabel = 'City Pickup · Atlanta · Saturday ' + dateStr;
+                cart.eggs.pickupType  = 'atlanta';
                 cart.eggs.sublabel    = cart.eggs.pickupLabel;
               }
               renderDrawerCalendar();
@@ -1691,6 +1773,7 @@
               var dateStr   = MONTHS[captured.getMonth()] + ' ' + captured.getDate() + ', ' + captured.getFullYear();
               cart.eggs.pickupDate  = captured.toISOString().split('T')[0];
               cart.eggs.pickupLabel = typeLabel + ' · ' + dayName + ' ' + dateStr;
+              cart.eggs.pickupType  = drawerPickupType;
               cart.eggs.sublabel    = cart.eggs.pickupLabel;
             }
             renderDrawerCalendar();
