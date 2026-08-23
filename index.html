@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=94" />
+  <link rel="stylesheet" href="css/style.css?v=95" />
 </head>
 <body>
 
@@ -486,22 +486,22 @@
 
       <!-- Product photo strip -->
       <div class="beef-modal-photos">
-        <div class="beef-modal-photo-item">
-          <img src="images/product-ground-beef.jpeg" alt="BFF Ground Beef — vacuum sealed, USDA inspected" />
+        <button type="button" class="beef-modal-photo-item" data-zoom-src="images/product-ground-beef.jpeg" data-zoom-label="Ground Beef">
+          <img src="images/product-ground-beef.jpeg" alt="BFF Ground Beef, vacuum sealed, USDA inspected" />
           <span class="beef-modal-photo-label">Ground Beef</span>
-        </div>
-        <div class="beef-modal-photo-item">
-          <img src="images/product-short-ribs.jpeg" alt="BFF Short Ribs — vacuum sealed, USDA inspected" />
+        </button>
+        <button type="button" class="beef-modal-photo-item" data-zoom-src="images/product-short-ribs.jpeg" data-zoom-label="Short Ribs">
+          <img src="images/product-short-ribs.jpeg" alt="BFF Short Ribs, vacuum sealed, USDA inspected" />
           <span class="beef-modal-photo-label">Short Ribs</span>
-        </div>
-        <div class="beef-modal-photo-item">
-          <img src="images/product-sirloin.jpeg" alt="BFF Sirloin Steak — vacuum sealed, USDA inspected" />
+        </button>
+        <button type="button" class="beef-modal-photo-item" data-zoom-src="images/product-sirloin.jpeg" data-zoom-label="Sirloin Steak">
+          <img src="images/product-sirloin.jpeg" alt="BFF Sirloin Steak, vacuum sealed, USDA inspected" />
           <span class="beef-modal-photo-label">Sirloin Steak</span>
-        </div>
-        <div class="beef-modal-photo-item">
-          <img src="images/product-ny-strip.jpeg" alt="BFF NY Strip Steak — vacuum sealed, USDA inspected" />
+        </button>
+        <button type="button" class="beef-modal-photo-item" data-zoom-src="images/product-ny-strip.jpeg" data-zoom-label="NY Strip">
+          <img src="images/product-ny-strip.jpeg" alt="BFF NY Strip Steak, vacuum sealed, USDA inspected" />
           <span class="beef-modal-photo-label">NY Strip</span>
-        </div>
+        </button>
       </div>
 
       <div class="beef-modal-header">
@@ -636,6 +636,18 @@
     </div>
   </div>
 
+  <!-- PHOTO LIGHTBOX — opened from the beef cut photos, pinch/double-tap to zoom -->
+  <div class="photo-zoom" id="photoZoom" role="dialog" aria-modal="true" aria-label="Product photo" hidden>
+    <button type="button" class="photo-zoom-close" id="photoZoomClose" aria-label="Close photo">&times;</button>
+    <div class="photo-zoom-stage" id="photoZoomStage">
+      <img id="photoZoomImg" alt="" draggable="false" />
+    </div>
+    <div class="photo-zoom-bar">
+      <span class="photo-zoom-caption" id="photoZoomCaption"></span>
+      <span class="photo-zoom-hint" id="photoZoomHint">Double-tap or pinch to zoom</span>
+    </div>
+  </div>
+
   <!-- CART DRAWER BACKDROP -->
   <div class="cart-backdrop" id="cartBackdrop"></div>
 
@@ -741,8 +753,8 @@
 
 
 
-  <script src="js/bff-config.js?v=94"></script>
-  <script src="js/bff-supabase.js?v=94"></script>
-  <script src="js/main.js?v=94"></script>
+  <script src="js/bff-config.js?v=95"></script>
+  <script src="js/bff-supabase.js?v=95"></script>
+  <script src="js/main.js?v=95"></script>
 </body>
 </html>
