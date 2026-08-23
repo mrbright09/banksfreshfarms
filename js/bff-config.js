@@ -9,23 +9,17 @@ var BFF_SUPABASE_URL      = 'YOUR_SUPABASE_PROJECT_URL';
 var BFF_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
 /* ─── Atlanta City Pickup Dates ────────────────────────────────
+   Used ONLY by the one-time single-dozen egg order, where a customer
+   picks City Pickup instead of the farm or the church. Beef and the
+   egg share both collect on the 2nd weekend and do not read this list.
+
    Add the specific Saturdays you'll be in Atlanta each month.
    Format: 'YYYY-MM-DD'  (24-hour local date, no time needed)
-   Update this list whenever you book a trip. Customers will only
-   see these exact dates as selectable — nothing else.
+   Customers see these exact dates and nothing else.
    Leave the array empty if no trips are scheduled yet.          */
 
 var BFF_ATLANTA_DATES = [
   /* Example: '2026-07-12', '2026-08-02' */
-];
-
-/* ─── Savannah City Pickup Dates ────────────────────────────────────────
-   Add the specific Saturdays you'll be in Savannah each month.
-   Format: 'YYYY-MM-DD'  (24-hour local date, no time needed)
-   Leave the array empty if no trips are scheduled yet.                   */
-
-var BFF_SAVANNAH_DATES = [
-  /* Example: '2026-07-19', '2026-08-09' */
 ];
 
 /* ─── Season Offer ─────────────────────────────────────────────────────
@@ -142,7 +136,7 @@ var BFF_TAX_RATES = {
 };
 
 /* ─── Delivery ─────────────────────────────────────────────────────────
-   Flat $15 delivery fee; waived when order subtotal is $75 or more.    */
+   Flat delivery fee, charged on every order that chooses delivery.
+   There is no free-delivery threshold.                                 */
 
-var BFF_DELIVERY_FEE       = 15;
-var BFF_DELIVERY_FREE_OVER = 75;
+var BFF_DELIVERY_FEE = 15;

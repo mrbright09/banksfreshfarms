@@ -21,6 +21,25 @@
     return new Date(year, month, 1 + offset + 7);   /* 2nd occurrence */
   }
 
+  /* Both weekend days of the 2nd weekend, in date order. Beef pickups use
+     the same run as the egg share, so a customer buying both collects
+     everything on one trip. */
+  function getPickupWeekendDates(count) {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var earliest = new Date(today.getTime() + 5 * 86400000);
+    var out = [], year = today.getFullYear(), month = today.getMonth();
+    for (var m = 0; m < 24 && out.length < count; m++) {
+      var y  = year + Math.floor((month + m) / 12);
+      var mo = (month + m) % 12;
+      ['sat', 'sun'].forEach(function (day) {
+        if (out.length >= count) return;
+        var d = secondWeekendDate(y, mo, EGG_PICKUP_DAYS[day]); d.setHours(0,0,0,0);
+        if (d >= earliest) out.push({ date: d, day: day });
+      });
+    }
+    return out;
+  }
+
   function getEggSubDates(dayPref, count) {
     var weekday = EGG_PICKUP_DAYS[dayPref];
     if (weekday === undefined) return [];
@@ -176,19 +195,18 @@
     return hasAtlantaItem ? rates.atlanta : rates.farm;
   }
 
-  /* Delivery fee: flat fee unless subtotal meets free threshold. */
-  function getDeliveryFee(subtotal) {
-    var fee      = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
-    var freeOver = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
-    var toggle   = document.getElementById('cartDeliveryToggle');
+  /* Delivery fee: a flat charge whenever delivery is chosen. */
+  function getDeliveryFee() {
+    var fee    = (typeof BFF_DELIVERY_FEE !== 'undefined') ? BFF_DELIVERY_FEE : 15;
+    var toggle = document.getElementById('cartDeliveryToggle');
     if (!toggle || !toggle.checked) return 0;
-    return subtotal >= freeOver ? 0 : fee;
+    return fee;
   }
 
   /* Recompute and write all totals to the cart drawer footer. */
   function updateCartTotals() {
     var subtotal  = cartTotal();
-    var delivery  = getDeliveryFee(subtotal);
+    var delivery  = getDeliveryFee();
     /* Tax applies only to seasonings (not raw meat/eggs). Since we don't
        sell seasonings online yet, tax is $0 for all current cart items.
        When seasonings are added, compute their taxable share and apply getTaxRate(). */
@@ -207,17 +225,12 @@
     if (taxEl)   taxEl.textContent   = '$' + tax.toFixed(2);
     if (totalEl) totalEl.textContent = '$' + grand.toFixed(2);
 
-    var freeOver     = (typeof BFF_DELIVERY_FREE_OVER !== 'undefined') ? BFF_DELIVERY_FREE_OVER : 75;
-    var fee          = (typeof BFF_DELIVERY_FEE       !== 'undefined') ? BFF_DELIVERY_FEE       : 15;
+    var fee          = (typeof BFF_DELIVERY_FEE !== 'undefined') ? BFF_DELIVERY_FEE : 15;
     var toggle       = document.getElementById('cartDeliveryToggle');
     var wantsDelivery = toggle && toggle.checked;
     if (delivEl) delivEl.style.display = wantsDelivery ? 'flex' : 'none';
-    if (delivAmtEl) {
-      delivAmtEl.textContent = (delivery === 0 && wantsDelivery) ? 'FREE' : '$' + delivery.toFixed(2);
-    }
-    if (noteEl) {
-      noteEl.textContent = subtotal >= freeOver ? 'Free on this order!' : '+$' + fee + ' · free over $' + freeOver;
-    }
+    if (delivAmtEl) delivAmtEl.textContent = '$' + delivery.toFixed(2);
+    if (noteEl) noteEl.textContent = '+$' + fee;
   }
 
   function cartLineCount() {
@@ -405,37 +418,42 @@
       setDiv.appendChild(changeBtn);
       panel.appendChild(setDiv);
     } else {
-      var srcDates = loc === 'savannah'
-        ? (window.BFF_SAVANNAH_DATES || [])
-        : (window.BFF_ATLANTA_DATES  || []);
-      var future = srcDates.filter(function (s) {
-        var p = s.split('-');
-        return new Date(+p[0], +p[1] - 1, +p[2]) >= today;
-      });
       var cityName = loc === 'savannah' ? 'Savannah' : 'Atlanta';
+      var dates    = getPickupWeekendDates(4);
 
-      if (future.length === 0) {
+      var whenHdr = document.createElement('p');
+      whenHdr.className = 'egg-sub-section-label';
+      whenHdr.textContent = 'Pickup is the 2nd weekend of every month. Choose your date:';
+      panel.appendChild(whenHdr);
+
+      if (dates.length === 0) {
         var msg = document.createElement('p');
         msg.className = 'cal-tbd-msg';
         msg.textContent = 'No ' + cityName + ' dates scheduled yet. Place your order and we\'ll reach out to confirm pickup.';
         panel.appendChild(msg);
         cart.beefPickup = { date: 'tbd', label: cityName + ' Pickup, date TBD' };
       } else {
-        future.forEach(function (s) {
-          var p    = s.split('-');
-          var date = new Date(+p[0], +p[1] - 1, +p[2]);
-          var btn  = document.createElement('button');
+        dates.forEach(function (item) {
+          var dayName = item.day === 'sat' ? 'Saturday' : 'Sunday';
+          var d       = item.date;
+          var btn     = document.createElement('button');
           btn.type = 'button';
           btn.className = 'cal-atlanta-date';
-          btn.textContent = MONTHS[date.getMonth()].slice(0,3) + ' ' + date.getDate() + ', ' + date.getFullYear();
-          (function (dateStr, dateObj) {
+          btn.textContent = dayName + ' ' + MONTHS[d.getMonth()].slice(0,3) + ' ' +
+            d.getDate() + ', ' + d.getFullYear();
+          (function (dateObj, name) {
             btn.addEventListener('click', function () {
-              var label = cityName + ' Pickup · Sat ' +
-                MONTHS[dateObj.getMonth()] + ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear();
-              cart.beefPickup = { date: dateStr, label: label };
+              var dateStr = dateObj.getFullYear() + '-' + pad2(dateObj.getMonth()+1) +
+                '-' + pad2(dateObj.getDate());
+              cart.beefPickup = {
+                date: dateStr,
+                label: cityName + ' Pickup · ' + name + ' ' + MONTHS[dateObj.getMonth()] +
+                       ' ' + dateObj.getDate() + ', ' + dateObj.getFullYear()
+              };
+              saveCart();
               renderCartItems();
             });
-          })(s, date);
+          })(d, dayName);
           panel.appendChild(btn);
         });
       }
@@ -1473,7 +1491,7 @@
                         hasBeef ? 'Beef Order' : 'Poultry / Eggs Order';
 
       var subtotal  = cartTotal();
-      var delivery  = getDeliveryFee(subtotal);
+      var delivery  = getDeliveryFee();
       var grand     = subtotal + delivery;
       var orderText = lines.join('\n');
       if (delivery > 0) {
