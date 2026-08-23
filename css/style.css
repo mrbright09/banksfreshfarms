@@ -2799,16 +2799,19 @@ ul  { list-style: none; }
 /* ── Free-dozen promotion ─────────────────────────────────────── */
 
 /* Compact flag on the shop card */
+/* Sits on .shop-card-body (--bg-card-light, a light tan), so every
+   value here is dark-on-light. Do not reuse the cream/gold text colors
+   from the dark sections — they vanish against this panel. */
 .promo-flag {
   display: flex;
   align-items: center;
   gap: 9px;
   flex-wrap: wrap;
   margin: 0 0 16px;
-  padding: 10px 12px;
-  border: 1px dashed rgba(200,146,42,0.5);
+  padding: 11px 12px;
+  border: 1px dashed rgba(60,32,10,0.42);
   border-radius: 7px;
-  background: rgba(200,146,42,0.08);
+  background: rgba(255,250,240,0.42);
 }
 .promo-flag[hidden] { display: none; }
 .promo-flag-tag {
@@ -2818,7 +2821,7 @@ ul  { list-style: none; }
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--charcoal);
+  color: #2A1607;
   background: var(--gold);
   padding: 3px 8px;
   border-radius: 3px;
@@ -2826,10 +2829,13 @@ ul  { list-style: none; }
 .promo-flag-text {
   font-family: 'Lato', sans-serif;
   font-size: 12.5px;
-  line-height: 1.45;
-  color: var(--cream-muted);
+  line-height: 1.5;
+  color: rgba(26,15,10,0.82);
 }
-.promo-flag-text strong { color: var(--gold); font-weight: 700; }
+.promo-flag-text strong {
+  color: #4A2408;
+  font-weight: 700;
+}
 
 /* Fuller banner inside the pack modal */
 .promo-banner {

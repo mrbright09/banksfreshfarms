@@ -45,6 +45,27 @@ var BFF_PROMO_FREE_DOZEN = {
   endDate: ''   /* Example: '2026-10-31' */
 };
 
+/* ─── Egg Pricing ──────────────────────────────────────────────────────
+   Two price sets. Which one the website uses is decided entirely by
+   BFF_PROMO_FREE_DOZEN above — you do not edit anything here to switch.
+
+     promo     → while the free-dozen offer is running
+                 $5/dozen one-time. Monthly is 4 dozen paid at $5
+                 plus the 5th free, so $20 for 5 dozen.
+
+     standard  → once the offer ends
+                 $6/dozen one-time. Monthly is $5/dozen for all five,
+                 so $25 for 5 dozen — still $1 under the one-time price.
+
+   IMPORTANT: ending the promo raises prices on the live site the moment
+   it takes effect. Existing subscribers are not repriced automatically —
+   that is a conversation you have with them directly.                   */
+
+var BFF_EGG_PRICING = {
+  promo:    { singleDozen: 5, monthlyTotal: 20 },
+  standard: { singleDozen: 6, monthlyTotal: 25 }
+};
+
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.
    Seasonings are taxable. We collect the combined rate (state + county):
