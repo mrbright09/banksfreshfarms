@@ -28,20 +28,30 @@ var BFF_SAVANNAH_DATES = [
   /* Example: '2026-07-19', '2026-08-09' */
 ];
 
-/* ─── Founding Member Offer ────────────────────────────────────────────
-   A limited introductory period. While it runs, the website shows the
-   founding rates below and flags the monthly share as limited time.
-   Turning it off switches every price to the upcoming rates and removes
-   the offer copy — website, cart and order email together.
+/* ─── Season Offer ─────────────────────────────────────────────────────
+   Enrollment at the season rate, open until the end of September.
 
-     active  → set to false to end the founding offer immediately
-     endDate → optional last day to sign up, 'YYYY-MM-DD'.
-               Leave '' to run until you set active to false.
-               After this date the offer stops showing on its own.       */
+   The reason is the flock, not a sales tactic: hens lay by daylight.
+   Production peaks in spring and early summer, declines steadily from
+   July, and falls off sharply around the September equinox as daylight
+   shortens. The offer closes with the season it depends on.
+
+   While it runs the website shows the season rates below. When it ends,
+   every price switches to the post-season rates and the offer copy
+   disappears — website, cart and order email together.
+
+     active  → set to false to close enrollment immediately
+     endDate → last day to sign up, 'YYYY-MM-DD'. The offer stops showing
+               by itself after this date, so the "closes at the end of
+               September" line on the site cannot outlive its own claim.
+               Set to '' to run until you flip active to false.
+
+   Change the date here if the season runs long or short — nothing else
+   needs editing.                                                        */
 
 var BFF_PROMO_FREE_DOZEN = {
   active:  true,
-  endDate: ''   /* Example: '2026-10-31' */
+  endDate: '2026-09-30'
 };
 
 /* ─── Egg Pricing ──────────────────────────────────────────────────────
@@ -52,8 +62,8 @@ var BFF_PROMO_FREE_DOZEN = {
 
    Which set is live is decided by BFF_PROMO_FREE_DOZEN above.
 
-     founding  → while the founding offer runs
-                 $5 a dozen one-time, $20/month for 5 dozen ($4/dozen),
+     founding  → while the season offer runs
+                 $5 a dozen one-time, $20/month for 5 dozen ($4/dozen).
                  A $120 six-month prepaid membership is defined below
                  but is NOT currently on the storefront.
 
@@ -64,7 +74,7 @@ var BFF_PROMO_FREE_DOZEN = {
    be switched back on without re-deriving its numbers. Nothing on the
    storefront reads them while that plan is off.
 
-   IMPORTANT: ending the founding offer raises prices on the live site
+   IMPORTANT: ending the season offer raises prices on the live site
    the moment it takes effect. Existing members are not repriced
    automatically — that is a conversation you have with them directly.   */
 
@@ -82,9 +92,6 @@ var BFF_EGG_PRICING = {
     dozensPerMonth: 5
   }
 };
-
-/* How many founding memberships are offered. Shown on the offer card. */
-var BFF_FOUNDING_LIMIT = 25;
 
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.
