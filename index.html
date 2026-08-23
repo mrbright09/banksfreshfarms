@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=92" />
+  <link rel="stylesheet" href="css/style.css?v=93" />
 </head>
 <body>
 
@@ -195,43 +195,51 @@
           <h3 class="shop-card-title">Grass Fed Angus Beef</h3>
           <p class="shop-card-desc">Premium pasture-raised Black Angus beef. Atlanta or Savannah pickup · Priced per pound.</p>
           <ul class="beef-price-list">
-            <li class="beef-price-row">
+            <li class="beef-price-row" data-cut="ground-beef">
               <span class="beef-price-cut">Ground Beef</span>
               <span class="beef-price-stock"><s class="stock-was">250</s> 125 lbs left</span>
+              <span class="beef-price-sold" hidden>Sold Out</span>
               <span class="beef-price-amt">$10.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row">
+            <li class="beef-price-row" data-cut="short-ribs">
               <span class="beef-price-cut">Short Ribs</span>
               <span class="beef-price-stock">50 lbs left</span>
+              <span class="beef-price-sold" hidden>Sold Out</span>
               <span class="beef-price-amt">$13.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row beef-price-row--soldout">
+            <li class="beef-price-row beef-price-row--soldout" data-cut="chuck-roast">
               <span class="beef-price-cut">Chuck Roast</span>
+              <span class="beef-price-stock" hidden></span>
               <span class="beef-price-sold">Sold Out</span>
               <span class="beef-price-amt">$12.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row beef-price-row--soldout">
+            <li class="beef-price-row beef-price-row--soldout" data-cut="ribeye">
               <span class="beef-price-cut">Ribeye</span>
+              <span class="beef-price-stock" hidden></span>
               <span class="beef-price-sold">Sold Out</span>
               <span class="beef-price-amt">$22.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row beef-price-row--soldout">
+            <li class="beef-price-row beef-price-row--soldout" data-cut="t-bone">
               <span class="beef-price-cut">T-Bone</span>
+              <span class="beef-price-stock" hidden></span>
               <span class="beef-price-sold">Sold Out</span>
               <span class="beef-price-amt">$22.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row beef-price-row--soldout">
+            <li class="beef-price-row beef-price-row--soldout" data-cut="oxtail">
               <span class="beef-price-cut">Oxtail</span>
+              <span class="beef-price-stock" hidden></span>
               <span class="beef-price-sold">Sold Out</span>
               <span class="beef-price-amt">$24.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row beef-price-row--soldout">
+            <li class="beef-price-row beef-price-row--soldout" data-cut="sirloin-steak">
               <span class="beef-price-cut">Sirloin Steak</span>
+              <span class="beef-price-stock" hidden></span>
               <span class="beef-price-sold">Sold Out</span>
               <span class="beef-price-amt">$17.99<span class="beef-price-unit">/lb</span></span>
             </li>
-            <li class="beef-price-row beef-price-row--soldout">
+            <li class="beef-price-row beef-price-row--soldout" data-cut="ny-strip">
               <span class="beef-price-cut">NY Strip</span>
+              <span class="beef-price-stock" hidden></span>
               <span class="beef-price-sold">Sold Out</span>
               <span class="beef-price-amt">$21.99<span class="beef-price-unit">/lb</span></span>
             </li>
@@ -505,55 +513,105 @@
         <li class="beef-cut-item" data-cut="ground-beef" data-price="10.99">
           <div class="beef-cut-name-wrap">
             <span class="beef-cut-name">Ground Beef</span>
-            <span class="beef-cut-stock"><s class="stock-was">250</s> 125 lbs left</span>
+            <span class="beef-cut-stock" hidden></span>
           </div>
-          <div class="beef-cut-stepper">
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
             <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
             <span class="beef-stepper-qty">0</span>
             <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
           </div>
           <span class="beef-cut-price">$10.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--sold-out" data-cut="chuck-roast" data-price="12.99">
-          <span class="beef-cut-name">Chuck Roast</span>
-          <span class="beef-cut-sold-badge">Sold Out</span>
+        <li class="beef-cut-item" data-cut="chuck-roast" data-price="12.99">
+          <div class="beef-cut-name-wrap">
+            <span class="beef-cut-name">Chuck Roast</span>
+            <span class="beef-cut-stock" hidden></span>
+          </div>
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$12.99<span class="beef-cut-unit">/lb</span></span>
         </li>
         <li class="beef-cut-item" data-cut="short-ribs" data-price="13.99">
           <div class="beef-cut-name-wrap">
             <span class="beef-cut-name">Short Ribs</span>
-            <span class="beef-cut-stock">50 lbs left</span>
+            <span class="beef-cut-stock" hidden></span>
           </div>
-          <div class="beef-cut-stepper">
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
             <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
             <span class="beef-stepper-qty">0</span>
             <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
           </div>
           <span class="beef-cut-price">$13.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--sold-out" data-cut="ribeye" data-price="22.99">
-          <span class="beef-cut-name">Ribeye</span>
-          <span class="beef-cut-sold-badge">Sold Out</span>
+        <li class="beef-cut-item" data-cut="ribeye" data-price="22.99">
+          <div class="beef-cut-name-wrap">
+            <span class="beef-cut-name">Ribeye</span>
+            <span class="beef-cut-stock" hidden></span>
+          </div>
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$22.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--sold-out" data-cut="t-bone" data-price="22.99">
-          <span class="beef-cut-name">T-Bone</span>
-          <span class="beef-cut-sold-badge">Sold Out</span>
+        <li class="beef-cut-item" data-cut="t-bone" data-price="22.99">
+          <div class="beef-cut-name-wrap">
+            <span class="beef-cut-name">T-Bone</span>
+            <span class="beef-cut-stock" hidden></span>
+          </div>
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$22.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--sold-out beef-cut-item--featured" data-cut="oxtail" data-price="24.99">
-          <span class="beef-cut-name">Oxtail</span>
-          <span class="beef-cut-sold-badge">Sold Out</span>
+        <li class="beef-cut-item beef-cut-item--featured" data-cut="oxtail" data-price="24.99">
+          <div class="beef-cut-name-wrap">
+            <span class="beef-cut-name">Oxtail</span>
+            <span class="beef-cut-stock" hidden></span>
+          </div>
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$24.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--sold-out" data-cut="sirloin-steak" data-price="17.99">
-          <span class="beef-cut-name">Sirloin Steak</span>
-          <span class="beef-cut-sold-badge">Sold Out</span>
+        <li class="beef-cut-item" data-cut="sirloin-steak" data-price="17.99">
+          <div class="beef-cut-name-wrap">
+            <span class="beef-cut-name">Sirloin Steak</span>
+            <span class="beef-cut-stock" hidden></span>
+          </div>
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$17.99<span class="beef-cut-unit">/lb</span></span>
         </li>
-        <li class="beef-cut-item beef-cut-item--sold-out" data-cut="ny-strip" data-price="21.99">
-          <span class="beef-cut-name">NY Strip</span>
-          <span class="beef-cut-sold-badge">Sold Out</span>
+        <li class="beef-cut-item" data-cut="ny-strip" data-price="21.99">
+          <div class="beef-cut-name-wrap">
+            <span class="beef-cut-name">NY Strip</span>
+            <span class="beef-cut-stock" hidden></span>
+          </div>
+          <span class="beef-cut-sold-badge" hidden>Sold Out</span>
+          <div class="beef-cut-stepper" hidden>
+            <button type="button" class="beef-stepper-btn" data-action="minus">−</button>
+            <span class="beef-stepper-qty">0</span>
+            <button type="button" class="beef-stepper-btn" data-action="plus">+</button>
+          </div>
           <span class="beef-cut-price">$21.99<span class="beef-cut-unit">/lb</span></span>
         </li>
       </ul>
@@ -683,8 +741,8 @@
 
 
 
-  <script src="js/bff-config.js?v=92"></script>
-  <script src="js/bff-supabase.js?v=92"></script>
-  <script src="js/main.js?v=92"></script>
+  <script src="js/bff-config.js?v=93"></script>
+  <script src="js/bff-supabase.js?v=93"></script>
+  <script src="js/main.js?v=93"></script>
 </body>
 </html>

@@ -97,6 +97,35 @@ var BFF_EGG_PRICING = {
   }
 };
 
+/* ─── Beef Stock ───────────────────────────────────────────────────────
+   What is actually left in the freezer, by cut. This is the ONLY place
+   beef stock is written down — the shop card, the cuts list and the
+   quantity steppers all read from here.
+
+   Update 'remaining' after an order is confirmed and shipped, not when
+   it is placed. The figure on the site is a claim about real inventory,
+   so it should only move when the meat has actually left.
+
+     started    what the cut started at. Only used to show the drop, as
+                a struck-through figure beside the live one. Set it equal
+                to 'remaining' when you restock and the strike goes away.
+     remaining  pounds left. Set to 0 and the cut shows Sold Out
+                everywhere by itself — nothing else to edit.
+
+   Customers cannot order more than 'remaining' of a cut; the stepper
+   stops there and tells them to get in touch about a larger order.      */
+
+var BFF_BEEF_STOCK = {
+  'ground-beef':   { started: 250, remaining: 125 },
+  'short-ribs':    { started: 50,  remaining: 50  },
+  'chuck-roast':   { started: 40,  remaining: 0   },
+  'ribeye':        { started: 30,  remaining: 0   },
+  't-bone':        { started: 30,  remaining: 0   },
+  'oxtail':        { started: 20,  remaining: 0   },
+  'sirloin-steak': { started: 35,  remaining: 0   },
+  'ny-strip':      { started: 30,  remaining: 0   }
+};
+
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.
    Seasonings are taxable. We collect the combined rate (state + county):

@@ -1107,6 +1107,68 @@
   var beefCtaTotal      = document.getElementById('beefCtaTotal');
   var beefOrderTotalAmt = document.getElementById('beefOrderTotalAmt');
 
+  /* ── Beef stock ────────────────────────────────────────────────────
+     Paint both stock lists from BFF_BEEF_STOCK before anything reads
+     the DOM, so a cut that has sold out in config is already marked
+     sold out by the time beefCutRows is collected below. */
+  function beefStockFor(cut) {
+    var all = window.BFF_BEEF_STOCK || {};
+    var s   = all[cut];
+    /* A cut with no entry is treated as sold out. Failing this way round
+       means a missing or mistyped config never sells meat we cannot
+       account for. */
+    if (!s || typeof s.remaining !== 'number') return { started: 0, remaining: 0 };
+    return { started: typeof s.started === 'number' ? s.started : s.remaining,
+             remaining: s.remaining };
+  }
+
+  function stockLabelHtml(s) {
+    var live = s.remaining + ' lbs left';
+    return s.started > s.remaining
+      ? '<s class="stock-was">' + s.started + '</s> ' + live
+      : live;
+  }
+
+  (function paintBeefStock() {
+    /* Cuts list inside the modal */
+    document.querySelectorAll('.beef-cut-item[data-cut]').forEach(function (row) {
+      var s = beefStockFor(row.getAttribute('data-cut'));
+      if (!s) return;
+      var stockEl = row.querySelector('.beef-cut-stock');
+      var soldEl  = row.querySelector('.beef-cut-sold-badge');
+
+      var stepper = row.querySelector('.beef-cut-stepper');
+      if (s.remaining <= 0) {
+        row.classList.add('beef-cut-item--sold-out');
+        if (stockEl) stockEl.hidden = true;
+        if (soldEl)  soldEl.hidden = false;
+        if (stepper) stepper.hidden = true;
+      } else {
+        row.classList.remove('beef-cut-item--sold-out');
+        if (soldEl)  soldEl.hidden = true;
+        if (stepper) stepper.hidden = false;
+        if (stockEl) { stockEl.hidden = false; stockEl.innerHTML = stockLabelHtml(s); }
+      }
+    });
+
+    /* Price list on the shop card */
+    document.querySelectorAll('.beef-price-row[data-cut]').forEach(function (row) {
+      var s = beefStockFor(row.getAttribute('data-cut'));
+      if (!s) return;
+      var stockEl = row.querySelector('.beef-price-stock');
+      var soldEl  = row.querySelector('.beef-price-sold');
+      if (s.remaining <= 0) {
+        row.classList.add('beef-price-row--soldout');
+        if (stockEl) stockEl.hidden = true;
+        if (soldEl)  soldEl.hidden = false;
+      } else {
+        row.classList.remove('beef-price-row--soldout');
+        if (soldEl)  soldEl.hidden = true;
+        if (stockEl) { stockEl.hidden = false; stockEl.innerHTML = stockLabelHtml(s); }
+      }
+    });
+  })();
+
   var beefCutRows = beefModal ? Array.prototype.slice.call(
     beefModal.querySelectorAll('.beef-cut-item[data-cut]:not(.beef-cut-item--sold-out)')
   ) : [];
@@ -1159,7 +1221,14 @@
     if (plusBtn) {
       plusBtn.onclick = function (e) {
         e.preventDefault(); e.stopPropagation();
-        setBeefQty(row, getBeefQty(row) + 1);
+        var s    = beefStockFor(row.getAttribute('data-cut'));
+        var next = getBeefQty(row) + 1;
+        /* Never let a customer order more of a cut than is in the freezer. */
+        if (s && next > s.remaining) {
+          showToast(s.remaining + ' lbs is all we have of this cut. Get in touch about a larger order.');
+          return;
+        }
+        setBeefQty(row, next);
         updateBeefTotal();
       };
     }
