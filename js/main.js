@@ -45,7 +45,7 @@
     return results;
   }
 
-  var EGG_SUB_PLANS = ['monthly', '6-month', '12-month'];
+  var EGG_SUB_PLANS = ['monthly'];
 
   function saveCart() {
     try { localStorage.setItem('bff_cart', JSON.stringify(cart)); } catch (e) {}
@@ -801,16 +801,8 @@
           eggSublabel = '$5/dozen · One-Time · Pickup TBD';
         } else if (plan === 'monthly') {
           eggTotal = 20;
-          eggLabel = 'Egg Share — Monthly Plan';
+          eggLabel = 'Monthly Egg Share';
           eggSublabel = '$20/mo · 5 dozen/month · $4.00/dozen · Cancel anytime';
-        } else if (plan === '6-month') {
-          eggTotal = 117;
-          eggLabel = 'Egg Share — 6-Month Plan';
-          eggSublabel = '$117 · 5 dozen/month · $3.90/dozen · 22% off';
-        } else if (plan === '12-month') {
-          eggTotal = 228;
-          eggLabel = 'Egg Share — 12-Month Plan';
-          eggSublabel = '$228 · 5 dozen/month · $3.80/dozen · 24% off';
         } else {
           eggLabel = order || 'Egg order';
         }
