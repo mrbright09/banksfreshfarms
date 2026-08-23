@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=84" />
+  <link rel="stylesheet" href="css/style.css?v=85" />
 </head>
 <body>
 
@@ -177,8 +177,8 @@
             </li>
           </ul>
           <div class="promo-flag" id="eggPromoFlag" hidden>
-            <span class="promo-flag-tag">Limited Time</span>
-            <span class="promo-flag-text">Prepay 6 months at $120 &mdash; pay for 4 dozen a month and get a <strong>5th free every month</strong>.</span>
+            <span class="promo-flag-tag">Founding Offer</span>
+            <span class="promo-flag-text" id="promoFlagText">Lock in <strong>$4 per dozen</strong> for six months &mdash; prepay $120 and save $30 on the upcoming rate.</span>
           </div>
           <button class="shop-card-btn" id="shopEggsBtn">Order Eggs</button>
         </div>
@@ -434,28 +434,30 @@
           <div class="pack-card-badge pack-card-badge--featured">Best Value</div>
           <div class="pack-card-icon">🥚🥚</div>
           <h3 class="pack-card-title">Monthly Egg Share</h3>
-          <div class="pack-card-sub">Family Subscription</div>
+          <div class="pack-card-sub">Founding Family Subscription</div>
           <p class="pack-card-desc">Fresh eggs every month without the store run.</p>
           <div class="pack-card-price">
             <span class="pack-price-amount" id="packMonthlyAmt">$4<span class="pack-price-per">/dozen</span></span>
             <span class="pack-price-label" id="packMonthlyLbl">$20/month · 5 dozen</span>
           </div>
           <ul class="pack-card-features">
-            <li id="packMonthlySave">20% off single-dozen pricing</li>
-            <li>2nd weekend &mdash; your pick of Saturday or Sunday</li>
-            <li>Cancel anytime</li>
+            <li id="packFeatQty">5 dozen farm-fresh eggs each month</li>
+            <li>Monthly pickup on the second weekend&mdash;choose Saturday or Sunday</li>
+            <li>Cancel before your next monthly renewal</li>
           </ul>
           <div class="promo-banner" id="eggPromoBanner" hidden>
-            <span class="promo-banner-tag">Limited Time Offer</span>
-            <span class="promo-banner-head">Pay for 4 dozen a month, take home 5</span>
-            <span class="promo-banner-sub">$120 prepays six months: 4 dozen a month with the 5th free every month &mdash; 30 dozen in all, and your rate is locked for the whole term.</span>
-            <span class="promo-banner-extra">After this offer, eggs go to <strong>$6 a dozen</strong> and the share to <strong>$25 a month</strong>.</span>
+            <span class="promo-banner-tag">Founding Member Offer</span>
+            <span class="promo-banner-head" id="promoHead">Lock in $4 per dozen for six months</span>
+            <span class="promo-banner-sub" id="promoBody">Prepay $120 and receive 5 dozen farm-fresh eggs each month for six months&mdash;30 dozen total. You&rsquo;ll save $30 compared with our upcoming $25 monthly subscription rate.</span>
+            <span class="promo-banner-extra" id="promoGuarantee">Your $4-per-dozen price is guaranteed for the full six-month term.</span>
+            <span class="promo-banner-urgency" id="promoUrgency">Limited to the first 25 families.</span>
           </div>
           <div class="pack-sub-tiers">
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
                id="packMonthlyBtn" data-plan="monthly">Start Monthly — $20/mo</button>
             <button type="button" class="pack-card-btn pack-card-btn--tier" hidden
-               id="packPrepayBtn" data-plan="6-month-prepay">Prepay 6 Months — $120 <span class="pack-tier-save">+1 free dozen</span></button>
+               id="packPrepayBtn" data-plan="6-month-prepay">Lock In 6 Months — $120 <span class="pack-tier-save">Save $30</span></button>
+            <p class="pack-terms" id="packPrepayTerms" hidden>Prepaid membership includes 30 dozen eggs distributed as 5 dozen per month for six months. Prepaid purchases are nonrefundable after the first monthly pickup. Membership ends after six months unless the customer actively renews. Future renewals will be offered at the then-current subscription rate.</p>
           </div>
         </div>
 
@@ -680,8 +682,8 @@
 
 
 
-  <script src="js/bff-config.js?v=84"></script>
-  <script src="js/bff-supabase.js?v=84"></script>
-  <script src="js/main.js?v=84"></script>
+  <script src="js/bff-config.js?v=85"></script>
+  <script src="js/bff-supabase.js?v=85"></script>
+  <script src="js/main.js?v=85"></script>
 </body>
 </html>

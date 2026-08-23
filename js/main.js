@@ -50,34 +50,71 @@
     return new Date() <= end;
   }
 
-  /* Active price set — promo pricing while the offer runs, standard after. */
+  var FALLBACK_PRICING = {
+    founding: { singleDozen: 5, monthlyTotal: 20, dozensPerMonth: 5, prepayTotal: 120, prepayMonths: 6 },
+    upcoming: { singleDozen: 6, monthlyTotal: 25, dozensPerMonth: 5 }
+  };
+
+  /* Every egg figure the site shows, derived from one config block. */
   function eggPricing() {
-    var cfg = window.BFF_EGG_PRICING || {};
-    var on  = promoActive();
-    var set = on ? cfg.promo : cfg.standard;
-    if (set && typeof set.singleDozen === 'number' && typeof set.monthlyTotal === 'number') return set;
-    return on ? { singleDozen: 5, monthlyTotal: 20 } : { singleDozen: 6, monthlyTotal: 25 };
+    var cfg      = window.BFF_EGG_PRICING || {};
+    var on       = promoActive();
+    var founding = cfg.founding || FALLBACK_PRICING.founding;
+    var upcoming = cfg.upcoming || FALLBACK_PRICING.upcoming;
+    var live     = on ? founding : upcoming;
+    var perMonth = live.dozensPerMonth || 5;
+    var months   = founding.prepayMonths || 6;
+
+    return {
+      founding:      founding,
+      upcoming:      upcoming,
+      singleDozen:   live.singleDozen,
+      monthlyTotal:  live.monthlyTotal,
+      dozensPerMonth: perMonth,
+      perDozen:      live.monthlyTotal / perMonth,
+      prepayTotal:   founding.prepayTotal,
+      prepayMonths:  months,
+      prepayDozens:  perMonth * months,
+      prepayPerDozen: founding.prepayTotal / (perMonth * months),
+      /* Saving is measured against the upcoming monthly rate, never typed. */
+      prepaySaving:  (upcoming.monthlyTotal * months) - founding.prepayTotal
+    };
   }
 
-  /* Paint prices and promo copy from config so the two never disagree. */
-  (function initPricing() {
-    var on    = promoActive();
-    var price = eggPricing();
-    var perDz = price.monthlyTotal / 5;
-    var money = function (n) { return '$' + (n % 1 ? n.toFixed(2) : n); };
+  function money(n) { return '$' + (n % 1 ? n.toFixed(2) : n); }
 
-    ['eggPromoFlag', 'eggPromoBanner'].forEach(function (id) {
+  /* Paint every price and every offer sentence from that one source. */
+  (function initPricing() {
+    var on = promoActive();
+    var p  = eggPricing();
+
+    ['eggPromoFlag', 'eggPromoBanner', 'packPrepayBtn', 'packPrepayTerms'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = !on;
     });
 
     var txt = {
-      shopSingleAmt:  money(price.singleDozen),
-      shopMonthlyAmt: money(price.monthlyTotal),
-      packSingleAmt:  money(price.singleDozen),
+      shopSingleAmt:  money(p.singleDozen),
+      shopMonthlyAmt: money(p.monthlyTotal),
+      packSingleAmt:  money(p.singleDozen),
       packSingleLbl:  'per dozen · 12 eggs',
-      packMonthlyLbl: money(price.monthlyTotal) + '/month · 5 dozen',
-      packMonthlyBtn: 'Start Monthly — ' + money(price.monthlyTotal) + '/mo'
+      packMonthlyLbl: money(p.monthlyTotal) + '/month · ' + p.dozensPerMonth + ' dozen',
+      packMonthlyBtn: 'Start Monthly — ' + money(p.monthlyTotal) + '/mo',
+      packFeatQty:    p.dozensPerMonth + ' dozen farm-fresh eggs each month',
+      promoHead:      'Lock in ' + money(p.prepayPerDozen) + ' per dozen for six months',
+      promoBody:      'Prepay ' + money(p.prepayTotal) + ' and receive ' + p.dozensPerMonth +
+                      ' dozen farm-fresh eggs each month for six months—' + p.prepayDozens +
+                      ' dozen total. You’ll save ' + money(p.prepaySaving) +
+                      ' compared with our upcoming ' + money(p.upcoming.monthlyTotal) +
+                      ' monthly subscription rate.',
+      promoGuarantee: 'Your ' + money(p.prepayPerDozen) +
+                      '-per-dozen price is guaranteed for the full six-month term.',
+      promoUrgency:   'Limited to the first ' + (window.BFF_FOUNDING_LIMIT || 25) + ' families.',
+      packPrepayTerms: 'Prepaid membership includes ' + p.prepayDozens + ' dozen eggs distributed as ' +
+                      p.dozensPerMonth + ' dozen per month for six months. Prepaid purchases are ' +
+                      'nonrefundable after the first monthly pickup. Membership ends after six months ' +
+                      'unless the customer actively renews. Future renewals will be offered at the ' +
+                      'then-current subscription rate.'
     };
     Object.keys(txt).forEach(function (id) {
       var el = document.getElementById(id);
@@ -85,20 +122,12 @@
     });
 
     var perEl = document.getElementById('packMonthlyAmt');
-    if (perEl) perEl.innerHTML = money(perDz) + '<span class="pack-price-per">/dozen</span>';
+    if (perEl) perEl.innerHTML = money(p.perDozen) + '<span class="pack-price-per">/dozen</span>';
 
-    /* 6-month prepay is part of the limited-time offer only. */
     var prepayBtn = document.getElementById('packPrepayBtn');
     if (prepayBtn) {
-      prepayBtn.hidden = !on;
-      prepayBtn.innerHTML = 'Prepay 6 Months — ' + money(price.monthlyTotal * 6) +
-        ' <span class="pack-tier-save">1 free dozen/mo</span>';
-    }
-
-    var saveEl = document.getElementById('packMonthlySave');
-    if (saveEl) {
-      var pct = Math.round((1 - perDz / price.singleDozen) * 100);
-      saveEl.textContent = pct + '% off single-dozen pricing';
+      prepayBtn.innerHTML = 'Lock In 6 Months — ' + money(p.prepayTotal) +
+        ' <span class="pack-tier-save">Save ' + money(p.prepaySaving) + '</span>';
     }
   })();
 
@@ -831,22 +860,24 @@
         var eggLabel = '';
         var eggSublabel = '';
 
-        var pr    = eggPricing();
-        var perDz = pr.monthlyTotal / 5;
+        var pr = eggPricing();
 
         if (plan === 'single-dozen') {
           eggTotal = eggsQty * EGG_PRICE;
           eggLabel = eggsQty + (eggsQty === 1 ? ' Dozen' : ' Dozen') + ' Pasture-Raised Eggs';
-          eggSublabel = '$' + pr.singleDozen + '/dozen · One-Time · Pickup TBD';
+          eggSublabel = money(pr.singleDozen) + '/dozen · One-Time · Pickup TBD';
         } else if (plan === 'monthly') {
           eggTotal = pr.monthlyTotal;
           eggLabel = 'Monthly Egg Share';
-          eggSublabel = '$' + pr.monthlyTotal + '/mo · 5 dozen/month · $' +
-            perDz.toFixed(2) + '/dozen · Cancel anytime';
+          eggSublabel = money(pr.monthlyTotal) + '/mo · ' + pr.dozensPerMonth +
+            ' dozen a month · ' + money(pr.perDozen) + '/dozen · Billed monthly';
         } else if (plan === '6-month-prepay') {
-          eggTotal = pr.monthlyTotal * 6;
-          eggLabel = 'Monthly Egg Share — 6 Months Prepaid';
-          eggSublabel = '$' + eggTotal + ' upfront · 4 dozen/month + 1 FREE · 5 dozen a month for 6 months · 30 dozen total';
+          /* One-time charge for the whole term — never a recurring $120. */
+          eggTotal = pr.prepayTotal;
+          eggLabel = 'Founding Membership — 6 Months Prepaid';
+          eggSublabel = money(pr.prepayTotal) + ' once · ' + pr.dozensPerMonth +
+            ' dozen a month for ' + pr.prepayMonths + ' months · ' + pr.prepayDozens +
+            ' dozen total · ' + money(pr.prepayPerDozen) + '/dozen locked';
         } else {
           eggLabel = order || 'Egg order';
         }
@@ -1353,7 +1384,12 @@
         eggLine += ' — $' + cart.eggs.total.toFixed(2);
         lines.push(eggLine);
         if (cart.eggs.plan === '6-month-prepay') {
-          lines.push('  (Prepay promo: 4 dozen a month + 1 free = 5 dozen a month, 30 over the term — nothing extra to pack)');
+          (function () {
+            var q = eggPricing();
+            lines.push('  (Founding membership: ' + money(q.prepayTotal) + ' charged ONCE, not monthly. ' +
+              q.dozensPerMonth + ' dozen a month for ' + q.prepayMonths + ' months, ' +
+              q.prepayDozens + ' dozen in total — nothing extra to pack.)');
+          })();
         }
       }
 
