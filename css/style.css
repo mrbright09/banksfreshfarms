@@ -20,6 +20,12 @@
 /* ─── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Any explicit display (flex, grid, block) outranks the browser's own
+   [hidden] rule, so an element with the attribute stays on screen. This
+   makes hidden mean hidden regardless of what the element is laid out
+   with — the seasonal blocks below rely on it. */
+[hidden] { display: none !important; }
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;
@@ -2922,6 +2928,20 @@ ul  { list-style: none; }
   margin: 10px 2px 0;
 }
 .pack-terms[hidden] { display: none; }
+
+/* Stands in for the whole subscription once the season closes. */
+.pack-closed-note {
+  font-family: 'Lato', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--cream-muted);
+  text-align: center;
+  margin: 8px 2px 0;
+  padding: 16px 14px;
+  border: 1px dashed rgba(200,146,42,0.35);
+  border-radius: 8px;
+}
+.pack-closed-note[hidden] { display: none; }
 
 /* Egg subscription panel */
 .egg-sub-section-label {

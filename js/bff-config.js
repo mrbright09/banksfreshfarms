@@ -36,9 +36,11 @@ var BFF_SAVANNAH_DATES = [
    July, and falls off sharply around the September equinox as daylight
    shortens. The offer closes with the season it depends on.
 
-   While it runs the website shows the season rates below. When it ends,
-   every price switches to the post-season rates and the offer copy
-   disappears — website, cart and order email together.
+   The Family Subscription is sold ONLY while this is running. When it
+   ends the subscription comes off the website entirely — price, features,
+   offer and button — leaving a note that says why, and single dozens
+   move to the post-season price. A subscription still sitting in an old
+   cart is blocked at checkout rather than quietly going through.
 
      active  → set to false to close enrollment immediately
      endDate → last day to sign up, 'YYYY-MM-DD'. The offer stops showing
@@ -68,7 +70,9 @@ var BFF_PROMO_FREE_DOZEN = {
                  but is NOT currently on the storefront.
 
      upcoming  → once the offer ends
-                 $6 a dozen one-time, $25/month for 5 dozen ($5/dozen).
+                 $6 a dozen one-time. monthlyTotal is kept only so the
+                 subscription has a rate to return at next season; it is
+                 not shown anywhere while enrollment is closed.
 
    prepayTotal / prepayMonths are retained so the prepaid membership can
    be switched back on without re-deriving its numbers. Nothing on the
