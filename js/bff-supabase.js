@@ -94,16 +94,6 @@
 
     if (plan === 'monthly') {
       totalPrice = 20;
-    } else if (plan === '6-month') {
-      totalPrice = 120;
-      var d6 = new Date();
-      d6.setMonth(d6.getMonth() + 6);
-      endDate = d6.toISOString().split('T')[0];
-    } else if (plan === '12-month') {
-      totalPrice = 240;
-      var d12 = new Date();
-      d12.setMonth(d12.getMonth() + 12);
-      endDate = d12.toISOString().split('T')[0];
     } else if (plan === 'single-dozen') {
       dozensPerMonth = 1;
       totalPrice     = 5;
