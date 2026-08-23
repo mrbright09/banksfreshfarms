@@ -9,43 +9,34 @@
   var cart = { beef: [], eggs: null, beefPickup: { date: '', label: '' }, beefPickupLocation: 'atlanta' };
 
   /* ─── Egg Subscription Helpers ───────────────────────────────────────── */
-  var EGG_SUB_HOLIDAYS = {
-    '2026-09-07':1,'2026-11-11':1,'2026-11-26':1,'2026-12-25':1,
-    '2027-01-01':1,'2027-01-18':1,'2027-02-15':1,'2027-05-31':1,
-    '2027-07-05':1,'2027-09-06':1,'2027-11-11':1,'2027-11-25':1,
-    '2027-12-24':1,'2028-01-01':1
-  };
-
   function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
-  function resolveEggSubDate(nominalDate) {
-    var d = new Date(nominalDate.getTime()); d.setHours(0,0,0,0);
-    for (var i = 0; i < 10; i++) {
-      var s = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
-      if (EGG_SUB_HOLIDAYS[s] || d.getDay() === 0) { d = new Date(d.getTime() + 86400000); }
-      else { break; }
-    }
-    return d;
+  /* Pickup is the SECOND WEEKEND of each month — subscribers choose
+     Saturday or Sunday and keep that day every month. */
+  var EGG_PICKUP_DAYS = { sat: 6, sun: 0 };
+
+  function secondWeekendDate(year, month, weekday) {
+    var first  = new Date(year, month, 1);
+    var offset = (weekday - first.getDay() + 7) % 7;
+    return new Date(year, month, 1 + offset + 7);   /* 2nd occurrence */
   }
 
-  function getEggSubDates(cadence, count) {
+  function getEggSubDates(dayPref, count) {
+    var weekday = EGG_PICKUP_DAYS[dayPref];
+    if (weekday === undefined) return [];
     var today = new Date(); today.setHours(0,0,0,0);
-    var earliest = new Date(today.getTime() + 5 * 86400000);
-    var nominalDays = cadence === 'all' ? [15] : [1, 15];
-    var results = []; var year = today.getFullYear(); var month = today.getMonth();
-    for (var m = 0; m < 36 && results.length < count; m++) {
-      var y = year + Math.floor((month + m) / 12);
+    var earliest = new Date(today.getTime() + 5 * 86400000);   /* 5-day lead time */
+    var results = [], year = today.getFullYear(), month = today.getMonth();
+    for (var m = 0; m < 24 && results.length < count; m++) {
+      var y  = year + Math.floor((month + m) / 12);
       var mo = (month + m) % 12;
-      for (var di = 0; di < nominalDays.length && results.length < count; di++) {
-        var nominal = new Date(y, mo, nominalDays[di]); nominal.setHours(0,0,0,0);
-        var resolved = resolveEggSubDate(nominal); resolved.setHours(0,0,0,0);
-        if (resolved >= earliest) results.push({ date: resolved, nominalDay: nominalDays[di] });
-      }
+      var d  = secondWeekendDate(y, mo, weekday); d.setHours(0,0,0,0);
+      if (d >= earliest) results.push({ date: d });
     }
     return results;
   }
 
-  var EGG_SUB_PLANS = ['monthly'];
+  var EGG_SUB_PLANS = ['monthly', '6-month-prepay'];
 
   /* Free-dozen promo — active only while configured on and not past endDate. */
   function promoActive() {
@@ -96,6 +87,14 @@
     var perEl = document.getElementById('packMonthlyAmt');
     if (perEl) perEl.innerHTML = money(perDz) + '<span class="pack-price-per">/dozen</span>';
 
+    /* 6-month prepay is part of the limited-time offer only. */
+    var prepayBtn = document.getElementById('packPrepayBtn');
+    if (prepayBtn) {
+      prepayBtn.hidden = !on;
+      prepayBtn.innerHTML = 'Prepay 6 Months — ' + money(price.monthlyTotal * 6) +
+        ' <span class="pack-tier-save">+1 free dozen</span>';
+    }
+
     var saveEl = document.getElementById('packMonthlySave');
     if (saveEl) {
       var pct = Math.round((1 - perDz / price.singleDozen) * 100);
@@ -120,6 +119,12 @@
         cart.eggs = p.eggs;
         if (cart.eggs && typeof cart.eggs === 'object') {
           if (!('cadence' in cart.eggs)) cart.eggs.cadence = '';
+          /* Old carts stored a 1st/15th cadence; pickup is now a weekend day. */
+          if (cart.eggs.cadence !== 'sat' && cart.eggs.cadence !== 'sun') {
+            cart.eggs.cadence = '';
+            cart.eggs.pickupDate = '';
+            cart.eggs.pickupLabel = '';
+          }
           if (!('ack1'    in cart.eggs)) cart.eggs.ack1    = false;
           if (!('ack2'    in cart.eggs)) cart.eggs.ack2    = false;
         }
@@ -444,18 +449,18 @@
       return;
     }
 
-    /* Cadence toggle */
+    /* Pickup day — second weekend of every month, Saturday or Sunday */
     var cadence = cart.eggs.cadence || '';
     var cadenceHdr = document.createElement('p');
     cadenceHdr.className = 'egg-sub-section-label';
-    cadenceHdr.textContent = 'How would you like your eggs delivered?';
+    cadenceHdr.textContent = 'Pickup is the 2nd weekend of every month. Which day suits you?';
     panel.appendChild(cadenceHdr);
 
     var cadenceTabs = document.createElement('div');
     cadenceTabs.className = 'beef-loc-tabs egg-cadence-tabs';
     [
-      { key: 'split', main: '3 + 2 Split',   detail: '3 dz on the 1st · 2 dz on the 15th' },
-      { key: 'all',   main: 'All at Once',    detail: '5 dz on the 15th each month' }
+      { key: 'sat', main: 'Saturday', detail: '2nd Saturday each month' },
+      { key: 'sun', main: 'Sunday',   detail: '2nd Sunday each month' }
     ].forEach(function (opt) {
       var tab = document.createElement('button');
       tab.type = 'button';
@@ -467,7 +472,6 @@
         cart.eggs.cadence     = opt.key;
         cart.eggs.pickupDate  = '';
         cart.eggs.pickupLabel = '';
-        cart.eggs.ack2        = false;   /* cadence-specific note must be re-read */
         saveCart();
         renderCartItems();
       });
@@ -480,9 +484,8 @@
     /* Acknowledgment checkboxes — must check before a date can be selected */
     var ackLabels = [
       'My eggs arrive farm-fresh and unwashed. I\'ll store them on the counter and refrigerate only after washing.',
-      cadence === 'all'
-        ? 'I receive all 5 dozen on the 15th each month. If my first pickup falls before the 15th, my first delivery is 5 dozen.'
-        : 'My 5 dozen/month is split: 3 dozen on the 1st and 2 dozen on the 15th. If my first pickup is on a 15th, my first delivery is 2 dozen.'
+      'I collect all 5 dozen on the 2nd ' + (cadence === 'sat' ? 'Saturday' : 'Sunday') +
+        ' of each month, and it is up to me to collect them on that day.'
     ];
 
     var dateBtns = [];
@@ -540,29 +543,26 @@
       noMsg.textContent = "No upcoming dates available yet. We'll confirm your first pickup by email after ordering.";
       panel.appendChild(noMsg);
     } else {
+      var dayName = cadence === 'sat' ? 'Saturday' : 'Sunday';
       dates.forEach(function (item) {
-        var qty = cadence === 'all' ? 5 : (item.nominalDay === 1 ? 3 : 2);
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'cal-atlanta-date';
-        btn.innerHTML = MONTHS[item.date.getMonth()].slice(0,3) + ' ' + item.date.getDate() +
-          ', ' + item.date.getFullYear() +
-          ' <span class="egg-date-qty">— ' + qty + ' dz</span>';
-        (function (d, q) {
+        btn.innerHTML = dayName + ' ' + MONTHS[item.date.getMonth()].slice(0,3) + ' ' +
+          item.date.getDate() + ', ' + item.date.getFullYear() +
+          ' <span class="egg-date-qty">— 5 dz</span>';
+        (function (d) {
           btn.addEventListener('click', function () {
-            var cadenceDesc = cart.eggs.cadence === 'all'
-              ? 'All at Once · 5 dz on the 15th'
-              : 'Split · 3 dz on 1st + 2 dz on 15th';
             var dateStr = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
             cart.eggs.pickupDate  = dateStr;
             cart.eggs.freeDozen   = promoActive();
-            cart.eggs.pickupLabel = cadenceDesc + ' · First: ' +
-              MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
-              ' (' + q + ' dz)';
+            cart.eggs.pickupLabel = '2nd ' + dayName + ' each month · First: ' +
+              dayName + ' ' + MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
+              ' (5 dz)';
             saveCart();
             renderCartItems();
           });
-        })(item.date, qty);
+        })(item.date);
         dateBtns.push(btn);
         panel.appendChild(btn);
       });
@@ -867,6 +867,10 @@
           eggSublabel = promoActive()
             ? '$' + pr.monthlyTotal + '/mo · 4 dozen + 1 dozen FREE · 5 dozen/month · Cancel anytime'
             : '$' + pr.monthlyTotal + '/mo · 5 dozen/month · $' + perDz.toFixed(2) + '/dozen · Cancel anytime';
+        } else if (plan === '6-month-prepay') {
+          eggTotal = pr.monthlyTotal * 6;
+          eggLabel = 'Monthly Egg Share — 6 Months Prepaid';
+          eggSublabel = '$' + eggTotal + ' upfront · 5 dozen/month for 6 months · +1 dozen FREE';
         } else {
           eggLabel = order || 'Egg order';
         }
@@ -1351,7 +1355,7 @@
         return;
       }
       if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1 && !cart.eggs.pickupDate) {
-        showToast('Please select a pickup cadence and first date for your egg subscription.');
+        showToast('Please choose your pickup day and first date for your egg subscription.');
         return;
       }
       if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1 && (!cart.eggs.ack1 || !cart.eggs.ack2)) {
@@ -1372,7 +1376,9 @@
         if (cart.eggs.pickupLabel) eggLine += ' · ' + cart.eggs.pickupLabel;
         eggLine += ' — $' + cart.eggs.total.toFixed(2);
         lines.push(eggLine);
-        if (cart.eggs.freeDozen) {
+        if (cart.eggs.plan === '6-month-prepay') {
+          lines.push('  ** PREPAY PROMO: add 1 EXTRA dozen to the first pickup (6 dz that month) **');
+        } else if (cart.eggs.freeDozen) {
           lines.push('  (Promo: 4 dozen + 1 dozen free — 5 dozen total, no extra to pack)');
         }
       }
