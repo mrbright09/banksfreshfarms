@@ -116,7 +116,7 @@
                       'through July, and drop sharply around the September equinox as the days ' +
                       'shorten. While the season holds, the Family Subscription is ' +
                       money(p.founding.monthlyTotal) + ' a month for ' + p.dozensPerMonth +
-                      ' dozen—' + money(p.founding.monthlyTotal / p.dozensPerMonth) +
+                      ' dozen, ' + money(p.founding.monthlyTotal / p.dozensPerMonth) +
                       ' a dozen. After September the share closes for the season and ' +
                       'single dozens go to ' + money(p.upcoming.singleDozen) + '.',
       promoUrgency:   'Enrollment closes at the end of September.'
@@ -294,7 +294,7 @@
 
     cart.beef.forEach(function (item) {
       var beefDetail = '$' + item.price.toFixed(2) + '/lb · Grass Fed Black Angus · ' +
-        (beefPickupConfirmed ? cart.beefPickup.label : 'Pickup — select location & date below');
+        (beefPickupConfirmed ? cart.beefPickup.label : 'Pickup, select location & date below');
       html += '<div class="cart-item" data-item="beef|' + item.name + '">' +
         '<div class="cart-item-row">' +
           '<div class="cart-item-info">' +
@@ -419,7 +419,7 @@
         msg.className = 'cal-tbd-msg';
         msg.textContent = 'No ' + cityName + ' dates scheduled yet. Place your order and we\'ll reach out to confirm pickup.';
         panel.appendChild(msg);
-        cart.beefPickup = { date: 'tbd', label: cityName + ' Pickup — date TBD' };
+        cart.beefPickup = { date: 'tbd', label: cityName + ' Pickup, date TBD' };
       } else {
         future.forEach(function (s) {
           var p    = s.split('-');
@@ -599,7 +599,7 @@
 
     var note = document.createElement('p');
     note.className = 'egg-sub-note';
-    note.textContent = 'Eggs are 1–14 days old at pickup — about 7 on average. ' +
+    note.textContent = 'Eggs are 1–14 days old at pickup, about 7 on average. ' +
       "We'll confirm your pickup location by email before your first date, and reach out directly if a date ever has to change.";
     panel.appendChild(note);
 
@@ -1393,7 +1393,7 @@
             var q = eggPricing();
             lines.push('  (Founding membership: ' + money(q.prepayTotal) + ' charged ONCE, not monthly. ' +
               q.dozensPerMonth + ' dozen a month for ' + q.prepayMonths + ' months, ' +
-              q.prepayDozens + ' dozen in total — nothing extra to pack.)');
+              q.prepayDozens + ' dozen in total, nothing extra to pack.)');
           })();
         }
       }
@@ -1499,7 +1499,7 @@
         /* Auto-set a placeholder so "Place Order" isn't blocked */
         if (cart.eggs) {
           cart.eggs.pickupDate  = 'tbd';
-          cart.eggs.pickupLabel = 'City Pickup · Atlanta — date TBD';
+          cart.eggs.pickupLabel = 'City Pickup · Atlanta, date TBD';
           cart.eggs.sublabel    = cart.eggs.pickupLabel;
           renderCartItems();
         }
