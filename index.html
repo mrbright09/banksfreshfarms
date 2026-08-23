@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=79" />
+  <link rel="stylesheet" href="css/style.css?v=80" />
 </head>
 <body>
 
@@ -168,17 +168,17 @@
             <li class="beef-price-row">
               <span class="beef-price-cut">Single Dozen</span>
               <span class="beef-price-stock">One-time</span>
-              <span class="beef-price-amt">$5<span class="beef-price-unit">/doz</span></span>
+              <span class="beef-price-amt"><span id="shopSingleAmt">$5</span><span class="beef-price-unit">/doz</span></span>
             </li>
             <li class="beef-price-row">
               <span class="beef-price-cut">Monthly Plan</span>
-              <span class="beef-price-stock">20% off</span>
-              <span class="beef-price-amt">$20<span class="beef-price-unit">/mo</span></span>
+              <span class="beef-price-stock" id="shopMonthlyStock">Best value</span>
+              <span class="beef-price-amt"><span id="shopMonthlyAmt">$20</span><span class="beef-price-unit">/mo</span></span>
             </li>
           </ul>
           <div class="promo-flag" id="eggPromoFlag" hidden>
             <span class="promo-flag-tag">Limited Time</span>
-            <span class="promo-flag-text">Monthly Share: pay for 4 dozen, get the <strong>5th dozen free</strong></span>
+            <span class="promo-flag-text">Pay for 4 dozen, get the <strong>5th free</strong> &mdash; and lock in $20/mo before prices rise</span>
           </div>
           <button class="shop-card-btn" id="shopEggsBtn">Order Eggs</button>
         </div>
@@ -411,8 +411,8 @@
           <div class="pack-card-sub">One-Time Purchase</div>
           <p class="pack-card-desc">Fresh eggs, no strings. Add to cart, choose your pickup location and date, and we'll have them ready for you.</p>
           <div class="pack-card-price">
-            <span class="pack-price-amount">$5</span>
-            <span class="pack-price-label">per dozen · 12 eggs</span>
+            <span class="pack-price-amount" id="packSingleAmt">$5</span>
+            <span class="pack-price-label" id="packSingleLbl">per dozen · 12 eggs</span>
           </div>
           <div class="dozen-stepper">
             <button type="button" class="stepper-btn" id="eggsQtyMinus" aria-label="Fewer dozens">&#8722;</button>
@@ -437,22 +437,22 @@
           <div class="pack-card-sub">Family Subscription</div>
           <p class="pack-card-desc">5 dozen a month, split across two pickups &mdash; 3 dozen on the 1st, 2 dozen on the 15th. Always fresh, always farm direct, no store runs required.</p>
           <div class="pack-card-price">
-            <span class="pack-price-amount">$4<span class="pack-price-per">/dozen</span></span>
-            <span class="pack-price-label">$20/month · 5 dozen per month</span>
+            <span class="pack-price-amount" id="packMonthlyAmt">$4<span class="pack-price-per">/dozen</span></span>
+            <span class="pack-price-label" id="packMonthlyLbl">$20/month · 5 dozen per month</span>
           </div>
           <ul class="pack-card-features">
             <li>5 dozen eggs per month</li>
-            <li>20% off single-dozen pricing</li>
+            <li id="packMonthlySave">20% off single-dozen pricing</li>
             <li>Cancel anytime</li>
           </ul>
           <div class="promo-banner" id="eggPromoBanner" hidden>
             <span class="promo-banner-tag">Limited Time Offer</span>
             <span class="promo-banner-head">Your 5th dozen is on us</span>
-            <span class="promo-banner-sub">Pay for 4 dozen at $5 each and we&rsquo;ll add the 5th free &mdash; 5 dozen every month for $20.</span>
+            <span class="promo-banner-sub">Pay for 4 dozen at $5 each and we&rsquo;ll add the 5th free &mdash; 5 dozen every month for $20. When this offer ends, eggs go to $6 a dozen and the share to $25.</span>
           </div>
           <div class="pack-sub-tiers">
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
-               data-plan="monthly">Start Monthly — $20/mo</button>
+               id="packMonthlyBtn" data-plan="monthly">Start Monthly — $20/mo</button>
           </div>
         </div>
 
@@ -698,8 +698,8 @@
 
 
 
-  <script src="js/bff-config.js?v=79"></script>
-  <script src="js/bff-supabase.js?v=79"></script>
-  <script src="js/main.js?v=79"></script>
+  <script src="js/bff-config.js?v=80"></script>
+  <script src="js/bff-supabase.js?v=80"></script>
+  <script src="js/main.js?v=80"></script>
 </body>
 </html>

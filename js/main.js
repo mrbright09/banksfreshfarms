@@ -59,13 +59,50 @@
     return new Date() <= end;
   }
 
-  /* Reveal the promo copy only while the offer is running. */
-  (function initPromo() {
-    if (!promoActive()) return;
+  /* Active price set — promo pricing while the offer runs, standard after. */
+  function eggPricing() {
+    var cfg = window.BFF_EGG_PRICING || {};
+    var on  = promoActive();
+    var set = on ? cfg.promo : cfg.standard;
+    if (set && typeof set.singleDozen === 'number' && typeof set.monthlyTotal === 'number') return set;
+    return on ? { singleDozen: 5, monthlyTotal: 20 } : { singleDozen: 6, monthlyTotal: 25 };
+  }
+
+  /* Paint prices and promo copy from config so the two never disagree. */
+  (function initPricing() {
+    var on    = promoActive();
+    var price = eggPricing();
+    var perDz = price.monthlyTotal / 5;
+    var money = function (n) { return '$' + (n % 1 ? n.toFixed(2) : n); };
+
     ['eggPromoFlag', 'eggPromoBanner'].forEach(function (id) {
       var el = document.getElementById(id);
-      if (el) el.hidden = false;
+      if (el) el.hidden = !on;
     });
+
+    var txt = {
+      shopSingleAmt:  money(price.singleDozen),
+      shopMonthlyAmt: money(price.monthlyTotal),
+      packSingleAmt:  money(price.singleDozen),
+      packSingleLbl:  'per dozen · 12 eggs',
+      packMonthlyLbl: money(price.monthlyTotal) + '/month · 5 dozen per month',
+      packMonthlyBtn: 'Start Monthly — ' + money(price.monthlyTotal) + '/mo'
+    };
+    Object.keys(txt).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = txt[id];
+    });
+
+    var perEl = document.getElementById('packMonthlyAmt');
+    if (perEl) perEl.innerHTML = money(perDz) + '<span class="pack-price-per">/dozen</span>';
+
+    var saveEl = document.getElementById('packMonthlySave');
+    if (saveEl) {
+      var pct = Math.round((1 - perDz / price.singleDozen) * 100);
+      saveEl.textContent = on
+        ? '4 dozen paid + 1 dozen free'
+        : pct + '% off single-dozen pricing';
+    }
   })();
 
   function saveCart() {
@@ -723,7 +760,7 @@
 
   /* ─── Dozen stepper ──────────────────────────────────────── */
   var eggsQty       = 1;
-  var EGG_PRICE     = 5;
+  var EGG_PRICE     = eggPricing().singleDozen;
   var eggsQtyEl     = document.getElementById('eggsQty');
   var eggsTotalEl   = document.getElementById('eggsStepperTotal');
   var eggsOrderBtn  = document.getElementById('eggsOrderBtn');
@@ -817,16 +854,19 @@
         var eggLabel = '';
         var eggSublabel = '';
 
+        var pr    = eggPricing();
+        var perDz = pr.monthlyTotal / 5;
+
         if (plan === 'single-dozen') {
           eggTotal = eggsQty * EGG_PRICE;
           eggLabel = eggsQty + (eggsQty === 1 ? ' Dozen' : ' Dozen') + ' Pasture-Raised Eggs';
-          eggSublabel = '$5/dozen · One-Time · Pickup TBD';
+          eggSublabel = '$' + pr.singleDozen + '/dozen · One-Time · Pickup TBD';
         } else if (plan === 'monthly') {
-          eggTotal = 20;
+          eggTotal = pr.monthlyTotal;
           eggLabel = 'Monthly Egg Share';
           eggSublabel = promoActive()
-            ? '$20/mo · 4 dozen + 1 dozen FREE · 5 dozen/month · Cancel anytime'
-            : '$20/mo · 5 dozen/month · $4.00/dozen · Cancel anytime';
+            ? '$' + pr.monthlyTotal + '/mo · 4 dozen + 1 dozen FREE · 5 dozen/month · Cancel anytime'
+            : '$' + pr.monthlyTotal + '/mo · 5 dozen/month · $' + perDz.toFixed(2) + '/dozen · Cancel anytime';
         } else {
           eggLabel = order || 'Egg order';
         }
