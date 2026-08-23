@@ -28,25 +28,16 @@ var BFF_SAVANNAH_DATES = [
   /* Example: '2026-07-19', '2026-08-09' */
 ];
 
-/* ─── Free Dozen Promotion ─────────────────────────────────────────────
-   Limited-time offer on the 6-MONTH PREPAY plan only: the customer pays
-   for 4 dozen a month and gets a 5th free every month, for six months —
-   24 dozen paid, 6 free, 30 delivered, $120 upfront.
+/* ─── Founding Member Offer ────────────────────────────────────────────
+   A limited introductory period. While it runs, the website shows the
+   founding rates below and offers the 6-month prepaid membership.
+   Turning it off switches every price to the upcoming rates and removes
+   the prepaid option — website copy, cart and order email together.
 
-   Fulfilment is still 5 dozen a month, so there is nothing extra to
-   pack; the free dozen is already inside that $120. It also locks the
-   rate for the whole term, which is the real draw once standard pricing
-   rises. The plain monthly plan gets no free dozen.
-
-   Turning this off also removes the prepay plan from the website.
-
-     active  → set to false to end the promotion immediately
+     active  → set to false to end the founding offer immediately
      endDate → optional last day to sign up, 'YYYY-MM-DD'.
                Leave '' to run until you set active to false.
-               After this date the offer stops showing on its own.
-
-   Turning this off changes the website copy, the cart, and the order
-   email together — there is nothing else to update.                    */
+               After this date the offer stops showing on its own.       */
 
 var BFF_PROMO_FREE_DOZEN = {
   active:  true,
@@ -54,25 +45,46 @@ var BFF_PROMO_FREE_DOZEN = {
 };
 
 /* ─── Egg Pricing ──────────────────────────────────────────────────────
-   Two price sets. Which one the website uses is decided entirely by
-   BFF_PROMO_FREE_DOZEN above — you do not edit anything here to switch.
+   Single source of truth for every egg price on the site. All customer-
+   facing copy — the shop card, the pack modal, the offer card, the cart
+   line and the order email — is generated from these numbers, so there
+   is nowhere else to edit and nothing that can fall out of step.
 
-     promo     → while the free-dozen offer is running
-                 $5/dozen one-time. Monthly is 4 dozen paid at $5
-                 plus the 5th free, so $20 for 5 dozen.
+   Which set is live is decided by BFF_PROMO_FREE_DOZEN above.
 
-     standard  → once the offer ends
-                 $6/dozen one-time. Monthly is $5/dozen for all five,
-                 so $25 for 5 dozen — still $1 under the one-time price.
+     founding  → while the founding offer runs
+                 $5 a dozen one-time, $20/month for 5 dozen ($4/dozen),
+                 and a $120 prepaid membership covering six months.
 
-   IMPORTANT: ending the promo raises prices on the live site the moment
-   it takes effect. Existing subscribers are not repriced automatically —
-   that is a conversation you have with them directly.                   */
+     upcoming  → once the offer ends
+                 $6 a dozen one-time, $25/month for 5 dozen ($5/dozen).
+                 No prepaid membership is sold at these rates.
+
+   The prepaid saving shown on the site is derived, not typed:
+     6 x upcoming monthly ($25) = $150, less the $120 prepaid = $30.
+   Change any number here and that figure follows automatically.
+
+   IMPORTANT: ending the founding offer raises prices on the live site
+   the moment it takes effect. Existing members are not repriced
+   automatically — that is a conversation you have with them directly.   */
 
 var BFF_EGG_PRICING = {
-  promo:    { singleDozen: 5, monthlyTotal: 20 },
-  standard: { singleDozen: 6, monthlyTotal: 25 }
+  founding: {
+    singleDozen:    5,
+    monthlyTotal:   20,
+    dozensPerMonth: 5,
+    prepayTotal:    120,
+    prepayMonths:   6
+  },
+  upcoming: {
+    singleDozen:    6,
+    monthlyTotal:   25,
+    dozensPerMonth: 5
+  }
 };
+
+/* How many founding memberships are offered. Shown on the offer card. */
+var BFF_FOUNDING_LIMIT = 25;
 
 /* ─── Tax Rates ────────────────────────────────────────────────────────
    Raw meat and eggs are exempt from Georgia state sales tax.

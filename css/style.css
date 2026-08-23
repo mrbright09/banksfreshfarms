@@ -1774,9 +1774,13 @@ ul  { list-style: none; }
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 11px 16px;
+  padding: 15px 16px;   /* clears the 44px minimum tap target */
+  min-height: 44px;
   font-size: 11px;
 }
+/* display:flex above outranks the UA [hidden] rule, so hiding the
+   prepaid button needs saying explicitly or it survives the offer. */
+.pack-card-btn--tier[hidden] { display: none; }
 
 .pack-tier-save {
   font-size: 9px;
@@ -1787,6 +1791,14 @@ ul  { list-style: none; }
   padding: 2px 6px;
   border-radius: 10px;
   text-transform: uppercase;
+  white-space: nowrap;   /* badge must never break across lines */
+  flex-shrink: 0;
+}
+/* On the unfilled prepaid button the translucent-white chip has too
+   little contrast, so give it the solid gold treatment instead. */
+.pack-card-btn--tier:not(.pack-card-btn--featured) .pack-tier-save {
+  background: var(--gold);
+  color: #2A1607;
 }
 
 /* Secondary one-time button */
@@ -2886,6 +2898,30 @@ ul  { list-style: none; }
   border-top: 1px solid rgba(200,146,42,0.35);
 }
 .promo-banner-extra strong { color: var(--gold-light); font-weight: 700; }
+.promo-banner-urgency {
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-top: 8px;
+  max-width: 34ch;
+}
+
+/* Prepaid membership terms — small but must stay readable, so it keeps a
+   real line-height and a left-aligned measure rather than centered runt
+   lines like the rest of the offer card. */
+.pack-terms {
+  font-family: 'Lato', sans-serif;
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: var(--cream-muted);
+  opacity: 0.78;
+  text-align: left;
+  margin: 10px 2px 0;
+}
+.pack-terms[hidden] { display: none; }
 
 /* Egg subscription panel */
 .egg-sub-section-label {
