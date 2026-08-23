@@ -92,7 +92,7 @@
     if (prepayBtn) {
       prepayBtn.hidden = !on;
       prepayBtn.innerHTML = 'Prepay 6 Months — ' + money(price.monthlyTotal * 6) +
-        ' <span class="pack-tier-save">6 dozen free</span>';
+        ' <span class="pack-tier-save">1 free dozen/mo</span>';
     }
 
     var saveEl = document.getElementById('packMonthlySave');
@@ -846,7 +846,7 @@
         } else if (plan === '6-month-prepay') {
           eggTotal = pr.monthlyTotal * 6;
           eggLabel = 'Monthly Egg Share — 6 Months Prepaid';
-          eggSublabel = '$' + eggTotal + ' upfront · 5 dozen/month for 6 months · 30 dozen for the price of 24';
+          eggSublabel = '$' + eggTotal + ' upfront · 4 dozen/month + 1 FREE · 5 dozen a month for 6 months · 30 dozen total';
         } else {
           eggLabel = order || 'Egg order';
         }
@@ -1353,7 +1353,7 @@
         eggLine += ' — $' + cart.eggs.total.toFixed(2);
         lines.push(eggLine);
         if (cart.eggs.plan === '6-month-prepay') {
-          lines.push('  (Prepay promo: 30 dozen for the price of 24 — still 5 dozen a month, nothing extra to pack)');
+          lines.push('  (Prepay promo: 4 dozen a month + 1 free = 5 dozen a month, 30 over the term — nothing extra to pack)');
         }
       }
 
