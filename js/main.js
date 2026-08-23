@@ -503,17 +503,14 @@
       noMsg.textContent = "No upcoming dates available yet. We'll confirm your first pickup by email after ordering.";
       panel.appendChild(noMsg);
     } else {
-      var bonus = promoActive() ? 1 : 0;
       dates.forEach(function (item) {
         var qty = cadence === 'all' ? 5 : (item.nominalDay === 1 ? 3 : 2);
-        var firstQty = qty + bonus;   /* free dozen rides on the first pickup */
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'cal-atlanta-date';
         btn.innerHTML = MONTHS[item.date.getMonth()].slice(0,3) + ' ' + item.date.getDate() +
           ', ' + item.date.getFullYear() +
-          ' <span class="egg-date-qty">— ' + firstQty + ' dz</span>' +
-          (bonus ? ' <span class="egg-date-bonus">incl. 1 free</span>' : '');
+          ' <span class="egg-date-qty">— ' + qty + ' dz</span>';
         (function (d, q) {
           btn.addEventListener('click', function () {
             var cadenceDesc = cart.eggs.cadence === 'all'
@@ -521,10 +518,10 @@
               : 'Split · 3 dz on 1st + 2 dz on 15th';
             var dateStr = d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
             cart.eggs.pickupDate  = dateStr;
-            cart.eggs.freeDozen   = bonus === 1;
+            cart.eggs.freeDozen   = promoActive();
             cart.eggs.pickupLabel = cadenceDesc + ' · First: ' +
               MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
-              ' (' + q + ' dz' + (bonus ? ' + 1 FREE' : '') + ')';
+              ' (' + q + ' dz)';
             saveCart();
             renderCartItems();
           });
@@ -828,7 +825,7 @@
           eggTotal = 20;
           eggLabel = 'Monthly Egg Share';
           eggSublabel = promoActive()
-            ? '$20/mo · 5 dozen/month · +1 FREE dozen on your first pickup'
+            ? '$20/mo · 4 dozen + 1 dozen FREE · 5 dozen/month · Cancel anytime'
             : '$20/mo · 5 dozen/month · $4.00/dozen · Cancel anytime';
         } else {
           eggLabel = order || 'Egg order';
@@ -1336,7 +1333,7 @@
         eggLine += ' — $' + cart.eggs.total.toFixed(2);
         lines.push(eggLine);
         if (cart.eggs.freeDozen) {
-          lines.push('  ** PROMO: add 1 FREE dozen to this customer\'s first pickup **');
+          lines.push('  (Promo: 4 dozen + 1 dozen free — 5 dozen total, no extra to pack)');
         }
       }
 
