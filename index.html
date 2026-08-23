@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=87" />
+  <link rel="stylesheet" href="css/style.css?v=89" />
 </head>
 <body>
 
@@ -170,7 +170,7 @@
               <span class="beef-price-stock">One-time</span>
               <span class="beef-price-amt"><span id="shopSingleAmt">$5</span><span class="beef-price-unit">/doz</span></span>
             </li>
-            <li class="beef-price-row">
+            <li class="beef-price-row" id="shopMembershipRow">
               <span class="beef-price-cut">Monthly Plan</span>
               <span class="beef-price-stock" id="shopMonthlyStock">Best value</span>
               <span class="beef-price-amt"><span id="shopMonthlyAmt">$20</span><span class="beef-price-unit">/mo</span></span>
@@ -431,16 +431,16 @@
 
         <!-- EGG SHARE SUBSCRIPTION -->
         <div class="pack-card pack-card--featured">
-          <div class="pack-card-badge pack-card-badge--featured">Best Value</div>
+          <div class="pack-card-badge pack-card-badge--featured" id="packBestValueBadge">Best Value</div>
           <div class="pack-card-icon">🥚🥚</div>
           <h3 class="pack-card-title">Monthly Egg Share</h3>
           <div class="pack-card-sub">Family Subscription</div>
           <p class="pack-card-desc">Fresh eggs every month without the store run.</p>
-          <div class="pack-card-price">
+          <div class="pack-card-price" id="packPriceBlock">
             <span class="pack-price-amount" id="packMonthlyAmt">$4<span class="pack-price-per">/dozen</span></span>
             <span class="pack-price-label" id="packMonthlyLbl">$20/month · 5 dozen</span>
           </div>
-          <ul class="pack-card-features">
+          <ul class="pack-card-features" id="packFeatures">
             <li id="packFeatQty">5 dozen farm-fresh eggs each month</li>
             <li>Monthly pickup on the second weekend&mdash;choose Saturday or Sunday</li>
             <li>Cancel before your next monthly renewal</li>
@@ -448,12 +448,13 @@
           <div class="promo-banner" id="eggPromoBanner" hidden>
             <span class="promo-banner-tag">Open Through September</span>
             <span class="promo-banner-head" id="promoHead">Join while the hens are laying</span>
-            <span class="promo-banner-sub" id="promoBody">Our hens lay by daylight. The baskets are fullest in spring, ease off through July, and drop sharply around the September equinox as the days shorten. While the season holds, the Family Subscription is $20 a month for 5 dozen&mdash;$4 a dozen. After September the share moves to $25 a month and single dozens to $6.</span>
+            <span class="promo-banner-sub" id="promoBody">Our hens lay by daylight. The baskets are fullest in spring, ease off through July, and drop sharply around the September equinox as the days shorten. While the season holds, the Family Subscription is $20 a month for 5 dozen&mdash;$4 a dozen. After September the share closes for the season and single dozens go to $6.</span>
             <span class="promo-banner-urgency" id="promoUrgency">Enrollment closes at the end of September.</span>
           </div>
           <div class="pack-sub-tiers">
             <button type="button" class="pack-card-btn pack-card-btn--tier pack-card-btn--featured"
                id="packMonthlyBtn" data-plan="monthly">Start Monthly — $20/mo</button>
+            <p class="pack-closed-note" id="packClosedNote" hidden>The Family Subscription is closed for the season. Our hens lay by daylight, and production falls through the winter months. Single dozens stay available year-round.</p>
           </div>
         </div>
 
@@ -678,8 +679,8 @@
 
 
 
-  <script src="js/bff-config.js?v=87"></script>
-  <script src="js/bff-supabase.js?v=87"></script>
-  <script src="js/main.js?v=87"></script>
+  <script src="js/bff-config.js?v=89"></script>
+  <script src="js/bff-supabase.js?v=89"></script>
+  <script src="js/main.js?v=89"></script>
 </body>
 </html>

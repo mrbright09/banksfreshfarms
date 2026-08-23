@@ -92,10 +92,16 @@
     var on = promoActive();
     var p  = eggPricing();
 
-    ['eggPromoFlag', 'eggPromoBanner'].forEach(function (id) {
+    /* The subscription is a seasonal product. When enrollment closes,
+       everything that sells it goes with it — price, features, offer and
+       button — leaving a note explaining why rather than a silent gap. */
+    ['eggPromoFlag', 'eggPromoBanner', 'packPriceBlock', 'packFeatures',
+     'packMonthlyBtn', 'shopMembershipRow', 'packBestValueBadge'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = !on;
     });
+    var closed = document.getElementById('packClosedNote');
+    if (closed) closed.hidden = on;
 
     var txt = {
       shopSingleAmt:  money(p.singleDozen),
@@ -111,9 +117,8 @@
                       'shorten. While the season holds, the Family Subscription is ' +
                       money(p.founding.monthlyTotal) + ' a month for ' + p.dozensPerMonth +
                       ' dozen—' + money(p.founding.monthlyTotal / p.dozensPerMonth) +
-                      ' a dozen. After September the share moves to ' +
-                      money(p.upcoming.monthlyTotal) + ' a month and single dozens to ' +
-                      money(p.upcoming.singleDozen) + '.',
+                      ' a dozen. After September the share closes for the season and ' +
+                      'single dozens go to ' + money(p.upcoming.singleDozen) + '.',
       promoUrgency:   'Enrollment closes at the end of September.'
     };
     Object.keys(txt).forEach(function (id) {
@@ -1353,6 +1358,12 @@
       }
       if (cart.eggs && cart.eggs.plan === 'single-dozen' && !cart.eggs.pickupDate) {
         showToast('Please choose a pickup location and date for your eggs.');
+        return;
+      }
+      /* A cart held over from the open season must not place a
+         subscription order once enrollment has closed. */
+      if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1 && !promoActive()) {
+        showToast('The Family Subscription is closed for the season. Please remove it to place your order.');
         return;
       }
       if (cart.eggs && EGG_SUB_PLANS.indexOf(cart.eggs.plan) !== -1 && !cart.eggs.pickupDate) {
