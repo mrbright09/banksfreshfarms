@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=96" />
+  <link rel="stylesheet" href="css/style.css?v=97" />
 </head>
 <body>
 
@@ -244,7 +244,9 @@
               <span class="beef-price-amt">$21.99<span class="beef-price-unit">/lb</span></span>
             </li>
           </ul>
+          <p class="beef-soldout-note" id="beefSoldOutNote" hidden>Every cut is spoken for. The next animal is a few weeks from processing, and the waitlist is offered first.</p>
           <button type="button" class="shop-card-btn" id="beefLearnMoreBtn">Order Beef</button>
+          <button type="button" class="shop-card-btn" id="beefWaitlistBtn" hidden>Join the Beef Waitlist</button>
         </div>
       </div>
 
@@ -632,6 +634,8 @@
           <span class="beef-cta-total-amt" id="beefOrderTotalAmt">$0.00</span>
         </div>
         <button type="button" class="beef-modal-order-btn" id="beefModalOrderBtn">Add to Order</button>
+        <p class="beef-soldout-panel" id="beefSoldOutPanel" hidden>Every cut is sold out. The next animal is a few weeks from processing &mdash; join the waitlist and we&rsquo;ll come to you first.</p>
+        <button type="button" class="beef-modal-order-btn" id="beefModalWaitlistBtn" hidden>Join the Beef Waitlist</button>
       </div>
     </div>
   </div>
@@ -753,8 +757,8 @@
 
 
 
-  <script src="js/bff-config.js?v=96"></script>
-  <script src="js/bff-supabase.js?v=96"></script>
-  <script src="js/main.js?v=96"></script>
+  <script src="js/bff-config.js?v=97"></script>
+  <script src="js/bff-supabase.js?v=97"></script>
+  <script src="js/main.js?v=97"></script>
 </body>
 </html>

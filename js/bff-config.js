@@ -110,8 +110,8 @@ var BFF_EGG_PRICING = {
    stops there and tells them to get in touch about a larger order.      */
 
 var BFF_BEEF_STOCK = {
-  'ground-beef':   { started: 250, remaining: 125 },
-  'short-ribs':    { started: 50,  remaining: 50  },
+  'ground-beef':   { started: 250, remaining: 0   },
+  'short-ribs':    { started: 50,  remaining: 0   },
   'chuck-roast':   { started: 40,  remaining: 0   },
   'ribeye':        { started: 30,  remaining: 0   },
   't-bone':        { started: 30,  remaining: 0   },

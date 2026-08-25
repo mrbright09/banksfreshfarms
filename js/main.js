@@ -1270,6 +1270,63 @@
     });
   })();
 
+  /* When the freezer is empty there is nothing to order, so the beef
+     card and modal switch from selling to collecting names. Driven by
+     the same config as the stock figures. */
+  function beefAllSoldOut() {
+    var cuts = document.querySelectorAll('.beef-cut-item[data-cut]');
+    if (!cuts.length) return false;
+    for (var i = 0; i < cuts.length; i++) {
+      var s = beefStockFor(cuts[i].getAttribute('data-cut'));
+      if (s && s.remaining > 0) return false;
+    }
+    return true;
+  }
+
+  (function paintBeefAvailability() {
+    var out = beefAllSoldOut();
+    [['beefSoldOutNote', out], ['beefWaitlistBtn', out], ['beefLearnMoreBtn', !out],
+     ['beefSoldOutPanel', out], ['beefModalWaitlistBtn', out],
+     ['beefModalOrderBtn', !out]].forEach(function (pair) {
+      var el = document.getElementById(pair[0]);
+      if (el) el.hidden = !pair[1];
+    });
+    var keep = document.querySelector('.beef-keeping-note');
+    if (keep) keep.hidden = out;   /* "buy what suits you" makes no sense with nothing to buy */
+  })();
+
+  /* Waitlist buttons drop the customer into the contact form with the
+     beef enquiry already chosen and a message written for them. */
+  function openBeefWaitlist() {
+    var modal = document.getElementById('beefModal');
+    if (modal && modal.classList.contains('open')) closeBeefModal();
+    var planIn = document.getElementById('contactPlan');
+    if (planIn) { planIn.value = 'beef-waitlist'; planIn.dataset.pickupDate = ''; }
+    setTimeout(function () {
+      var inquiry = document.getElementById('contactInquiry');
+      var message = document.getElementById('contactMessage');
+      if (inquiry) {
+        for (var i = 0; i < inquiry.options.length; i++) {
+          if (inquiry.options[i].text === 'Beef Order') { inquiry.selectedIndex = i; break; }
+        }
+      }
+      if (message && !message.value) {
+        message.value = "Please add me to the beef waitlist and let me know when the next animal is ready.";
+      }
+      var contact = document.getElementById('contact');
+      if (contact) {
+        var nav = document.getElementById('nav');
+        var off = nav ? nav.offsetHeight : 0;
+        window.scrollTo({ top: contact.getBoundingClientRect().top + window.pageYOffset - off - 16,
+                          behavior: 'smooth' });
+      }
+    }, 60);
+  }
+  ['beefWaitlistBtn', 'beefModalWaitlistBtn'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('click', openBeefWaitlist);
+  });
+
   var beefCutRows = beefModal ? Array.prototype.slice.call(
     beefModal.querySelectorAll('.beef-cut-item[data-cut]:not(.beef-cut-item--sold-out)')
   ) : [];

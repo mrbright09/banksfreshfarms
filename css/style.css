@@ -4193,3 +4193,28 @@ button.beef-modal-photo-item:focus-visible {
   .photo-zoom-stage.is-animating img { transition: none; }
   button.beef-modal-photo-item img { transition: none; }
 }
+
+/* Beef sold-out state — shown when no cut has stock left */
+.beef-soldout-note {
+  font-family: 'Lato', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(26,15,10,0.78);
+  text-align: center;
+  margin: 0 0 14px;
+  padding: 11px 12px;
+  border: 1px dashed rgba(60,32,10,0.38);
+  border-radius: 7px;
+  background: rgba(255,250,240,0.4);
+}
+.beef-soldout-panel {
+  font-family: 'Lato', sans-serif;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--cream-muted);
+  text-align: center;
+  margin: 0 0 14px;
+  padding: 14px 14px;
+  border: 1px dashed rgba(200,146,42,0.4);
+  border-radius: 8px;
+}
