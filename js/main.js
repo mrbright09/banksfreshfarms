@@ -1293,6 +1293,31 @@
     });
     var keep = document.querySelector('.beef-keeping-note');
     if (keep) keep.hidden = out;   /* "buy what suits you" makes no sense with nothing to buy */
+    if (!out) return;
+
+    /* Say when the next cuts land, from one config value. With no date
+       set, the copy drops the claim rather than inventing a timeframe. */
+    var when = (typeof BFF_BEEF_NEXT_CUTS === 'string') ? BFF_BEEF_NEXT_CUTS.trim() : '';
+    var noteEl  = document.getElementById('beefSoldOutNote');
+    var panelEl = document.getElementById('beefSoldOutPanel');
+    if (noteEl) {
+      noteEl.textContent = when
+        ? 'Every cut is spoken for. The next cuts are ready in ' + when +
+          ', and the waitlist is offered first.'
+        : 'Every cut is spoken for. Join the waitlist and we\u2019ll tell you the moment the next animal is ready.';
+    }
+    if (panelEl) {
+      panelEl.textContent = when
+        ? 'Every cut is sold out until ' + when + '. It is a long wait, so the waitlist ' +
+          'is how we decide who gets what \u2014 join it and we will come to you first.'
+        : 'Every cut is sold out. Join the waitlist and we will come to you first when the ' +
+          'next animal is ready.';
+    }
+    var waitBtn = document.getElementById('beefWaitlistBtn');
+    var mWaitBtn = document.getElementById('beefModalWaitlistBtn');
+    [waitBtn, mWaitBtn].forEach(function (btn) {
+      if (btn) btn.textContent = when ? 'Join the ' + when + ' Waitlist' : 'Join the Beef Waitlist';
+    });
   })();
 
   /* Waitlist buttons drop the customer into the contact form with the
@@ -1311,7 +1336,10 @@
         }
       }
       if (message && !message.value) {
-        message.value = "Please add me to the beef waitlist and let me know when the next animal is ready.";
+        var when2 = (typeof BFF_BEEF_NEXT_CUTS === 'string') ? BFF_BEEF_NEXT_CUTS.trim() : '';
+        message.value = when2
+          ? 'Please add me to the beef waitlist for the ' + when2 + ' cuts.'
+          : 'Please add me to the beef waitlist and let me know when the next animal is ready.';
       }
       var contact = document.getElementById('contact');
       if (contact) {
