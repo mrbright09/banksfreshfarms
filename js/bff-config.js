@@ -120,6 +120,17 @@ var BFF_BEEF_STOCK = {
   'ny-strip':      { started: 30,  remaining: 0   }
 };
 
+/* ─── Next Beef Cuts ───────────────────────────────────────────────────
+   When the next animal's cuts will be ready. Shown on the beef card and
+   in the modal while every cut is sold out, so customers get a real
+   answer instead of a vague one.
+
+   Write it the way you would say it out loud — 'March 2027', 'late
+   spring'. Set it to '' if the timing is genuinely unknown and the copy
+   will simply omit the date rather than guess.                          */
+
+var BFF_BEEF_NEXT_CUTS = 'March 2027';
+
 /* ─── Sales Tax ────────────────────────────────────────────────────────
    READ THIS BEFORE CHANGING ANYTHING HERE, AND HAVE YOUR ACCOUNTANT
    CONFIRM IT. These are the rules the site applies, not tax advice.
