@@ -1313,11 +1313,10 @@
         : 'Every cut is sold out. Join the waitlist and we will come to you first when the ' +
           'next animal is ready.';
     }
-    var waitBtn = document.getElementById('beefWaitlistBtn');
-    var mWaitBtn = document.getElementById('beefModalWaitlistBtn');
-    [waitBtn, mWaitBtn].forEach(function (btn) {
-      if (btn) btn.textContent = when ? 'Join the ' + when + ' Waitlist' : 'Join the Beef Waitlist';
-    });
+    /* The button label stays fixed. Folding the date into it produced
+       'Join the March/April 2027 Waitlist', which wrapped to two lines
+       and would break again on whatever the next date string is. The
+       date is already stated directly above it. */
   })();
 
   /* Waitlist buttons drop the customer into the contact form with the
