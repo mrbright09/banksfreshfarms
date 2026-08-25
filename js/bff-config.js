@@ -129,7 +129,7 @@ var BFF_BEEF_STOCK = {
    spring'. Set it to '' if the timing is genuinely unknown and the copy
    will simply omit the date rather than guess.                          */
 
-var BFF_BEEF_NEXT_CUTS = 'March 2027';
+var BFF_BEEF_NEXT_CUTS = 'March/April 2027';
 
 /* ─── Sales Tax ────────────────────────────────────────────────────────
    READ THIS BEFORE CHANGING ANYTHING HERE, AND HAVE YOUR ACCOUNTANT
