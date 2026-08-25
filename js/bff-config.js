@@ -131,6 +131,19 @@ var BFF_BEEF_STOCK = {
 
 var BFF_BEEF_NEXT_CUTS = 'March/April 2027';
 
+/* ─── Seasonings Launch ────────────────────────────────────────────────
+   When the Signature Seasonings line goes on sale. Shown on its shop
+   card in place of a bare "Coming Soon", so people know what they are
+   waiting for.
+
+   Write it as you would say it — 'April 2027', 'this spring'. Set it to
+   '' and the card falls back to Coming Soon with no date claimed.
+
+   NOTE: seasonings are NOT groceries for tax. When they go on sale they
+   are taxed at state plus local, which BFF_TAX below already handles.   */
+
+var BFF_SEASONINGS_LAUNCH = 'April 2027';
+
 /* ─── Sales Tax ────────────────────────────────────────────────────────
    READ THIS BEFORE CHANGING ANYTHING HERE, AND HAVE YOUR ACCOUNTANT
    CONFIRM IT. These are the rules the site applies, not tax advice.

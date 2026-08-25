@@ -1319,6 +1319,20 @@
        date is already stated directly above it. */
   })();
 
+  /* Signature Seasonings are not on sale yet. When a launch date is set,
+     the card says which month rather than an open-ended "Coming Soon". */
+  (function paintSeasonings() {
+    var when = (typeof BFF_SEASONINGS_LAUNCH === 'string') ? BFF_SEASONINGS_LAUNCH.trim() : '';
+    if (!when) return;
+    var badge = document.getElementById('seasoningsBadge');
+    var desc  = document.getElementById('seasoningsDesc');
+    var btn   = document.getElementById('seasoningsNotifyBtn');
+    if (badge) badge.textContent = when;
+    if (desc)  desc.textContent  = 'Hand-crafted blends, Georgia-made. Launching ' + when +
+                                   '. Join the list and we\u2019ll tell you the week they drop.';
+    if (btn)   btn.textContent   = 'Tell Me When They Drop';
+  })();
+
   /* Waitlist buttons drop the customer into the contact form with the
      beef enquiry already chosen and a message written for them. */
   function openBeefWaitlist() {
