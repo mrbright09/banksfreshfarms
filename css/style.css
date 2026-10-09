@@ -4218,3 +4218,81 @@ button.beef-modal-photo-item:focus-visible {
   border: 1px dashed rgba(200,146,42,0.4);
   border-radius: 8px;
 }
+
+/* =============================================================
+   BEEF CUTS DROPDOWN
+   Eight price rows made the beef card roughly three times the
+   content of its neighbours, and because the cards stretch to
+   match, that height was forced on all of them. Collapsing the
+   rows is what brings the row back into proportion.
+   ============================================================= */
+.beef-cuts-drop {
+  margin-bottom: 16px;
+  border-top: 1px solid rgba(60,32,10,0.18);
+  border-bottom: 1px solid rgba(60,32,10,0.18);
+}
+
+.beef-cuts-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 2px;
+  cursor: pointer;
+  list-style: none;          /* kill the default disclosure marker */
+  font-family: 'Lato', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(26,15,10,0.85);
+  min-height: 44px;          /* tap target */
+}
+.beef-cuts-summary::-webkit-details-marker { display: none; }
+.beef-cuts-summary:hover { color: rgba(26,15,10,1); }
+.beef-cuts-summary:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.beef-cuts-summary-text {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.beef-cuts-chevron {
+  flex-shrink: 0;
+  color: rgba(60,32,10,0.6);
+  transition: transform 0.26s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.beef-cuts-drop.is-open .beef-cuts-chevron { transform: rotate(180deg); }
+
+/* The track animates from 0fr to 1fr, which resolves to the rows'
+   natural height — no guessed max-height, so the motion never runs
+   against empty space the way a max-height transition does. */
+.beef-cuts-track {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Driven by a class, not [open]: the browser drops the content the
+   instant [open] goes away, so a close keyed to it never animates.
+   JS sets the class first and only removes [open] once the track has
+   finished collapsing. */
+.beef-cuts-drop.is-open .beef-cuts-track {
+  grid-template-rows: 1fr;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.beef-cuts-inner {
+  overflow: hidden;
+  min-height: 0;             /* required, or the grid child refuses to shrink */
+}
+.beef-cuts-drop .beef-price-list { padding-bottom: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .beef-cuts-track,
+  .beef-cuts-chevron { transition: none; }
+}

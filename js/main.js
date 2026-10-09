@@ -1319,6 +1319,80 @@
        date is already stated directly above it. */
   })();
 
+  /* ── Beef cuts dropdown ──────────────────────────────────────────
+     The eight price rows are collapsed by default. <details> gives the
+     keyboard and screen-reader behaviour for free, but it drops its
+     content the moment [open] is removed, so a close animation keyed to
+     [open] never runs. The class drives the animation and [open] is
+     only cleared once the track has finished collapsing. */
+  (function beefCutsDrop() {
+    var drop = document.getElementById('beefCutsDrop');
+    if (!drop) return;
+    var summary = drop.querySelector('.beef-cuts-summary');
+    var track   = drop.querySelector('.beef-cuts-track');
+    var label   = document.getElementById('beefCutsSummaryText');
+
+    function reduced() {
+      return window.matchMedia &&
+             window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    /* Summary carries the state, so the row says something useful while
+       collapsed. Derived from BFF_BEEF_STOCK, so it cannot drift. */
+    function describe() {
+      var rows = drop.querySelectorAll('.beef-price-row[data-cut]');
+      var total = rows.length, inStock = 0, lowest = null;
+      rows.forEach(function (row) {
+        var st = beefStockFor(row.getAttribute('data-cut'));
+        if (!st || st.remaining <= 0) return;
+        inStock++;
+        var amt = row.querySelector('.beef-price-amt');
+        var n = amt ? parseFloat(amt.textContent.replace(/[^0-9.]/g, '')) : NaN;
+        if (!isNaN(n) && (lowest === null || n < lowest)) lowest = n;
+      });
+      if (!total) return 'Cuts & prices';
+      if (inStock === 0) return total + ' cuts · all sold out · see prices';
+      return inStock + ' of ' + total + ' cuts available' +
+             (lowest !== null ? ' · from $' + lowest.toFixed(2) + '/lb' : '');
+    }
+    if (label) label.textContent = describe();
+
+    function open() {
+      drop.open = true;
+      if (reduced()) { drop.classList.add('is-open'); return; }
+      /* Two frames: the first paints the collapsed track so the second
+         has a 0fr start value to animate away from. */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { drop.classList.add('is-open'); });
+      });
+    }
+
+    function close() {
+      drop.classList.remove('is-open');
+      if (reduced()) { drop.open = false; return; }
+      var settled = false;
+      function finish() {
+        if (settled) return;
+        settled = true;
+        track.removeEventListener('transitionend', onEnd);
+        if (!drop.classList.contains('is-open')) drop.open = false;
+      }
+      function onEnd(e) {
+        if (e.propertyName === 'grid-template-rows') finish();
+      }
+      track.addEventListener('transitionend', onEnd);
+      /* transitionend can be missed on a backgrounded tab, which would
+         leave the panel open but visually collapsed. */
+      setTimeout(finish, 420);
+    }
+
+    summary.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (drop.open && drop.classList.contains('is-open')) close();
+      else open();
+    });
+  })();
+
   /* Signature Seasonings are not on sale yet. When a launch date is set,
      the card says which month rather than an open-ended "Coming Soon". */
   (function paintSeasonings() {
