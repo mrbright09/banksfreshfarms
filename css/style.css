@@ -4296,3 +4296,11 @@ button.beef-modal-photo-item:focus-visible {
   .beef-cuts-track,
   .beef-cuts-chevron { transition: none; }
 }
+
+/* Badge on a card whose stock has run out. Distinct from --soon, which
+   marks something that has never been on sale. */
+.shop-card-badge--soldout {
+  background: rgba(26,15,10,0.88);
+  border: 1px solid rgba(214,196,166,0.5);
+  color: #D6C4A6;
+}

@@ -1293,6 +1293,15 @@
     });
     var keep = document.querySelector('.beef-keeping-note');
     if (keep) keep.hidden = out;   /* "buy what suits you" makes no sense with nothing to buy */
+
+    /* The photo badge said Order Now over a card where nothing could be
+       ordered. It is the first thing read on the card, so it has to
+       agree with the rest of it. */
+    var badge = document.getElementById('beefBadge');
+    if (badge) {
+      badge.textContent = out ? 'Sold Out' : 'Order Now';
+      badge.classList.toggle('shop-card-badge--soldout', out);
+    }
     if (!out) return;
 
     /* Say when the next cuts land, from one config value. With no date
